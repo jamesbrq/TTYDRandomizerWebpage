@@ -1,24 +1,40 @@
+@font-face {
+    font-family: 'HeyGorgeous';
+    src: url('../fonts/heygorgeous.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     background: linear-gradient(180deg, #fde808 10%, #e63b3d 90%);
+    font-family: 'HeyGorgeous', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .header {
     display: flex;
-    background-color: #cea500;
-    position: absolute;
-    top: 0;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background-color: #e8ac2a;
+    position: fixed;
+    top: 0%;
     left: 0;
     width: 100%;
     height: 60px;
 }
 
 .header-logo {
-    width: 8%;
+    flex-shrink: 0;
 }
 
 .logo {
-    width: 100%;
-    height: 100%;
+    width: 110px;
+    height: auto;
     object-fit: contain;
 }
 
@@ -28,31 +44,121 @@ body {
 }
 
 .header-pages {
-    font-family: Tahoma, sans-serif;
-    font-size: 22px;
-    left: 10%;
-    color: #191919;
     display: flex;
-    flex-direction: row;
+    gap: 15px;
     align-items: center;
-    justify-content: space-between;
-    position: absolute;
-    width: 25%;
-    height: 100%;
+    flex-wrap: wrap; /* Wrap if needed */
 }
 
 .pages-link {
     display: inline-block;
     padding: 15px 15px;
-    background-color: #cca400;
-    font-family: Tahoma, sans-serif;
-    font-size: 24px;
+    background-color: #eaad2a;
+    font-size: 16px;
     color: #191919;
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0s;
+    white-space: nowrap;
 }
 
 .pages-link:hover {
-    background-color: #bc9800;
+    background-color: #c69321;
+}
+
+.info-parent {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.info-panel {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.15);
+    background-color: rgba(220, 159, 69, 0.4);
+    width: 100%;
+    flex: 1;
+    z-index: 1;
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    gap: 60px;
+}
+
+.info-logo {
+    width: clamp(200px, 40%, 500px);
+    z-index: 10;
+    order: 1;
+}
+
+.info-logo a {
+    display: block;
+}
+
+.main-logo {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.info-header {
+    transform: translateY(20px);
+    font-family: 'HeyGorgeous', sans-serif;
+    font-size: clamp(24px, 5vw, 24px);
+}
+
+.info-link-container {
+    display: inline-block;
+    padding: 20px 20px;
+    background-color: #5282ff;
+    font-size: 18px;
+    color: #191919;
+    text-decoration: none;
+    border-radius: 10px;
+    box-shadow: 0 8px 12px 2px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s ease;
+}
+
+.info-link-container:hover {
+    background-color: #426ad5;
+}
+
+.info-link {
+    color: #000000;
+    text-decoration: none;
+}
+
+.generator-version {
+    font-size: 12px;
+    font-family: 'HeyGorgeous', sans-serif;
+}
+
+.links-header {
+    transform: translateY(20px);
+    font-family: 'HeyGorgeous', sans-serif;
+    font-size: clamp(24px, 5vw, 24px);
+}
+
+.generate-link-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-link-group {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
 }
