@@ -10,14 +10,24 @@
 </head>
 <body>
 <script src="./js/Test.js"></script>
+<h1 id="header"></h1>
 <py-config>
     packages = ["https://github.com/LagoLunatic/gclib/archive/6c7769e31dd56afb148b6207282bb496fd2c533a.zip", "Data"]
 </py-config>
 <py-script src="./py/TTYDPatcher.py"></py-script>
 <py-script>
-    from js import window
+    from js import window, document
     window.testVar = "Test"
-    patcher = TTYDPatcher()
+    window.pog = "Pog"
+    try:
+        patcher = TTYDPatcher()
+    except Exception as e:
+        print(e)
+    header = document.getElementById('header')
+    header.textContext = window.pog
 </py-script>
+<script>
+    //document.getElementById('header').textContent = window.pog;
+</script>
 </body>
 </html>
