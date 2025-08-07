@@ -19,7 +19,10 @@
             </a>
         </div>
     </div>
-    <py-script src="./py/TTYDPatcher.py" cfg="./py/config.toml"></py-script>
+    <py-config>
+        packages = ["https://github.com/LagoLunatic/gclib/archive/6c7769e31dd56afb148b6207282bb496fd2c533a.zip", "Data"]
+    </py-config>
+    <py-script src="./py/TTYDPatcher.py"></py-script>
     <py-script>
         patcher = TTYDPatcher()
     </py-script>

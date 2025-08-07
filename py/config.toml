@@ -1,1 +1,1 @@
-packages = ["https://github.com/LagoLunatic/gclib/archive/6c7769e31dd56afb148b6207282bb496fd2c533a.zip"]
+packages = ["https://github.com/LagoLunatic/gclib/archive/6c7769e31dd56afb148b6207282bb496fd2c533a.zip", "Data"]
