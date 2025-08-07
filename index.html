@@ -19,10 +19,6 @@
     from js import window, document
     window.testVar = "Test"
     window.pog = "Pog"
-    try:
-        patcher = TTYDPatcher()
-    except Exception as e:
-        print(e)
     header = document.getElementById('header')
     header.textContext = window.pog
 </py-script>
