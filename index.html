@@ -25,6 +25,8 @@
     </py-config>
     <py-script src="./py/TTYDPatcher.py"></py-script>
     <py-script>
+        from js import window
+        window.testVar = "Test"
         patcher = TTYDPatcher()
     </py-script>
     <div class="info-parent">
