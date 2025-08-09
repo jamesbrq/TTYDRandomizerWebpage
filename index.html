@@ -6,10 +6,13 @@
     <meta name="description" content="A randomizer for the game TTYD, enhancing replayability with randomized items, enemies, and more.">
     <meta name="keywords" content="TTYD, randomizer, game, mod, Mario, Paper Mario, Thousand-Year Door, randomization">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.3.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.3.1/core.js"></script>
     <script defer src="js/patcher.js"></script>
     <script defer src="js/handler.js"></script>
 </head>
 <body>
+    <py-script src="./py/TTYDPatcher.py" cfg="config.toml"></py-script>
     <div class="header">
         <div class="header-logo">
             <a href="index.html">
