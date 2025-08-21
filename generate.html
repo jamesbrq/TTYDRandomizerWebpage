@@ -6,6 +6,7 @@
     <meta name="description" content="A randomizer for the game TTYD, enhancing replayability with randomized items, enemies, and more.">
     <meta name="keywords" content="TTYD, randomizer, game, mod, Mario, Paper Mario, Thousand-Year Door, randomization">
     <link rel="stylesheet" href="css/styles.css">
+    <script src="js/generate.js"></script>
 </head>
 <body>
 <div class="header">
@@ -17,6 +18,148 @@
     <div class="header-pages">
         <a href="generate.html" class="pages-link">Seed Generator</a>
         <a href="test.html" class="pages-link">Test</a>
+    </div>
+</div>
+
+<div class="generate-panel">
+    <div class="preset-section">
+        <h3 class="preset-header">Preset Settings</h3>
+        <div class="preset-controls">
+            <select class="preset-dropdown" onchange="loadPreset()">
+                <option>Select Preset...</option>
+                <option data-settings="eyJSYW5kb21pemUgSXRlbXMiOmZhbHNlLCJSYW5kb21pemUgQmFkZ2VzIjpmYWxzZSwiSW5jbHVkZSBLZXkgSXRlbXMiOnRydWUsIlJhbmRvbWl6ZSBFBW5lbWllcyI6ZmFsc2UsIlNodWZmbGUgTlBDcyI6ZmFsc2UsIlJhbmRvbWl6ZSBTaG9wIFByaWNlcyI6ZmFsc2UsIkhhcmQgTW9kZSI6ZmFsc2UsIkJvc3MgUnVzaCBNb2RlIjpmYWxzZSwiRGlmZmljdWx0eSBMZXZlbCI6MywiU2VlZCBWYWx1ZSI6MCwiRmFzdCBUZXh0Ijp0cnVlLCJEZWJ1ZyBNb2RlIjpmYWxzZX0=">Default Settings</option>
+                <option data-settings="eyJSYW5kb21pemUgSXRlbXMiOnRydWUsIlJhbmRvbWl6ZSBCYW5nZXMiOmZhbHNlLCJJbmNsdWRlIEtleSBJdGVtcyI6dHJ1ZSwiUmFuZG9taXplIEVuZW1pZXMiOmZhbHNlLCJTaHVmZmxlIE5QQ3MiOmZhbHNlLCJSYW5kb21pemUgU2hvcCBQcmljZXMiOmZhbHNlLCJIYXJkIE1vZGUiOmZhbHNlLCJCb3NzIFJ1c2ggTW9kZSI6ZmFsc2UsIkRpZmZpY3VsdHkgTGV2ZWwiOjEsIlNlZWQgVmFsdWUiOjAsIkZhc3QgVGV4dCI6dHJ1ZSwiRGVidWcgTW9kZSI6ZmFsc2V9">Beginner Mode</option>
+                <option data-settings="eyJSYW5kb21pemUgSXRlbXMiOnRydWUsIlJhbmRvbWl6ZSBCYW5nZXMiOnRydWUsIkluY2x1ZGUgS2V5IEl0ZW1zIjp0cnVlLCJSYW5kb21pemUgRW5lbWllcyI6dHJ1ZSwiU2h1ZmZsZSBOUENzIjp0cnVlLCJSYW5kb21pemUgU2hvcCBQcmljZXMiOnRydWUsIkhhcmQgTW9kZSI6dHJ1ZSwiQm9zcyBSdXNoIE1vZGUiOnRydWUsIkRpZmZpY3VsdHkgTGV2ZWwiOjcsIlNlZWQgVmFsdWUiOjAsIkZhc3QgVGV4dCI6dHJ1ZSwiRGVidWcgTW9kZSI6ZmFsc2V9">Expert Challenge</option>
+                <option>Custom Config 1</option>
+            </select>
+            <button class="preset-button" onclick="savePreset()">Save</button>
+            <button class="preset-button" onclick="loadPreset()">Load</button>
+            <button class="delete-preset-button" id="deletePresetBtn" onclick="deleteCurrentPreset()" style="display: none;">Delete</button>
+        </div>
+        
+        <div class="settings-string-section">
+            <label class="settings-string-label">Settings String</label>
+            <div class="settings-string-controls">
+                <input type="text" class="settings-string-input" id="settingsStringInput" placeholder="Paste settings string here...">
+                <button class="preset-button" onclick="exportToField()">Export</button>
+                <button class="preset-button" onclick="importFromField()">Import</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="panel-tabs">
+        <button class="panel-tab active" onclick="switchTab(this, 'items')">Items</button>
+        <button class="panel-tab" onclick="switchTab(this, 'world')">World</button>
+        <button class="panel-tab" onclick="switchTab(this, 'difficulty')">Difficulty</button>
+        <button class="panel-tab" onclick="switchTab(this, 'misc')">Misc</button>
+    </div>
+    
+    <div class="generate-content">
+        <div id="items" class="panel-content active">
+            <div class="generate-link-group">
+                <div class="toggle-container">
+                    <span class="toggle-label">Randomize Items</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Randomize Badges</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Include Key Items</span>
+                    <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="world" class="panel-content">
+            <div class="generate-link-group">
+                <div class="toggle-container">
+                    <span class="toggle-label">Randomize Enemies</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Shuffle NPCs</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Randomize Shop Prices</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="difficulty" class="panel-content">
+            <div class="generate-link-group">
+                <div class="number-container">
+                    <span class="number-label">Difficulty Level</span>
+                    <input type="number" class="number-input" min="0" max="7" value="3">
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Hard Mode</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Boss Rush Mode</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="misc" class="panel-content">
+            <div class="generate-link-group">
+                <div class="number-container">
+                    <span class="number-label">Seed Value</span>
+                    <input type="number" class="number-input" min="0" max="7" value="0">
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Fast Text</span>
+                    <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Debug Mode</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal System -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <p class="modal-message" id="modalMessage"></p>
+        <input type="text" class="modal-input" id="modalInput" style="display: none;">
+        <div class="modal-buttons" id="modalButtons"></div>
     </div>
 </div>
 </body>
