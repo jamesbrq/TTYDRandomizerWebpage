@@ -7,6 +7,8 @@
     <meta name="keywords" content="TTYD, randomizer, game, mod, Mario, Paper Mario, Thousand-Year Door, randomization">
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/generate.js"></script>
+    <script type="module" src="js/gciso.js"></script>
+    <script type="module" src="js/bsdiff.js"></script>
 </head>
 <body>
 <div class="header">
@@ -149,6 +151,19 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    
+    <!-- ROM Selection Section -->
+    <div class="iso-generation-section">
+        <h3>Select ROM File</h3>
+        <div class="iso-controls">
+            <input type="file" id="romFileInput" accept=".iso,.gcm" style="display: none;">
+            <button class="preset-button" onclick="document.getElementById('romFileInput').click()">Select ROM File</button>
+            <span id="selectedROMName" style="margin-left: 10px; font-style: italic; color: #666;"></span>
+        </div>
+        <div class="iso-controls" style="margin-top: 10px;">
+            <button class="preset-button" id="generateBtn" onclick="generateRandomizedROM()" disabled>Generate Randomized ROM</button>
         </div>
     </div>
 </div>
