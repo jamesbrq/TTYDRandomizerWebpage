@@ -594,17 +594,78 @@ function rebuildISO(isoBuf, treeRoot, opts = {}) {
     const alignment = opts.alignment || 2048; // file alignment
     debugLog('rebuildISO: start (preserve original offsets, append new files)');
 
-    // mutable copy of original
-    let out = new Uint8Array(isoBuf.slice(0));
+    // Calculate actual data size by finding the highest used offset in the FST
+    const tempView = new DataView(isoBuf);
+    const origDolOffset = tempView.getUint32(0x420, false);
+    const origFstOffset = tempView.getUint32(0x424, false);
+    const origFstSize = tempView.getUint32(0x428, false);
+    
+    // Parse FST to find the highest file offset + size
+    let maxDataEnd = Math.max(0x440, origFstOffset + origFstSize); // At minimum, include header and FST
+    
+    if (origFstOffset && origFstSize && origFstOffset + origFstSize <= isoBuf.byteLength) {
+        const fstBuf = isoBuf.slice(origFstOffset, origFstOffset + origFstSize);
+        const fstView = new DataView(fstBuf);
+        const entryCount = fstView.getUint32(8, false);
+        
+        // Scan all FST entries to find highest file end
+        for (let i = 0; i < entryCount; i++) {
+            const base = i * 12;
+            const typeName = fstView.getUint32(base, false);
+            const fileOffset = fstView.getUint32(base + 4, false);
+            const fileSize = fstView.getUint32(base + 8, false);
+            const type = (typeName >>> 24) & 0xFF;
+            
+            // Only process files (type 0), not directories (type 1)
+            if (type === 0 && fileOffset && fileSize) {
+                maxDataEnd = Math.max(maxDataEnd, fileOffset + fileSize);
+            }
+        }
+    }
+    
+    // Add DOL size if valid
+    if (origDolOffset && origDolOffset < isoBuf.byteLength) {
+        try {
+            const dolView = new DataView(isoBuf, origDolOffset);
+            let dolEnd = origDolOffset;
+            
+            // Check text sections (7 max)
+            for (let i = 0; i < 7; i++) {
+                const fileOff = dolView.getUint32(0x00 + i*4, false);
+                const size = dolView.getUint32(0x90 + i*4, false);
+                if (size && fileOff) dolEnd = Math.max(dolEnd, fileOff + size);
+            }
+            
+            // Check data sections (11 max)
+            for (let i = 0; i < 11; i++) {
+                const fileOff = dolView.getUint32(0x1C + i*4, false);
+                const size = dolView.getUint32(0xAC + i*4, false);
+                if (size && fileOff) dolEnd = Math.max(dolEnd, fileOff + size);
+            }
+            
+            maxDataEnd = Math.max(maxDataEnd, dolEnd);
+        } catch (e) {
+            // If DOL parsing fails, use a reasonable estimate
+            maxDataEnd = Math.max(maxDataEnd, origDolOffset + 0x400000);
+        }
+    }
+    
+    // Round up to next 32KB boundary for safety
+    const actualSize = Math.min(isoBuf.byteLength, ((maxDataEnd + 0x7FFF) & ~0x7FFF));
+    
+    debugLog(`rebuildISO: found data end at ${maxDataEnd}, copying ${actualSize} bytes instead of full ${isoBuf.byteLength} bytes`);
+    
+    // mutable copy of only the needed portion
+    let out = new Uint8Array(isoBuf.slice(0, actualSize));
     let view = new DataView(out.buffer);
 
     const read32 = (o) => view.getUint32(o, false);
     const write32 = (o, v) => view.setUint32(o, v >>> 0, false);
 
-    // header values
-    const origDolOffset = read32(0x420);
-    const origFstOffset = read32(0x424);
-    const origFstSize = read32(0x428);
+    // header values (reuse the calculated values from above)
+    const finalDolOffset = origDolOffset;
+    const finalFstOffset = origFstOffset;
+    const finalFstSize = origFstSize;
     const origFstMax = read32(0x42C);
 
     // helper to ensure buffer is big enough
@@ -653,7 +714,7 @@ function rebuildISO(isoBuf, treeRoot, opts = {}) {
     writeSystem(sys.boot, 0x000, 0x440, 'boot.bin');
     writeSystem(sys.bi2, 0x0440, 0x2000, 'bi2.bin');
     writeSystem(sys.apl, 0x2440, sys.apl?.src?.size || 0x1000, 'apploader.img');
-    writeSystem(sys.dol, origDolOffset, sys.dol?.src?.size || 0x400000, 'main.dol');
+    writeSystem(sys.dol, finalDolOffset, sys.dol?.src?.size || 0x400000, 'main.dol');
 
     // ---------------- Gather FST files ----------------
     function walkFstFiles(node, parentPath = '') {
@@ -693,7 +754,7 @@ function rebuildISO(isoBuf, treeRoot, opts = {}) {
     }
 
     collectOriginalRegions(treeRoot);
-    highestOriginalEnd = Math.max(highestOriginalEnd, origFstOffset + (origFstSize || 0));
+    highestOriginalEnd = Math.max(highestOriginalEnd, finalFstOffset + (finalFstSize || 0));
 
     let appendCursor = alignUp(Math.max(0x10000, highestOriginalEnd), alignment);
 
