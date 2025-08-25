@@ -50,56 +50,107 @@
     </div>
     
     <div class="panel-tabs">
-        <button class="panel-tab active" onclick="switchTab(this, 'items')">Items</button>
-        <button class="panel-tab" onclick="switchTab(this, 'world')">World</button>
-        <button class="panel-tab" onclick="switchTab(this, 'difficulty')">Difficulty</button>
-        <button class="panel-tab" onclick="switchTab(this, 'misc')">Misc</button>
+        <button class="panel-tab active" onclick="switchTab(this, 'logic')">Logic & Progression</button>
+        <button class="panel-tab" onclick="switchTab(this, 'world')">World & Gameplay</button>
+        <button class="panel-tab" onclick="switchTab(this, 'stats')">Starting Stats</button>
+        <button class="panel-tab" onclick="switchTab(this, 'qol')">Quality of Life</button>
     </div>
     
     <div class="generate-content">
-        <div id="items" class="panel-content active">
-            <div class="generate-link-group">
+        <!-- Logic & Progression Tab -->
+        <div id="logic" class="panel-content active">
+            <div class="settings-grid">
+                <div class="dropdown-container">
+                    <span class="dropdown-label">Goal</span>
+                    <select class="dropdown-select goal-dropdown">
+                        <option value="0" selected>Shadow Queen</option>
+                        <option value="1">Crystal Stars</option>
+                        <option value="2">Bonetail</option>
+                    </select>
+                </div>
+                
+                <div class="number-container">
+                    <span class="number-label">Goal Crystal Stars</span>
+                    <input type="number" class="number-input" min="0" max="7" value="7">
+                </div>
+                
+                <div class="number-container">
+                    <span class="number-label">Palace Crystal Stars</span>
+                    <input type="number" class="number-input" min="0" max="7" value="7">
+                </div>
+                
+                <div class="dropdown-container">
+                    <span class="dropdown-label">Pit Items</span>
+                    <select class="dropdown-select">
+                        <option value="0">Vanilla</option>
+                        <option value="1" selected>Filler</option>
+                        <option value="2">All</option>
+                    </select>
+                </div>
+                
                 <div class="toggle-container">
-                    <span class="toggle-label">Randomize Items</span>
+                    <span class="toggle-label">Tattlesanity</span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
                 
                 <div class="toggle-container">
-                    <span class="toggle-label">Randomize Badges</span>
+                    <span class="toggle-label">Limit Chapter Logic</span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
                 
                 <div class="toggle-container">
-                    <span class="toggle-label">Include Key Items</span>
-                    <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                    <span class="toggle-label">Limit Chapter 8</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
             </div>
         </div>
         
+        <!-- World & Gameplay Tab -->
         <div id="world" class="panel-content">
-            <div class="generate-link-group">
+            <div class="settings-grid">
                 <div class="toggle-container">
-                    <span class="toggle-label">Randomize Enemies</span>
+                    <span class="toggle-label">Palace Skip</span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
                 
                 <div class="toggle-container">
-                    <span class="toggle-label">Shuffle NPCs</span>
+                    <span class="toggle-label">Skip Cutscenes</span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
                 
                 <div class="toggle-container">
-                    <span class="toggle-label">Randomize Shop Prices</span>
+                    <span class="toggle-label">Disable Intermissions</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Open West Side</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Fast Travel</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Always Succeed Conditions</span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
@@ -107,48 +158,79 @@
             </div>
         </div>
         
-        <div id="difficulty" class="panel-content">
-            <div class="generate-link-group">
+        <!-- Starting Stats Tab -->
+        <div id="stats" class="panel-content">
+            <div class="settings-grid">
                 <div class="number-container">
-                    <span class="number-label">Difficulty Level</span>
-                    <input type="number" class="number-input" min="0" max="7" value="3">
+                    <span class="number-label">Starting HP</span>
+                    <input type="number" class="number-input" min="1" max="100" value="10">
                 </div>
                 
-                <div class="toggle-container">
-                    <span class="toggle-label">Hard Mode</span>
-                    <div class="toggle-switch" onclick="toggleSwitch(this)">
-                        <div class="toggle-slider"></div>
-                    </div>
+                <div class="number-container">
+                    <span class="number-label">Starting FP</span>
+                    <input type="number" class="number-input" min="0" max="100" value="5">
                 </div>
                 
-                <div class="toggle-container">
-                    <span class="toggle-label">Boss Rush Mode</span>
-                    <div class="toggle-switch" onclick="toggleSwitch(this)">
-                        <div class="toggle-slider"></div>
-                    </div>
+                <div class="number-container">
+                    <span class="number-label">Starting BP</span>
+                    <input type="number" class="number-input" min="0" max="99" value="3">
+                </div>
+                
+                <div class="number-container">
+                    <span class="number-label">Starting Coins</span>
+                    <input type="number" class="number-input" min="0" max="999" value="100">
+                </div>
+                
+                <div class="dropdown-container">
+                    <span class="dropdown-label">Starting Partner</span>
+                    <select class="dropdown-select">
+                        <option value="1" selected>Goombella</option>
+                        <option value="2">Koops</option>
+                        <option value="3">Bobbery</option>
+                        <option value="4">Yoshi</option>
+                        <option value="5">Flurrie</option>
+                        <option value="6">Vivian</option>
+                        <option value="7">Ms. Mowz</option>
+                        <option value="8">Random Partner</option>
+                    </select>
                 </div>
             </div>
         </div>
         
-        <div id="misc" class="panel-content">
-            <div class="generate-link-group">
-                <div class="number-container">
-                    <span class="number-label">Seed Value</span>
-                    <input type="number" class="number-input" min="0" max="7" value="0">
-                </div>
-                
+        <!-- Quality of Life Tab -->
+        <div id="qol" class="panel-content">
+            <div class="settings-grid">
                 <div class="toggle-container">
-                    <span class="toggle-label">Fast Text</span>
-                    <div class="toggle-switch active" onclick="toggleSwitch(this)">
-                        <div class="toggle-slider"></div>
-                    </div>
-                </div>
-                
-                <div class="toggle-container">
-                    <span class="toggle-label">Debug Mode</span>
+                    <span class="toggle-label">Permanent Peekaboo</span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Full Run Bar</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <div class="dropdown-container">
+                    <span class="dropdown-label">Yoshi Color</span>
+                    <select class="dropdown-select">
+                        <option value="0" selected>Green</option>
+                        <option value="1">Red</option>
+                        <option value="2">Blue</option>
+                        <option value="3">Orange</option>
+                        <option value="4">Pink</option>
+                        <option value="5">Black</option>
+                        <option value="6">White</option>
+                        <option value="7">Random Color</option>
+                    </select>
+                </div>
+                
+                <div class="text-container">
+                    <span class="text-label">Yoshi Name</span>
+                    <input type="text" class="text-input" maxlength="8" value="Yoshi">
                 </div>
             </div>
         </div>

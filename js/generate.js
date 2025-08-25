@@ -186,6 +186,9 @@ function savePreset() {
             // Update input field
             const inputField = document.getElementById('settingsStringInput');
             inputField.value = settingsString;
+            
+            // Show delete button since we just saved a user preset
+            document.getElementById('deletePresetBtn').style.display = 'inline-block';
         }
     );
 }
@@ -539,6 +542,9 @@ async function replaceExtractedFiles(isoData) {
 
 // Function to add REL mod files to the ISO
 async function addRelFilesToISO(isoData) {
+    // Import addOrReplace function
+    const { addOrReplace } = await import('./gciso.js');
+    
     // List of all REL files in the data folder
     const relFilepaths = [
         'aaa', 'aji', 'bom', 'dou', 'eki', 'end', 'gon', 'gor', 'gra', 'hei',
@@ -549,14 +555,14 @@ async function addRelFilesToISO(isoData) {
     // Filter out "mod" from filepaths (equivalent to Python: [file for file in rel_filepaths if file != "mod"])
     const filteredFiles = relFilepaths.filter(file => file !== "mod");
     
-    // Add subrel files to files/mod/subrels/
+    // Add subrel files to mod/subrels/
     for (const file of filteredFiles) {
         try {
             const response = await fetch(`data/${file}.rel`);
             if (response.ok) {
                 const fileData = new Uint8Array(await response.arrayBuffer());
-                isoData.tree.putFile(`files/mod/subrels/${file}.rel`, fileData);
-                console.log(`Added ${file}.rel to files/mod/subrels/`);
+                addOrReplace(isoData.tree, `mod/subrels/${file}.rel`, fileData);
+                console.log(`Added ${file}.rel to mod/subrels/ (${fileData.length} bytes)`);
             } else {
                 console.warn(`Could not load ${file}.rel`);
             }
@@ -565,13 +571,13 @@ async function addRelFilesToISO(isoData) {
         }
     }
     
-    // Add main mod.rel file to files/mod/
+    // Add main mod.rel file to mod/
     try {
         const response = await fetch(`data/mod.rel`);
         if (response.ok) {
             const modFileData = new Uint8Array(await response.arrayBuffer());
-            isoData.tree.putFile(`files/mod/mod.rel`, modFileData);
-            console.log('Added mod.rel to files/mod/');
+            addOrReplace(isoData.tree, `mod/mod.rel`, modFileData);
+            console.log(`Added mod.rel to mod/ (${modFileData.length} bytes)`);
         } else {
             console.warn('Could not load mod.rel');
         }
