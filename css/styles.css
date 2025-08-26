@@ -347,6 +347,8 @@ body {
     align-items: center;
     gap: clamp(10px, 2vw, 15px);
     margin: clamp(5px, 1vh, 10px) 0;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .toggle-label {
@@ -354,6 +356,8 @@ body {
     font-size: clamp(12px, 2.5vw, 18px);
     color: #191919;
     user-select: none;
+    flex: 1;
+    text-align: left;
 }
 
 .toggle-switch {
@@ -413,7 +417,7 @@ body {
 }
 
 .number-input {
-    width: clamp(60px, 10vw, 80px);
+    width: clamp(70px, 10vw, 90px);
     height: clamp(30px, 5vh, 40px);
     padding: clamp(5px, 1vw, 8px);
     font-family: 'HeyGorgeous', sans-serif;
@@ -760,6 +764,48 @@ body {
     background-color: #e55656;
     transform: translateY(-1px);
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Tooltip System */
+.tooltip {
+    position: fixed;
+    background-color: rgba(40, 40, 40, 0.95);
+    color: #ffffff;
+    padding: clamp(8px, 1.5vh, 12px) clamp(10px, 2vw, 15px);
+    border-radius: clamp(4px, 0.8vw, 6px);
+    font-family: 'HeyGorgeous', sans-serif;
+    font-size: clamp(10px, 2vw, 14px);
+    max-width: clamp(200px, 40vw, 300px);
+    word-wrap: break-word;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    line-height: 1.3;
+}
+
+.tooltip.show {
+    opacity: 1;
+}
+
+.tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid rgba(40, 40, 40, 0.95);
+}
+
+.has-tooltip {
+    position: relative;
+    cursor: help;
 }
 
 /* Very large screens - prevent things from getting too big */

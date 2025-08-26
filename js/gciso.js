@@ -436,7 +436,7 @@ function buildFST_fromTree(treeRoot) {
                     continue; // system files and directories are not part of FST
                 }
 
-                debugLog(`Including in FST: ${child.name} (src.system=${child.src?.system || 'undefined'}, node.system=${child.system || 'undefined'})`);
+                //debugLog(`Including in FST: ${child.name} (src.system=${child.src?.system || 'undefined'}, node.system=${child.system || 'undefined'})`);
                 const childIdx = dfs(child);
                 entries[idx].children.push(childIdx);
                 entries[childIdx].parent = idx;
@@ -795,7 +795,7 @@ function rebuildISO(isoBuf, treeRoot, opts = {}) {
         ensureSize(node.offset + node.size);
         out.set(data, node.offset);
 
-        debugLog(`Wrote file ${entry.path} @0x${node.offset.toString(16)} size ${data.length}`);
+        //debugLog(`Wrote file ${entry.path} @0x${node.offset.toString(16)} size ${data.length}`);
     }
 
     // ---------------- Rebuild FST ----------------
