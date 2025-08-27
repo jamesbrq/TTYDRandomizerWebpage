@@ -7,7 +7,9 @@
       "0x2C624"
     ],
     "vanilla_item": 77772092,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Docks: Star Piece",
@@ -17,7 +19,9 @@
       "0x2F460"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Docks: Star Piece 2",
@@ -27,7 +31,9 @@
       "0x2F49C"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Goombella",
@@ -37,7 +43,9 @@
       "0x37F88"
     ],
     "vanilla_item": 77772078,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Old Letter",
@@ -47,7 +55,9 @@
       "0x3222C"
     ],
     "vanilla_item": 77772124,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Fire Flower",
@@ -58,7 +68,9 @@
       "0x36CA4"
     ],
     "vanilla_item": 77772059,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Fright Mask",
@@ -69,7 +81,9 @@
       "0x36CB4"
     ],
     "vanilla_item": 77772068,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Honey Syrup",
@@ -80,7 +94,9 @@
       "0x36C94"
     ],
     "vanilla_item": 77772088,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Mushroom",
@@ -91,7 +107,9 @@
       "0x36C8C"
     ],
     "vanilla_item": 77772120,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Sleepy Sheep",
@@ -102,7 +120,9 @@
       "0x36CAC"
     ],
     "vanilla_item": 77772169,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Star Piece 1",
@@ -112,7 +132,9 @@
       "0x3C554"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Star Piece 2",
@@ -122,7 +144,9 @@
       "0x3C578"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Star Piece 3",
@@ -132,7 +156,9 @@
       "0x3C58C"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Star Piece 4",
@@ -142,7 +168,9 @@
       "0x3C5B4"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Star Piece 5",
@@ -152,7 +180,9 @@
       "0x3C5DC"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Tasty Tonic",
@@ -163,7 +193,9 @@
       "0x36C9C"
     ],
     "vanilla_item": 77772193,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Center: Ultra Hammer",
@@ -173,7 +205,9 @@
       "0x39344"
     ],
     "vanilla_item": 77772190,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Eastside: Power Smash",
@@ -183,7 +217,9 @@
       "0x49BF0"
     ],
     "vanilla_item": 77772147,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Eastside: Double Dip",
@@ -193,7 +229,9 @@
       "0x4CE58"
     ],
     "vanilla_item": 77772046,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Eastside: Shine Sprite 1",
@@ -203,7 +241,9 @@
       "0x4D76C"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Eastside: Shine Sprite 2",
@@ -213,7 +253,9 @@
       "0x4D7B4"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Eastside: Shine Sprite 3",
@@ -223,7 +265,9 @@
       "0x4D790"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Eastside: Star Piece 1",
@@ -233,7 +277,9 @@
       "0x4D7CC"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Eastside: Star Piece 2",
@@ -243,7 +289,9 @@
       "0x4D700"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Eastside: Star Piece 3",
@@ -253,7 +301,9 @@
       "0x4D7F4"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Eastside: Star Piece 4",
@@ -263,7 +313,9 @@
       "0x4D81C"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Eastside: Star Piece 5",
@@ -273,7 +325,9 @@
       "0x4D724"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Westside: Blimp Ticket",
@@ -283,7 +337,9 @@
       "0x4E0E4"
     ],
     "vanilla_item": 77772013,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Train Ticket",
@@ -293,7 +349,9 @@
       "0x506C4"
     ],
     "vanilla_item": 77772199,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Dizzy Dial",
@@ -303,7 +361,9 @@
       "0x57B90"
     ],
     "vanilla_item": 77772045,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Dried Shroom",
@@ -313,7 +373,9 @@
       "0x57B80"
     ],
     "vanilla_item": 77772049,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Life Shroom",
@@ -323,7 +385,9 @@
       "0x57B88"
     ],
     "vanilla_item": 77772108,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Mushroom",
@@ -333,7 +397,9 @@
       "0x59E18"
     ],
     "vanilla_item": 77772120,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Shine Sprite 1",
@@ -343,7 +409,9 @@
       "0x5A68C"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Shine Sprite 2",
@@ -353,7 +421,9 @@
       "0x5A668"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Star Piece 1",
@@ -363,7 +433,9 @@
       "0x5A5C0"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Star Piece 2",
@@ -373,7 +445,9 @@
       "0x5A5E8"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Star Piece 3",
@@ -383,7 +457,9 @@
       "0x5A610"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Star Piece 4",
@@ -393,7 +469,9 @@
       "0x5A648"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Super Shroom 1",
@@ -403,7 +481,9 @@
       "0x57B70"
     ],
     "vanilla_item": 77772191,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Thunder Bolt",
@@ -413,7 +493,9 @@
       "0x57B98"
     ],
     "vanilla_item": 77772195,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Westside: Volt Shroom",
@@ -423,7 +505,9 @@
       "0x57B78"
     ],
     "vanilla_item": 77772209,
-    "tags": []
+    "tags": [
+      "rogueport_westside"
+    ]
   },
   {
     "name": "Rogueport Blimp Room: Star Piece 1",
@@ -433,7 +517,9 @@
       "0x60480"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Blimp Room: Star Piece 2",
@@ -443,7 +529,9 @@
       "0x6046C"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "rogueport"
+    ]
   },
   {
     "name": "Rogueport Sewers Town: Star Piece 1",
@@ -453,7 +541,9 @@
       "0x13570"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers East Entrance: Star Piece",
@@ -463,7 +553,9 @@
       "0x14CC8"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers East Entrance: Defend Plus P",
@@ -473,7 +565,9 @@
       "0x14A40"
     ],
     "vanilla_item": 77772043,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Petal Meadows Pipe: Shine Sprite",
@@ -483,7 +577,9 @@
       "0x16674"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Boggly Woods Pipe: Damage Dodge",
@@ -493,7 +589,9 @@
       "0x17DC8"
     ],
     "vanilla_item": 77772040,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Boggly Woods Pipe: Star Piece",
@@ -503,7 +601,9 @@
       "0x17E00"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Black Key Room: Black Key",
@@ -513,7 +613,9 @@
       "0x18AA8"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Black Key Room: Happy Heart P",
@@ -523,7 +625,9 @@
       "0x18830"
     ],
     "vanilla_item": 77772085,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Black Key Room: Pretty Lucky",
@@ -533,7 +637,9 @@
       "0x18B74"
     ],
     "vanilla_item": 77772148,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Black Key Room: Star Piece",
@@ -543,7 +649,9 @@
       "0x18B90"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Thousand Year Door: Shine Sprite",
@@ -553,7 +661,9 @@
       "0x1F01C"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Thousand Year Door: Star Piece",
@@ -563,7 +673,9 @@
       "0x1F0B4"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Star Piece House: Star Piece",
@@ -573,7 +685,9 @@
       "0x212AC"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers East Enemy Hall: Fire Flower",
@@ -583,7 +697,9 @@
       "0x2BAC8"
     ],
     "vanilla_item": 77772059,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers East Enemy Hall: Mushroom",
@@ -593,7 +709,9 @@
       "0x2BAF0"
     ],
     "vanilla_item": 77772120,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers East Pipe Room: Shine Sprite",
@@ -603,7 +721,9 @@
       "0x2C22C"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers West Pipe Room: FP Plus",
@@ -613,7 +733,9 @@
       "0x2C7DC"
     ],
     "vanilla_item": 77772066,
-    "tags": []
+    "tags": [
+      "sewers_westside"
+    ]
   },
   {
     "name": "Rogueport Sewers Black Chest Room: Plane Curse",
@@ -623,7 +745,9 @@
       "0x2D65C"
     ],
     "vanilla_item": 77772137,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Black Chest Room: Star Piece",
@@ -633,7 +757,9 @@
       "0x2DAC8"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Spike Room: Spike Shield",
@@ -643,7 +769,9 @@
       "0x2B5F4"
     ],
     "vanilla_item": 77772174,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Town: Gold Bar",
@@ -653,7 +781,9 @@
       "0xDDB8"
     ],
     "vanilla_item": 77772072,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Town: Gold Bar x3",
@@ -663,7 +793,9 @@
       "0xDDC0"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Town: Gradual Syrup",
@@ -673,7 +805,9 @@
       "0xDDA0"
     ],
     "vanilla_item": 77772079,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Town: Jammin' Jelly",
@@ -683,7 +817,9 @@
       "0xDDB0"
     ],
     "vanilla_item": 77772101,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Town: Shine Sprite",
@@ -693,7 +829,9 @@
       "0x134E4"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Town: Slow Shroom",
@@ -703,7 +841,9 @@
       "0xDD98"
     ],
     "vanilla_item": 77772171,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Town: Soft Stomp",
@@ -713,7 +853,9 @@
       "0x132A0"
     ],
     "vanilla_item": 77772172,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Town: Star Piece 2",
@@ -723,7 +865,9 @@
       "0x13598"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Town: Star Piece 3",
@@ -733,7 +877,9 @@
       "0x13534"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Town: Star Piece 4",
@@ -743,7 +889,9 @@
       "0x13548"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Town: Ultra Mushroom",
@@ -753,7 +901,9 @@
       "0xDDA8"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers West Entrance: Shine Sprite",
@@ -763,7 +913,9 @@
       "0x20474"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "sewers_westside"
+    ]
   },
   {
     "name": "Rogueport Sewers West Entrance: Star Piece 2",
@@ -773,7 +925,9 @@
       "0x2048C"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "sewers_westside"
+    ]
   },
   {
     "name": "Rogueport Sewers West Enemy Hall: Gradual Syrup",
@@ -783,7 +937,9 @@
       "0x2CDA8"
     ],
     "vanilla_item": 77772079,
-    "tags": []
+    "tags": [
+      "sewers_westside"
+    ]
   },
   {
     "name": "Rogueport Sewers West Enemy Hall: Slow Shroom",
@@ -793,7 +949,9 @@
       "0x2CDD0"
     ],
     "vanilla_item": 77772171,
-    "tags": []
+    "tags": [
+      "sewers_westside"
+    ]
   },
   {
     "name": "Rogueport Sewers Spania Room: Defend Plus",
@@ -803,7 +961,9 @@
       "0x2DD20"
     ],
     "vanilla_item": 77772042,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Spania Room: Shine Sprite 1",
@@ -813,7 +973,9 @@
       "0x2DD54"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Spania Room: Shine Sprite 2",
@@ -823,7 +985,9 @@
       "0x2DD78"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers Spania Room: Shine Sprite 3",
@@ -833,7 +997,9 @@
       "0x2DD9C"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "sewers"
+    ]
   },
   {
     "name": "Rogueport Sewers West Entrance: Flower Saver P",
@@ -843,7 +1009,9 @@
       "0x20320"
     ],
     "vanilla_item": 77772063,
-    "tags": []
+    "tags": [
+      "sewers_westside"
+    ]
   },
   {
     "name": "Rogueport Sewers West Entrance: Star Piece 1",
@@ -853,7 +1021,9 @@
       "0x204C4"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "sewers_westside"
+    ]
   },
   {
     "name": "Petal Meadows Bridge Room: Fire Flower",
@@ -863,7 +1033,9 @@
       "0xEE68"
     ],
     "vanilla_item": 77772059,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Bridge Room: Mystery",
@@ -873,7 +1045,9 @@
       "0xCC98"
     ],
     "vanilla_item": 77772121,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Bridge Room: Koops",
@@ -883,7 +1057,9 @@
       "0xD2E4"
     ],
     "vanilla_item": 77772104,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows First Fort Exterior: Coin",
@@ -893,7 +1069,9 @@
       "0xF184"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows First Fort Exterior: Star Piece",
@@ -903,7 +1081,9 @@
       "0xF294"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows First Fort Exterior: POW Block",
@@ -913,7 +1093,9 @@
       "0xF468"
     ],
     "vanilla_item": 77772139,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Second Fort Exterior: Coin 1",
@@ -923,7 +1105,9 @@
       "0x1012C"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Second Fort Exterior: Coin 2",
@@ -933,7 +1117,9 @@
       "0x101DC"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Second Fort Exterior: POW Block",
@@ -943,7 +1129,9 @@
       "0x1022C"
     ],
     "vanilla_item": 77772139,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Third Fort Exterior: Coin",
@@ -953,7 +1141,9 @@
       "0x10F14"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Third Fort Exterior: Fire Flower",
@@ -963,7 +1153,9 @@
       "0x11098"
     ],
     "vanilla_item": 77772059,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Third Fort Exterior: Inn Coupon",
@@ -973,7 +1165,9 @@
       "0x110B4"
     ],
     "vanilla_item": 77772099,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Sewers West Key Room: Moon Stone",
@@ -983,7 +1177,9 @@
       "0x134FC"
     ],
     "vanilla_item": 77772117,
-    "tags": []
+    "tags": [
+      "sewers_westside_ground"
+    ]
   },
   {
     "name": "Petal Meadows Sewers: Multibounce",
@@ -993,7 +1189,9 @@
       "0x13FD4"
     ],
     "vanilla_item": 77772119,
-    "tags": []
+    "tags": [
+      "sewers_westside_ground"
+    ]
   },
   {
     "name": "Petal Meadows Sewers East Key Room: Sun Stone",
@@ -1003,7 +1201,9 @@
       "0x14660"
     ],
     "vanilla_item": 77772186,
-    "tags": []
+    "tags": [
+      "sewers_westside_ground"
+    ]
   },
   {
     "name": "Petalburg Westside: Courage Shell",
@@ -1013,7 +1213,9 @@
       "0x3C24"
     ],
     "vanilla_item": 77772038,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petalburg Westside: Fire Flower",
@@ -1023,7 +1225,9 @@
       "0x3C14"
     ],
     "vanilla_item": 77772059,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petalburg Westside: Honey Syrup",
@@ -1033,7 +1237,9 @@
       "0x3C34"
     ],
     "vanilla_item": 77772088,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petalburg Westside: Mr. Softener",
@@ -1043,7 +1249,9 @@
       "0x3C2C"
     ],
     "vanilla_item": 77772118,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petalburg Westside: Mushroom",
@@ -1053,7 +1261,9 @@
       "0x3C3C"
     ],
     "vanilla_item": 77772120,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petalburg Westside: POW Block",
@@ -1063,7 +1273,9 @@
       "0x3C1C"
     ],
     "vanilla_item": 77772139,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petalburg Westside: Star Piece",
@@ -1073,7 +1285,9 @@
       "0x58C0"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petalburg Eastside: Mega Rush P",
@@ -1083,7 +1297,9 @@
       "0x9758"
     ],
     "vanilla_item": 77772114,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petalburg Eastside: Star Piece",
@@ -1093,7 +1309,9 @@
       "0x9744"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petalburg Eastside: Turtley Leaf",
@@ -1106,7 +1324,9 @@
       "0x978C"
     ],
     "vanilla_item": 77772201,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Entrance: Mushroom 1",
@@ -1116,7 +1336,9 @@
       "0xC980"
     ],
     "vanilla_item": 77772120,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Entrance: Mushroom 2",
@@ -1126,7 +1348,9 @@
       "0xBE8C"
     ],
     "vanilla_item": 77772120,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Entrance: Star Piece",
@@ -1136,7 +1360,9 @@
       "0xBE3C"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Bridge Room: Coin 1",
@@ -1146,7 +1372,9 @@
       "0xCCE8"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Bridge Room: Coin 2",
@@ -1156,7 +1384,9 @@
       "0xCC48"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Bridge Room: Star Piece",
@@ -1166,7 +1396,9 @@
       "0xEE84"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Field: 10 Coins",
@@ -1176,7 +1408,9 @@
       "0x14A94"
     ],
     "vanilla_item": 77772000,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Field: Close Call",
@@ -1186,7 +1420,9 @@
       "0x149D0"
     ],
     "vanilla_item": 77772031,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Field: Happy Heart",
@@ -1196,7 +1432,9 @@
       "0x14A5C"
     ],
     "vanilla_item": 77772084,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Petal Meadows Field: Horsetail",
@@ -1207,7 +1445,9 @@
       "0x1492C"
     ],
     "vanilla_item": 77772089,
-    "tags": []
+    "tags": [
+      "petal_left"
+    ]
   },
   {
     "name": "Hooktail's Castle Drawbridge: HP Plus",
@@ -1217,7 +1457,9 @@
       "0x8850"
     ],
     "vanilla_item": 77772094,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Entrance: Power Bounce",
@@ -1227,7 +1469,9 @@
       "0x8F40"
     ],
     "vanilla_item": 77772140,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Red Bones Room: Castle Key",
@@ -1237,7 +1481,9 @@
       "0xA158"
     ],
     "vanilla_item": 77772025,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Red Bones Room: Star Piece",
@@ -1247,7 +1493,9 @@
       "0xA468"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Stair Switch Room: Castle Key",
@@ -1257,7 +1505,9 @@
       "0xCC8C"
     ],
     "vanilla_item": 77772025,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Stair Switch Room: Shine Sprite",
@@ -1267,7 +1517,9 @@
       "0xCDFC"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Stair Switch Room: Star Piece 1",
@@ -1277,7 +1529,9 @@
       "0xCCB8"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Stair Switch Room: Star Piece 2",
@@ -1287,7 +1541,9 @@
       "0xCCE0"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Stair Central Staircase: Castle Key",
@@ -1297,7 +1553,9 @@
       "0xE718"
     ],
     "vanilla_item": 77772025,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Stair Central Staircase: Last Stand P",
@@ -1307,7 +1565,9 @@
       "0xE76C"
     ],
     "vanilla_item": 77772107,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Stair Central Staircase: Shine Sprite",
@@ -1317,7 +1577,9 @@
       "0xE860"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Stair Central Staircase: Star Piece",
@@ -1327,7 +1589,9 @@
       "0xE744"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Prison Entrance: Paper Curse",
@@ -1337,7 +1601,9 @@
       "0xF504"
     ],
     "vanilla_item": 77772132,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Prison Entrance: Attack FX R",
@@ -1347,7 +1613,9 @@
       "0xFD5C"
     ],
     "vanilla_item": 77772005,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Spikes Room: Black Key (Paper Curse)",
@@ -1357,7 +1625,9 @@
       "0x1026C"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Life Shroom Room: Life Shroom",
@@ -1367,7 +1637,9 @@
       "0x11C00"
     ],
     "vanilla_item": 77772108,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Plane Rafters Room: Star Piece",
@@ -1377,7 +1649,9 @@
       "0x129AC"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Hooktail's Room: Diamond Star",
@@ -1385,7 +1659,9 @@
     "rel": "gon",
     "offsets": [],
     "vanilla_item": 77772044,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Storeroom: Castle Key",
@@ -1395,7 +1671,9 @@
       "0x157D8"
     ],
     "vanilla_item": 77772025,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Storeroom: Honey Syrup",
@@ -1405,7 +1683,9 @@
       "0x158F4"
     ],
     "vanilla_item": 77772088,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Storeroom: Mushroom",
@@ -1415,7 +1695,9 @@
       "0x1586C"
     ],
     "vanilla_item": 77772120,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Storeroom: Shine Sprite",
@@ -1425,7 +1707,9 @@
       "0x15A98"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Hooktail's Castle Up Arrow Room: Up Arrow",
@@ -1435,7 +1719,9 @@
       "0x261D8"
     ],
     "vanilla_item": 77772206,
-    "tags": []
+    "tags": [
+      "hooktails_castle"
+    ]
   },
   {
     "name": "Boggly Woods Shadow Sirens Room: Necklace",
@@ -1447,7 +1733,9 @@
       "0x98A0"
     ],
     "vanilla_item": 77772123,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Shadow Sirens Room: Honey Syrup",
@@ -1457,7 +1745,9 @@
       "0x98CC"
     ],
     "vanilla_item": 77772088,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Shadow Sirens Room: Sleepy Sheep",
@@ -1467,7 +1757,9 @@
       "0x9318"
     ],
     "vanilla_item": 77772169,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Tree View: Coin",
@@ -1477,7 +1769,9 @@
       "0xA518"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Tree View: Inn Coupon",
@@ -1487,7 +1781,9 @@
       "0xA64C"
     ],
     "vanilla_item": 77772099,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Plane Panel Room: P-Down D-Up P",
@@ -1497,7 +1793,9 @@
       "0xAD64"
     ],
     "vanilla_item": 77772127,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Plane Panel Room: Quake Hammer",
@@ -1507,7 +1805,9 @@
       "0xAD8C"
     ],
     "vanilla_item": 77772151,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Plane Panel Room: Shine Sprite",
@@ -1517,7 +1817,9 @@
       "0xAD40"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Plane Panel Room: Star Piece",
@@ -1527,7 +1829,9 @@
       "0xADA8"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Outside Flurrie's House: Star Piece 1",
@@ -1537,7 +1841,9 @@
       "0xB5E0"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Outside Flurrie's House: Star Piece 2",
@@ -1547,7 +1853,9 @@
       "0xB768"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Outside Flurrie's House: Volt Shroom",
@@ -1557,7 +1865,9 @@
       "0xB740"
     ],
     "vanilla_item": 77772209,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Flurrie's House: Flurrie",
@@ -1567,7 +1877,9 @@
       "0xDFC4"
     ],
     "vanilla_item": 77772064,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Flurrie's House Backroom: Star Piece",
@@ -1577,7 +1889,9 @@
       "0x10128"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Flurrie's House Backroom: Super Appeal P",
@@ -1587,7 +1901,9 @@
       "0xFE78"
     ],
     "vanilla_item": 77772188,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Boggly Woods Outside Great Tree: FP Plus",
@@ -1597,7 +1913,9 @@
       "0x2CBA0"
     ],
     "vanilla_item": 77772066,
-    "tags": []
+    "tags": [
+      "boggly_woods"
+    ]
   },
   {
     "name": "Great Tree Entrance: Coin",
@@ -1607,7 +1925,9 @@
       "0x36668"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Entrance: Emerald Star",
@@ -1615,7 +1935,9 @@
     "rel": "mri",
     "offsets": [],
     "vanilla_item": 77772055,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Entrance: Mystic Egg",
@@ -1625,7 +1947,9 @@
       "0x2E474"
     ],
     "vanilla_item": 77772122,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Entrance: Puni Orb",
@@ -1635,7 +1959,9 @@
       "0x326BC"
     ],
     "vanilla_item": 77772150,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree 10-Puni Pedestal: Star Piece",
@@ -1645,7 +1971,9 @@
       "0x38998"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Red/Blue Cages: Star Piece",
@@ -1655,7 +1983,9 @@
       "0x3C840"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Red Key Room: Coin",
@@ -1665,7 +1995,9 @@
       "0x3DFF0"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Red Key Room: Mushroom",
@@ -1675,7 +2007,9 @@
       "0x3CC58"
     ],
     "vanilla_item": 77772120,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Red Key Room: Red Key",
@@ -1686,7 +2020,9 @@
       "0x3DA14"
     ],
     "vanilla_item": 77772154,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Red Key Room: Ultra Shroom",
@@ -1696,7 +2032,9 @@
       "0x3E098"
     ],
     "vanilla_item": 77772204,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Bubble Room: Shine Sprite",
@@ -1706,7 +2044,9 @@
       "0x3F890"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Bubble Room: Thunder Rage",
@@ -1716,7 +2056,9 @@
       "0x3E954"
     ],
     "vanilla_item": 77772196,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Zigzag Room: Coin",
@@ -1726,7 +2068,9 @@
       "0x40E84"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Zigzag Room: Damage Dodge P",
@@ -1736,7 +2080,9 @@
       "0x40E5C"
     ],
     "vanilla_item": 77772041,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Zigzag Room: Star Piece",
@@ -1746,7 +2092,9 @@
       "0x40360"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Shop: Honey Syrup",
@@ -1756,7 +2104,9 @@
       "0x40FC8"
     ],
     "vanilla_item": 77772088,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Shop: HP Drain",
@@ -1766,7 +2116,9 @@
       "0x40FA8"
     ],
     "vanilla_item": 77772092,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Shop: Ice Storm",
@@ -1776,7 +2128,9 @@
       "0x40FB0"
     ],
     "vanilla_item": 77772098,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Shop: Mini Mr.Mini",
@@ -1786,7 +2140,9 @@
       "0x40FC0"
     ],
     "vanilla_item": 77772115,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Shop: Mushroom",
@@ -1796,7 +2152,9 @@
       "0x40FD0"
     ],
     "vanilla_item": 77772120,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Shop: Mystery",
@@ -1806,7 +2164,9 @@
       "0x40FB8"
     ],
     "vanilla_item": 77772121,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Blue Key Room: Blue Key",
@@ -1816,7 +2176,9 @@
       "0x44258"
     ],
     "vanilla_item": 77772014,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Blue Key Room: Charge",
@@ -1826,7 +2188,9 @@
       "0x44788"
     ],
     "vanilla_item": 77772027,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Blue Key Room: Shine Sprite",
@@ -1836,7 +2200,9 @@
       "0x447BC"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Super Boots Room: Super Boots",
@@ -1846,7 +2212,9 @@
       "0x44928"
     ],
     "vanilla_item": 77772202,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree 100-Puni Pedestal: Coin",
@@ -1856,7 +2224,9 @@
       "0x4674C"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree 100-Puni Pedestal: Star Piece",
@@ -1866,7 +2236,9 @@
       "0x46A50"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Elevator Pedestal: Mushroom",
@@ -1876,7 +2248,9 @@
       "0x47AB4"
     ],
     "vanilla_item": 77772120,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Escape Ambush Room: Star Piece",
@@ -1886,7 +2260,9 @@
       "0x4A83C"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Pool Room: Dizzy Dial",
@@ -1896,7 +2272,9 @@
       "0x4B9BC"
     ],
     "vanilla_item": 77772045,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Pool Room: Shine Sprite",
@@ -1906,7 +2284,9 @@
       "0x4BA18"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Pool Room: Shrink Stomp",
@@ -1916,7 +2296,9 @@
       "0x4B56C"
     ],
     "vanilla_item": 77772166,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Fake Pedestal: Star Piece",
@@ -1926,7 +2308,9 @@
       "0x5DF0C"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Lower Duplex: Coin",
@@ -1936,7 +2320,9 @@
       "0x5E614"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Middle Duplex: Shine Sprite",
@@ -1946,7 +2332,9 @@
       "0x5EC00"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Great Tree Upper Duplex: Power Punch",
@@ -1956,7 +2344,9 @@
       "0x5E1E8"
     ],
     "vanilla_item": 77772144,
-    "tags": []
+    "tags": [
+      "great_tree"
+    ]
   },
   {
     "name": "Glitzville Main Square: Coin",
@@ -1966,7 +2356,9 @@
       "0x219F8"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Earth Quake",
@@ -1976,7 +2368,9 @@
       "0x1AED4"
     ],
     "vanilla_item": 77772051,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Hot Dog",
@@ -1986,7 +2380,9 @@
       "0x1B0D8"
     ],
     "vanilla_item": 77772090,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Inn Coupon",
@@ -1996,7 +2392,9 @@
       "0x21B00"
     ],
     "vanilla_item": 77772099,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Point Swap",
@@ -2006,7 +2404,9 @@
       "0x1AEF4"
     ],
     "vanilla_item": 77772138,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Power Plus P",
@@ -2016,7 +2416,9 @@
       "0x21928"
     ],
     "vanilla_item": 77772143,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Power Punch",
@@ -2026,7 +2428,9 @@
       "0x1AEE4"
     ],
     "vanilla_item": 77772144,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Repel Cape",
@@ -2036,7 +2440,9 @@
       "0x1AEEC"
     ],
     "vanilla_item": 77772156,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Shine Sprite",
@@ -2046,7 +2452,9 @@
       "0x219D4"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Star Piece 1",
@@ -2056,7 +2464,9 @@
       "0x21A60"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Star Piece 2",
@@ -2066,7 +2476,9 @@
       "0x21A88"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Star Piece 3",
@@ -2076,7 +2488,9 @@
       "0x21AB0"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Star Piece 4",
@@ -2086,7 +2500,9 @@
       "0x21A4C"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Star Piece 5",
@@ -2096,7 +2512,9 @@
       "0x21AD8"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Storage Key 1",
@@ -2106,7 +2524,9 @@
       "0x21CE0"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Super Hammer",
@@ -2116,7 +2536,9 @@
       "0x1B5E0"
     ],
     "vanilla_item": 77772190,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Super Shroom",
@@ -2126,7 +2548,9 @@
       "0x1AEFC"
     ],
     "vanilla_item": 77772191,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Main Square: Thunder Bolt",
@@ -2136,7 +2560,9 @@
       "0x1AEDC"
     ],
     "vanilla_item": 77772195,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Lobby: Star Piece",
@@ -2146,7 +2572,9 @@
       "0x26F38"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Lobby: Storage Key 2",
@@ -2157,7 +2585,9 @@
       "0x26A88"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Arena: Gold Star",
@@ -2165,7 +2595,9 @@
     "rel": "tou2",
     "offsets": [],
     "vanilla_item": 77772075,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Hall: Last Stand",
@@ -2175,7 +2607,9 @@
       "0x2C8B8"
     ],
     "vanilla_item": 77772106,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Promoter's Office: Star Piece 1",
@@ -2185,7 +2619,9 @@
       "0x3104C"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Promoter's Office: Star Piece 2",
@@ -2195,7 +2631,9 @@
       "0x2DF0C"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Storage Room: Charge P",
@@ -2205,7 +2643,9 @@
       "0x33010"
     ],
     "vanilla_item": 77772028,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Storage Room: HP Plus P",
@@ -2215,7 +2655,9 @@
       "0x32FE8"
     ],
     "vanilla_item": 77772095,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Storage Room: Shine Sprite",
@@ -2225,7 +2667,9 @@
       "0x32F94"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Storage Room: Star Piece",
@@ -2235,7 +2679,9 @@
       "0x32FBC"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Major-League Room: Champ's Belt",
@@ -2246,7 +2692,9 @@
       "0x378D8"
     ],
     "vanilla_item": 77772026,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Major-League Room: Ice Storm",
@@ -2256,7 +2704,9 @@
       "0x3857C"
     ],
     "vanilla_item": 77772098,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Minor-League Room: Dubious Paper",
@@ -2266,7 +2716,9 @@
       "0x3DCB0"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Minor-League Room: Yoshi",
@@ -2276,7 +2728,9 @@
       "0x3BE30"
     ],
     "vanilla_item": 77772213,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Glitzville Storage Back Room: Star Piece",
@@ -2286,7 +2740,9 @@
       "0x3F3DC"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "glitzville"
+    ]
   },
   {
     "name": "Twilight Town Leftside: Coin",
@@ -2296,7 +2752,9 @@
       "0xBC7C"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Leftside: Peachy Peach",
@@ -2306,7 +2764,9 @@
       "0xAEF8"
     ],
     "vanilla_item": 77772133,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Leftside: Star Piece 1",
@@ -2316,7 +2776,9 @@
       "0xBC18"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Leftside: Star Piece 2",
@@ -2326,7 +2788,9 @@
       "0xF8A8"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Leftside: Superbombomb",
@@ -2336,7 +2800,9 @@
       "0xBEC0"
     ],
     "vanilla_item": 77772192,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Leftside: Vivian",
@@ -2346,7 +2812,9 @@
       "0xA16C"
     ],
     "vanilla_item": 77772208,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Rightside: Boo's Sheet",
@@ -2356,7 +2824,9 @@
       "0x16D88"
     ],
     "vanilla_item": 77772017,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Rightside: Defend Plus",
@@ -2366,7 +2836,9 @@
       "0x1690C"
     ],
     "vanilla_item": 77772042,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Rightside: Inn Coupon",
@@ -2376,7 +2848,9 @@
       "0x16DD8"
     ],
     "vanilla_item": 77772099,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Rightside: Jammin' Jelly",
@@ -2386,7 +2860,9 @@
       "0x16DB0"
     ],
     "vanilla_item": 77772101,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Rightside: Life Shroom 1",
@@ -2396,7 +2872,9 @@
       "0x15C10"
     ],
     "vanilla_item": 77772108,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Rightside: Life Shroom 2",
@@ -2406,7 +2884,9 @@
       "0x16D60"
     ],
     "vanilla_item": 77772108,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Rightside: Maple Syrup",
@@ -2416,7 +2896,9 @@
       "0x15C00"
     ],
     "vanilla_item": 77772112,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Rightside: Spite Pouch",
@@ -2426,7 +2908,9 @@
       "0x15BF0"
     ],
     "vanilla_item": 77772175,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Rightside: Star Piece",
@@ -2436,7 +2920,9 @@
       "0x16D38"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Rightside: Stopwatch",
@@ -2446,7 +2932,9 @@
       "0x15BF8"
     ],
     "vanilla_item": 77772182,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Rightside: Super Shroom",
@@ -2456,7 +2944,9 @@
       "0x15C08"
     ],
     "vanilla_item": 77772191,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Rightside: Thunder Rage",
@@ -2466,7 +2956,9 @@
       "0x15BE8"
     ],
     "vanilla_item": 77772196,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Town Rightside: Tube Curse",
@@ -2476,7 +2968,9 @@
       "0x162E8"
     ],
     "vanilla_item": 77772200,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Trail Entrance: 10 Coins",
@@ -2486,7 +2980,9 @@
       "0x4A38"
     ],
     "vanilla_item": 77772000,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Trail Entrance: Black Key (Tube Curse)",
@@ -2496,7 +2992,9 @@
       "0x4A60"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Trail Hyper Goomba Room: 10 Coins",
@@ -2506,7 +3004,9 @@
       "0x4EB4"
     ],
     "vanilla_item": 77772000,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Trail Hyper Goomba Room: Coin",
@@ -2516,7 +3016,9 @@
       "0x4DEC"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Trail Hyper Goomba Room: Super Shroom",
@@ -2526,7 +3028,9 @@
       "0x4E8C"
     ],
     "vanilla_item": 77772191,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Trail Fallen Tree: Shop Key",
@@ -2536,7 +3040,9 @@
       "0x53C8"
     ],
     "vanilla_item": 77772165,
-    "tags": []
+    "tags": [
+      "twilight_town"
+    ]
   },
   {
     "name": "Twilight Trail Fallen Tree: Star Piece 1",
@@ -2546,7 +3052,9 @@
       "0x5358"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "twilight_trail"
+    ]
   },
   {
     "name": "Twilight Trail Fallen Tree: Star Piece 2",
@@ -2556,7 +3064,9 @@
       "0x5380"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "twilight_trail"
+    ]
   },
   {
     "name": "Twilight Trail Dark Woods First Room: 10 Coins",
@@ -2566,7 +3076,9 @@
       "0x559C"
     ],
     "vanilla_item": 77772000,
-    "tags": []
+    "tags": [
+      "twilight_trail"
+    ]
   },
   {
     "name": "Twilight Trail Dark Woods First Room: Earthquake",
@@ -2576,7 +3088,9 @@
       "0x55C4"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "twilight_trail"
+    ]
   },
   {
     "name": "Twilight Trail Dark Woods Second Room: Hammer Throw",
@@ -2586,7 +3100,9 @@
       "0x5D2C"
     ],
     "vanilla_item": 77772081,
-    "tags": []
+    "tags": [
+      "twilight_trail"
+    ]
   },
   {
     "name": "Twilight Trail Dark Woods Third Room: 10 Coins",
@@ -2596,7 +3112,9 @@
       "0x6C74"
     ],
     "vanilla_item": 77772000,
-    "tags": []
+    "tags": [
+      "twilight_trail"
+    ]
   },
   {
     "name": "Twilight Trail Dark Woods Third Room: Shine Sprite",
@@ -2606,7 +3124,9 @@
       "0x6C9C"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "twilight_trail"
+    ]
   },
   {
     "name": "Twilight Trail Steeple Exterior: Coin",
@@ -2616,7 +3136,9 @@
       "0x7D80"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "twilight_trail"
+    ]
   },
   {
     "name": "Twilight Trail Steeple Exterior: Star Piece",
@@ -2626,7 +3148,9 @@
       "0x7C7C"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "twilight_trail"
+    ]
   },
   {
     "name": "Creepy Steeple Main Hall: Lucky Start",
@@ -2636,7 +3160,9 @@
       "0xD7A8"
     ],
     "vanilla_item": 77772111,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Main Hall: Steeple Key",
@@ -2646,7 +3172,9 @@
       "0xD938"
     ],
     "vanilla_item": 77772180,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple North Hall: Golden Leaf",
@@ -2656,7 +3184,9 @@
       "0xE104"
     ],
     "vanilla_item": 77772077,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Upper Room: Ruby Star",
@@ -2664,7 +3194,9 @@
     "rel": "jin",
     "offsets": [],
     "vanilla_item": 77772158,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Back Stairs: Star Piece",
@@ -2674,7 +3206,9 @@
       "0xEC80"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Cookbook Room: Cookbook",
@@ -2684,7 +3218,9 @@
       "0x11C88"
     ],
     "vanilla_item": 77772037,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Cookbook Room: Ice Smash",
@@ -2694,7 +3230,9 @@
       "0x11D10"
     ],
     "vanilla_item": 77772097,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Cookbook Room: Shine Sprite",
@@ -2704,7 +3242,9 @@
       "0x11DD8"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Cookbook Room: Star Piece",
@@ -2714,7 +3254,9 @@
       "0x11E40"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Under Statue: Flower Saver",
@@ -2724,7 +3266,9 @@
       "0x120A8"
     ],
     "vanilla_item": 77772062,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Boo Chest Room: Star Piece",
@@ -2734,7 +3278,9 @@
       "0x131B4"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Boo Chest Room: Ultra Mushroom",
@@ -2746,7 +3292,9 @@
       "0x12FB4"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Parrot Room: Mr. Softener",
@@ -2756,7 +3304,9 @@
       "0x13E38"
     ],
     "vanilla_item": 77772118,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Parrot Room: Power Plus",
@@ -2766,7 +3316,9 @@
       "0x13DB0"
     ],
     "vanilla_item": 77772142,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Parrot Room: Star Piece",
@@ -2776,7 +3328,9 @@
       "0x14050"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Parrot Room: Steeple Key 2",
@@ -2786,7 +3340,9 @@
       "0x13798"
     ],
     "vanilla_item": 77772180,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Parrot Room: The Letter \"p\"",
@@ -2796,7 +3352,9 @@
       "0x13674"
     ],
     "vanilla_item": 77772194,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Well Entrance: Shine Sprite",
@@ -2806,7 +3364,9 @@
       "0x14244"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Buzzy Room: Tornado Jump",
@@ -2816,7 +3376,9 @@
       "0x14DB8"
     ],
     "vanilla_item": 77772198,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Creepy Steeple Underground Tube Passage: Shine Sprite",
@@ -2826,7 +3388,9 @@
       "0x15060"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "creepy_steeple"
+    ]
   },
   {
     "name": "Keelhaul Key Landing Site: Star Piece",
@@ -2836,7 +3400,9 @@
       "0x1E758"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Landing Site: Whacka Bump 1",
@@ -2846,7 +3412,9 @@
       "0x160B0"
     ],
     "vanilla_item": 77772212,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Landing Site: Whacka Bump 2",
@@ -2856,7 +3424,9 @@
       "0x160C4"
     ],
     "vanilla_item": 77772212,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Landing Site: Whacka Bump 3",
@@ -2866,7 +3436,9 @@
       "0x160D8"
     ],
     "vanilla_item": 77772212,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Landing Site: Whacka Bump 4",
@@ -2876,7 +3448,9 @@
       "0x160EC"
     ],
     "vanilla_item": 77772212,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Landing Site: Whacka Bump 5",
@@ -2886,7 +3460,9 @@
       "0x16104"
     ],
     "vanilla_item": 77772212,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Landing Site: Whacka Bump 6",
@@ -2896,7 +3472,9 @@
       "0x16118"
     ],
     "vanilla_item": 77772212,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Landing Site: Whacka Bump 7",
@@ -2906,7 +3484,9 @@
       "0x1612C"
     ],
     "vanilla_item": 77772212,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Landing Site: Whacka Bump 8",
@@ -2916,7 +3496,9 @@
       "0x16144"
     ],
     "vanilla_item": 77772212,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Town: Chuckola Cola",
@@ -2926,7 +3508,9 @@
       "0x1FA7C"
     ],
     "vanilla_item": 77772030,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Town: Fire Flower",
@@ -2936,7 +3520,9 @@
       "0x21C20"
     ],
     "vanilla_item": 77772059,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Town: Fright Mask",
@@ -2946,7 +3532,9 @@
       "0x21C30"
     ],
     "vanilla_item": 77772068,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Town: Honey Syrup",
@@ -2956,7 +3544,9 @@
       "0x21C38"
     ],
     "vanilla_item": 77772088,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Town: Ice Storm",
@@ -2966,7 +3556,9 @@
       "0x21C18"
     ],
     "vanilla_item": 77772098,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Town: Sleepy Sheep",
@@ -2976,7 +3568,9 @@
       "0x21C28"
     ],
     "vanilla_item": 77772169,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Town: Star Piece 1",
@@ -2986,7 +3580,9 @@
       "0x24210"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Town: Star Piece 2",
@@ -2996,7 +3592,9 @@
       "0x24238"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Town: Super Shroom",
@@ -3006,7 +3604,9 @@
       "0x21C40"
     ],
     "vanilla_item": 77772191,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Entrance: Coin",
@@ -3016,7 +3616,9 @@
       "0x256D4"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Entrance: Courage Shell",
@@ -3026,7 +3628,9 @@
       "0x25A54"
     ],
     "vanilla_item": 77772038,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Entrance: Head Rattle",
@@ -3036,7 +3640,9 @@
       "0x25A2C"
     ],
     "vanilla_item": 77772086,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Entrance: Keel Mango",
@@ -3046,7 +3652,9 @@
       "0x25684"
     ],
     "vanilla_item": 77772103,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Entrance: Star Piece",
@@ -3056,7 +3664,9 @@
       "0x25724"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Winding Climb: 10 Coins",
@@ -3066,7 +3676,9 @@
       "0x262B4"
     ],
     "vanilla_item": 77772000,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Winding Climb: Coin 1",
@@ -3076,7 +3688,9 @@
       "0x2628C"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Winding Climb: Coin 2",
@@ -3086,7 +3700,9 @@
       "0x26108"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Winding Climb: Jammin' Jelly",
@@ -3096,7 +3712,9 @@
       "0x26350"
     ],
     "vanilla_item": 77772101,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Winding Climb: Mini Mr.Mini",
@@ -3106,7 +3724,9 @@
       "0x260B8"
     ],
     "vanilla_item": 77772115,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Winding Climb: Shine Sprite",
@@ -3116,7 +3736,9 @@
       "0x26304"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Winding Climb: Star Piece",
@@ -3126,7 +3748,9 @@
       "0x2636C"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Winding Climb: Thunder Rage",
@@ -3136,7 +3760,9 @@
       "0x26328"
     ],
     "vanilla_item": 77772196,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Bridge: Coconut 1",
@@ -3146,7 +3772,9 @@
       "0x2756C"
     ],
     "vanilla_item": 77772033,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Bridge: Coconut 2",
@@ -3156,7 +3784,9 @@
       "0x27768"
     ],
     "vanilla_item": 77772033,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Bridge: Ice Power",
@@ -3166,7 +3796,9 @@
       "0x278E0"
     ],
     "vanilla_item": 77772096,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Bridge: Inn Coupon",
@@ -3176,7 +3808,9 @@
       "0x27908"
     ],
     "vanilla_item": 77772099,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Jungle Bridge: Shine Sprite",
@@ -3186,7 +3820,9 @@
       "0x2793C"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Grotto Entrance: Bobbery",
@@ -3196,7 +3832,9 @@
       "0x27DFC"
     ],
     "vanilla_item": 77772016,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Grotto Entrance: Skull Gem",
@@ -3206,7 +3844,9 @@
       "0x284CC"
     ],
     "vanilla_item": 77772168,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Grotto Entrance: Spite Pouch",
@@ -3216,7 +3856,9 @@
       "0x2AEA0"
     ],
     "vanilla_item": 77772175,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Grotto Entrance: Star Piece",
@@ -3226,7 +3868,9 @@
       "0x2B1D4"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Keelhaul Key Grotto Entrance: Wedding Ring",
@@ -3236,7 +3880,9 @@
       "0x2B144"
     ],
     "vanilla_item": 77772211,
-    "tags": []
+    "tags": [
+      "keelhaul_key"
+    ]
   },
   {
     "name": "Pirate's Grotto Entrance: Ruin Powder",
@@ -3246,7 +3892,9 @@
       "0x717C"
     ],
     "vanilla_item": 77772159,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Gate Handle Room: Gate Handle",
@@ -3256,7 +3904,9 @@
       "0x7DC8"
     ],
     "vanilla_item": 77772071,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Gate Handle Room: Shine Sprite",
@@ -3266,7 +3916,9 @@
       "0x7E24"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Gate Handle Room: Star Piece",
@@ -3276,7 +3928,9 @@
       "0x7DF0"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Sluice Gate: Star Piece",
@@ -3286,7 +3940,9 @@
       "0x8C84"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Storeroom: Grotto Key",
@@ -3296,7 +3952,9 @@
       "0xAA2C"
     ],
     "vanilla_item": 77772080,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Storeroom: Shine Sprite",
@@ -3306,7 +3964,9 @@
       "0xAA9C"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Storeroom: Star Piece",
@@ -3316,7 +3976,9 @@
       "0xAA54"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Staircase: Coin",
@@ -3326,7 +3988,9 @@
       "0xB370"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Staircase: Defend Plus P",
@@ -3336,7 +4000,9 @@
       "0xB04C"
     ],
     "vanilla_item": 77772043,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Staircase: Shine Sprite",
@@ -3346,7 +4012,9 @@
       "0xB34C"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Parabuzzy Room: Star Piece",
@@ -3356,7 +4024,9 @@
       "0xB598"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Chest Boat: Black Key (Boat Curse)",
@@ -3367,7 +4037,9 @@
       "0xB64C"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Chest Boat: Boat Curse",
@@ -3377,7 +4049,9 @@
       "0xBE8C"
     ],
     "vanilla_item": 77772015,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Chest Boat: P-Down D-Up",
@@ -3387,7 +4061,9 @@
       "0xC408"
     ],
     "vanilla_item": 77772126,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Barrel Room: 10 Coins",
@@ -3397,7 +4073,9 @@
       "0xD858"
     ],
     "vanilla_item": 77772000,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Barrel Room: Shine Sprite",
@@ -3407,7 +4085,9 @@
       "0xD834"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Spike Wall Room: Shine Sprite",
@@ -3417,7 +4097,9 @@
       "0xEBCC"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Pirate's Grotto Cortez' Hoard: Sapphire Star",
@@ -3425,7 +4107,9 @@
     "rel": "muj",
     "offsets": [],
     "vanilla_item": 77772160,
-    "tags": []
+    "tags": [
+      "pirates_grotto"
+    ]
   },
   {
     "name": "Excess Express Locomotive: Autograph",
@@ -3435,7 +4119,9 @@
       "0x18E48"
     ],
     "vanilla_item": 77772007,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Locomotive: Star Piece",
@@ -3446,7 +4132,9 @@
       "0x19358"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Front Passenger Car: Vital Paper",
@@ -3456,7 +4144,9 @@
       "0x1A848"
     ],
     "vanilla_item": 77772207,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Front Passenger Car: 30 Coins",
@@ -3467,7 +4157,9 @@
       "0x6F84"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Middle Passenger Car: Blanket",
@@ -3477,7 +4169,9 @@
       "0x1CA20"
     ],
     "vanilla_item": 77772012,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Middle Passenger Car: Briefcase",
@@ -3487,7 +4181,9 @@
       "0x1DE04"
     ],
     "vanilla_item": 77772018,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Middle Passenger Car: Dried Shroom",
@@ -3497,7 +4193,9 @@
       "0x1EAA4"
     ],
     "vanilla_item": 77772049,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Middle Passenger Car: Galley Pot",
@@ -3507,7 +4205,9 @@
       "0x1BD4C"
     ],
     "vanilla_item": 77772069,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Middle Passenger Car: Gold Ring",
@@ -3517,7 +4217,9 @@
       "0x1DE4C"
     ],
     "vanilla_item": 77772074,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Middle Passenger Car: Shell Earrings",
@@ -3527,7 +4229,9 @@
       "0x1DE94"
     ],
     "vanilla_item": 77772161,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Middle Passenger Car: Shine Sprite",
@@ -3537,7 +4241,9 @@
       "0x1ED80"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Middle Passenger Car: Star Piece",
@@ -3547,7 +4253,9 @@
       "0x1ED60"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Dining Car: Boo's Sheet",
@@ -3557,7 +4265,9 @@
       "0x23780"
     ],
     "vanilla_item": 77772017,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Dining Car: Maple Syrup",
@@ -3567,7 +4277,9 @@
       "0x23790"
     ],
     "vanilla_item": 77772112,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Dining Car: Mystery",
@@ -3577,7 +4289,9 @@
       "0x23778"
     ],
     "vanilla_item": 77772121,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Dining Car: Star Piece 1",
@@ -3587,7 +4301,9 @@
       "0x212C0"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Dining Car: Star Piece 2",
@@ -3597,7 +4313,9 @@
       "0x21AA0"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Dining Car: Super Shroom",
@@ -3607,7 +4325,9 @@
       "0x23798"
     ],
     "vanilla_item": 77772191,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Dining Car: Tasty Tonic",
@@ -3617,7 +4337,9 @@
       "0x23788"
     ],
     "vanilla_item": 77772193,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Dining Car: Thunder Rage",
@@ -3627,7 +4349,9 @@
       "0x23770"
     ],
     "vanilla_item": 77772196,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Back Passenger Car: Mushroom",
@@ -3637,7 +4361,9 @@
       "0x26B38"
     ],
     "vanilla_item": 77772120,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Back Passenger Car: Shine Sprite",
@@ -3647,7 +4373,9 @@
       "0x27AE4"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Back Passenger Car: Star Piece",
@@ -3657,7 +4385,9 @@
       "0x283C0"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Excess Express Storage Car: Ragged Diary",
@@ -3667,7 +4397,9 @@
       "0x2ADAC"
     ],
     "vanilla_item": 77772153,
-    "tags": []
+    "tags": [
+      "excess_express"
+    ]
   },
   {
     "name": "Riverside Station Drawbridge: Station Key 1",
@@ -3677,7 +4409,9 @@
       "0x14CC"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "riverside"
+    ]
   },
   {
     "name": "Riverside Station Entrance: Close Call P",
@@ -3688,7 +4422,9 @@
       "0xC894"
     ],
     "vanilla_item": 77772032,
-    "tags": []
+    "tags": [
+      "riverside"
+    ]
   },
   {
     "name": "Riverside Station Clockwork Room: Star Piece",
@@ -3698,7 +4434,9 @@
       "0xD6C8"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "riverside"
+    ]
   },
   {
     "name": "Riverside Station Clockwork Room: Station Key 2",
@@ -3708,7 +4446,9 @@
       "0xD68C"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "riverside"
+    ]
   },
   {
     "name": "Riverside Station Back Exterior: HP Plus",
@@ -3718,7 +4458,9 @@
       "0xDCA4"
     ],
     "vanilla_item": 77772094,
-    "tags": []
+    "tags": [
+      "riverside"
+    ]
   },
   {
     "name": "Riverside Station Back Exterior: Shine Sprite",
@@ -3728,7 +4470,9 @@
       "0xDCD8"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "riverside"
+    ]
   },
   {
     "name": "Riverside Station Back Exterior: Thunder Rage",
@@ -3738,7 +4482,9 @@
       "0xDD20"
     ],
     "vanilla_item": 77772196,
-    "tags": []
+    "tags": [
+      "riverside"
+    ]
   },
   {
     "name": "Riverside Station Tube Mode Maze: Dried Shroom",
@@ -3748,7 +4494,9 @@
       "0xE628"
     ],
     "vanilla_item": 77772049,
-    "tags": []
+    "tags": [
+      "riverside"
+    ]
   },
   {
     "name": "Riverside Station Tube Mode Maze: P-Up D-Down",
@@ -3758,7 +4506,9 @@
       "0xE650"
     ],
     "vanilla_item": 77772128,
-    "tags": []
+    "tags": [
+      "riverside"
+    ]
   },
   {
     "name": "Riverside Station Ultra Boots Room: Elevator Key (Riverside)",
@@ -3769,7 +4519,9 @@
       "0xEA28"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "riverside"
+    ]
   },
   {
     "name": "Riverside Station Ultra Boots Room: Ultra Boots",
@@ -3779,7 +4531,9 @@
       "0xE990"
     ],
     "vanilla_item": 77772202,
-    "tags": []
+    "tags": [
+      "riverside"
+    ]
   },
   {
     "name": "Riverside Station Goomba Room: Shine Sprite",
@@ -3789,7 +4543,9 @@
       "0xF5D4"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "riverside"
+    ]
   },
   {
     "name": "Poshley Heights Station: Goldbob Guide",
@@ -3799,7 +4555,9 @@
       "0x6538"
     ],
     "vanilla_item": 77772076,
-    "tags": []
+    "tags": [
+      "poshley_heights"
+    ]
   },
   {
     "name": "Poshley Heights Station: HP Drain P",
@@ -3809,7 +4567,9 @@
       "0x7D88"
     ],
     "vanilla_item": 77772093,
-    "tags": []
+    "tags": [
+      "poshley_heights"
+    ]
   },
   {
     "name": "Poshley Heights Station: Star Piece 1",
@@ -3819,7 +4579,9 @@
       "0x81D0"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "poshley_heights"
+    ]
   },
   {
     "name": "Poshley Heights Station: Star Piece 2",
@@ -3829,7 +4591,9 @@
       "0x81F8"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "poshley_heights"
+    ]
   },
   {
     "name": "Poshley Heights Station: Star Piece 3",
@@ -3839,7 +4603,9 @@
       "0x8194"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "poshley_heights"
+    ]
   },
   {
     "name": "Poshley Heights Sanctum Exterior: Shine Sprite",
@@ -3849,7 +4615,9 @@
       "0xB854"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "poshley_heights"
+    ]
   },
   {
     "name": "Poshley Heights Sanctum Altar: Garnet Star",
@@ -3857,7 +4625,9 @@
     "rel": "pik",
     "offsets": [],
     "vanilla_item": 77772070,
-    "tags": []
+    "tags": [
+      "poshley_heights"
+    ]
   },
   {
     "name": "Poshley Heights Sanctum Altar: L Emblem",
@@ -3867,7 +4637,9 @@
       "0xEE6C"
     ],
     "vanilla_item": 77772105,
-    "tags": []
+    "tags": [
+      "poshley_heights"
+    ]
   },
   {
     "name": "Poshley Heights Sanctum Altar: Shine Sprite",
@@ -3877,7 +4649,9 @@
       "0xEEA0"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "poshley_heights"
+    ]
   },
   {
     "name": "Poshley Heights Downtown: Fresh Pasta",
@@ -3887,7 +4661,9 @@
       "0x10CB4"
     ],
     "vanilla_item": 77772067,
-    "tags": []
+    "tags": [
+      "poshley_heights"
+    ]
   },
   {
     "name": "Poshley Heights Downtown: Inn Coupon",
@@ -3897,7 +4673,9 @@
       "0x115D8"
     ],
     "vanilla_item": 77772099,
-    "tags": []
+    "tags": [
+      "poshley_heights"
+    ]
   },
   {
     "name": "Poshley Heights Downtown: Omelette Meal",
@@ -3907,7 +4685,9 @@
       "0x10E50"
     ],
     "vanilla_item": 77772125,
-    "tags": []
+    "tags": [
+      "poshley_heights"
+    ]
   },
   {
     "name": "Poshley Heights Downtown: Star Piece",
@@ -3917,7 +4697,9 @@
       "0x115B0"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "poshley_heights"
+    ]
   },
   {
     "name": "Fahr Outpost Entrance: Double Dip P",
@@ -3927,7 +4709,9 @@
       "0x8CB0"
     ],
     "vanilla_item": 77772047,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost Entrance: Star Piece",
@@ -3937,7 +4721,9 @@
       "0x8CDC"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost Town Outskirts: Star Piece",
@@ -3947,7 +4733,9 @@
       "0xDCD0"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost Town: Ice Storm",
@@ -3957,7 +4745,9 @@
       "0x1117C"
     ],
     "vanilla_item": 77772098,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost Town: Inn Coupon",
@@ -3967,7 +4757,9 @@
       "0x11F70"
     ],
     "vanilla_item": 77772099,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost Town: Maple Syrup",
@@ -3977,7 +4769,9 @@
       "0x11194"
     ],
     "vanilla_item": 77772112,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost Town: Ruin Powder",
@@ -3987,7 +4781,9 @@
       "0x11184"
     ],
     "vanilla_item": 77772159,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost Town: Shine Sprite",
@@ -3997,7 +4793,9 @@
       "0x11F0C"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost Town: Shooting Star",
@@ -4007,7 +4805,9 @@
       "0x11174"
     ],
     "vanilla_item": 77772164,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost Town: Space Food",
@@ -4017,7 +4817,9 @@
       "0x11CAC"
     ],
     "vanilla_item": 77772173,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost Town: Star Piece 1",
@@ -4027,7 +4829,9 @@
       "0x11F34"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost Town: Star Piece 2",
@@ -4037,7 +4841,9 @@
       "0x11F48"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost Town: Stopwatch",
@@ -4047,7 +4853,9 @@
       "0x1118C"
     ],
     "vanilla_item": 77772182,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost Town: Super Shroom",
@@ -4057,7 +4865,9 @@
       "0x1119C"
     ],
     "vanilla_item": 77772191,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost West Enemy Room: Shine Sprite",
@@ -4067,7 +4877,9 @@
       "0x1264C"
     ],
     "vanilla_item": 77772162,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost West Enemy Room: Star Piece",
@@ -4077,7 +4889,9 @@
       "0x12664"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost East Enemy Room: HP Plus P",
@@ -4087,7 +4901,9 @@
       "0x12434"
     ],
     "vanilla_item": 77772095,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Fahr Outpost East Enemy Room: Star Piece",
@@ -4097,7 +4913,9 @@
       "0x12400"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "fahr_outpost"
+    ]
   },
   {
     "name": "Moon Landing Site: Stopwatch",
@@ -4107,7 +4925,9 @@
       "0x52B8"
     ],
     "vanilla_item": 77772182,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "Moon East Room 1: Volt Shroom",
@@ -4117,7 +4937,9 @@
       "0x55AC"
     ],
     "vanilla_item": 77772209,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "Moon Fortress View: Power Punch",
@@ -4127,7 +4949,9 @@
       "0x5C68"
     ],
     "vanilla_item": 77772144,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "Moon Fortress View: Star Piece",
@@ -4137,7 +4961,9 @@
       "0x5B14"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "Moon West Room 2: Ruin Powder",
@@ -4147,7 +4973,9 @@
       "0x979C"
     ],
     "vanilla_item": 77772159,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "Moon West Room 1: Courage Shell",
@@ -4157,7 +4985,9 @@
       "0x99F0"
     ],
     "vanilla_item": 77772038,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Elevator Key Room: Elevator Key 1",
@@ -4167,7 +4997,9 @@
       "0x1EC14"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Elevator Key Room: Super Shroom",
@@ -4177,7 +5009,9 @@
       "0x1F180"
     ],
     "vanilla_item": 77772191,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Crane Room: Coin 1",
@@ -4187,7 +5021,9 @@
       "0x21DBC"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Crane Room: Coin 2",
@@ -4197,7 +5033,9 @@
       "0x21DE4"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Crane Room: Coin 3",
@@ -4207,7 +5045,9 @@
       "0x21E0C"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Crane Room: Coin 4",
@@ -4217,7 +5057,9 @@
       "0x21E34"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Crane Room: Coin 5",
@@ -4227,7 +5069,9 @@
       "0x21E94"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Crane Room: Coin 6",
@@ -4237,7 +5081,9 @@
       "0x21EF4"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Crane Room: Feeling Fine",
@@ -4247,7 +5093,9 @@
       "0x21E68"
     ],
     "vanilla_item": 77772056,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Crane Room: Feeling Fine P",
@@ -4257,7 +5105,9 @@
       "0x21EC8"
     ],
     "vanilla_item": 77772057,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Crane Room: Star Piece",
@@ -4267,7 +5117,9 @@
       "0x21F28"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Quiz Room: Elevator Key 2",
@@ -4278,7 +5130,9 @@
       "0x23BAC"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Card Key Room A: Card Key 1",
@@ -4288,7 +5142,9 @@
       "0x23FD8"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Card Key Room A: Sleepy Sheep",
@@ -4298,7 +5154,9 @@
       "0x24338"
     ],
     "vanilla_item": 77772169,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Teleporter Room: Cog",
@@ -4308,7 +5166,9 @@
       "0x299D0"
     ],
     "vanilla_item": 77772034,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Ceiling Grate Room: Star Piece",
@@ -4318,7 +5178,9 @@
       "0x29FAC"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Office: Card Key 2",
@@ -4328,7 +5190,9 @@
       "0x30D60"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Card Key Room B: Card Key 3",
@@ -4338,7 +5202,9 @@
       "0x31080"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Card Key Room B: HP Drain",
@@ -4348,7 +5214,9 @@
       "0x31370"
     ],
     "vanilla_item": 77772092,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Factory: Card Key 4",
@@ -4358,7 +5226,9 @@
       "0x32D9C"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Factory: Ultra Shroom",
@@ -4368,7 +5238,9 @@
       "0x32F14"
     ],
     "vanilla_item": 77772204,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "X-Naut Fortress Boss Room: Crystal Star",
@@ -4376,7 +5248,9 @@
     "rel": "aji",
     "offsets": [],
     "vanilla_item": 77772039,
-    "tags": []
+    "tags": [
+      "xnaut_fortress"
+    ]
   },
   {
     "name": "Palace of Shadow Swoopula Staircase: Stopwatch",
@@ -4386,7 +5260,9 @@
       "0x1BF04"
     ],
     "vanilla_item": 77772182,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Palace of Shadow Bullet Bill Hallway: Shooting Star",
@@ -4396,7 +5272,9 @@
       "0x1C2A4"
     ],
     "vanilla_item": 77772164,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Palace of Shadow Spike Trap Room: All or Nothing",
@@ -4406,7 +5284,9 @@
       "0x1C970"
     ],
     "vanilla_item": 77772002,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Palace of Shadow Fire Trap Room: Boo's Sheet",
@@ -4416,7 +5296,9 @@
       "0x1D098"
     ],
     "vanilla_item": 77772017,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Palace of Shadow Dark Bones Room: Palace Key",
@@ -4427,7 +5309,9 @@
       "0x1E8F8"
     ],
     "vanilla_item": 77772130,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Palace of Shadow Second Bullet Bill Hallway: Ultra Shroom",
@@ -4437,7 +5321,9 @@
       "0x1ECF4"
     ],
     "vanilla_item": 77772204,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Palace of Shadow Large Open Room: Coin",
@@ -4447,7 +5333,9 @@
       "0x1F270"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Palace of Shadow Large Open Room: Jammin' Jelly",
@@ -4457,7 +5345,9 @@
       "0x1F298"
     ],
     "vanilla_item": 77772101,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Palace of Shadow Large Open Room: P-Up D-Down P",
@@ -4467,7 +5357,9 @@
       "0x1F2C0"
     ],
     "vanilla_item": 77772129,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Riddle Tower Floor 1 NW: Palace Key (Riddle Tower)",
@@ -4477,7 +5369,9 @@
       "0x251E8"
     ],
     "vanilla_item": 77772130,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Riddle Tower Floor 1 NE: Palace Key (Riddle Tower)",
@@ -4487,7 +5381,9 @@
       "0x25690"
     ],
     "vanilla_item": 77772130,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Riddle Tower Floor 1 SW: Palace Key (Riddle Tower)",
@@ -4497,7 +5393,9 @@
       "0x25AC0"
     ],
     "vanilla_item": 77772130,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Riddle Tower Floor 1 SE: Palace Key (Riddle Tower)",
@@ -4507,7 +5405,9 @@
       "0x26008"
     ],
     "vanilla_item": 77772130,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Riddle Tower Floor 2 NW: Palace Key (Riddle Tower)",
@@ -4517,7 +5417,9 @@
       "0x26438"
     ],
     "vanilla_item": 77772130,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Riddle Tower Floor 2 NE: Palace Key (Riddle Tower)",
@@ -4527,7 +5429,9 @@
       "0x268E0"
     ],
     "vanilla_item": 77772130,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Riddle Tower Floor 2 SW: Palace Key (Riddle Tower)",
@@ -4537,7 +5441,9 @@
       "0x26F40"
     ],
     "vanilla_item": 77772130,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Riddle Tower Floor 2 SE: Palace Key (Riddle Tower)",
@@ -4547,7 +5453,9 @@
       "0x27600"
     ],
     "vanilla_item": 77772130,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Palace of Shadow Far Hallway 1: Thunder Rage",
@@ -4557,7 +5465,9 @@
       "0x2870C"
     ],
     "vanilla_item": 77772196,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Far Backroom 1: Life Shroom",
@@ -4567,7 +5477,9 @@
       "0x298D4"
     ],
     "vanilla_item": 77772108,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Far Backroom 1: Repel Cape",
@@ -4577,7 +5489,9 @@
       "0x298AC"
     ],
     "vanilla_item": 77772156,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Far Backroom 2: Life Shroom",
@@ -4587,7 +5501,9 @@
       "0x2B678"
     ],
     "vanilla_item": 77772108,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Far Backroom 2: Palace Key",
@@ -4597,7 +5513,9 @@
       "0x2B6C0"
     ],
     "vanilla_item": 77772130,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Far Backroom 2: Shooting Star",
@@ -4607,7 +5525,9 @@
       "0x2B488"
     ],
     "vanilla_item": 77772164,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Far Backroom 3: Coin",
@@ -4617,7 +5537,9 @@
       "0x2C75C"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Far Backroom 3: Palace Key",
@@ -4627,7 +5549,9 @@
       "0x2C478"
     ],
     "vanilla_item": 77772130,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Far Backroom 3: Point Swap",
@@ -4637,7 +5561,9 @@
       "0x2C784"
     ],
     "vanilla_item": 77772138,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Far Hallway 4: Life Shroom",
@@ -4647,7 +5573,9 @@
       "0x2CE68"
     ],
     "vanilla_item": 77772108,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Far Hallway 4: Shooting Star",
@@ -4657,7 +5585,9 @@
       "0x2CE90"
     ],
     "vanilla_item": 77772164,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Gloomtail Room: Jammin' Jelly",
@@ -4667,7 +5597,9 @@
       "0x2E6B4"
     ],
     "vanilla_item": 77772101,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Gloomtail Room: Star Key",
@@ -4677,7 +5609,9 @@
       "0x2D0BC"
     ],
     "vanilla_item": 77772176,
-    "tags": []
+    "tags": [
+      "palace"
+    ]
   },
   {
     "name": "Palace of Shadow Gloomtail Room: Ultra Shroom",
@@ -4687,7 +5621,9 @@
       "0x2E68C"
     ],
     "vanilla_item": 77772204,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Final Staircase: Jammin' Jelly",
@@ -4697,7 +5633,9 @@
       "0x5CD4C"
     ],
     "vanilla_item": 77772101,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Palace of Shadow Final Staircase: Ultra Shroom",
@@ -4707,7 +5645,9 @@
       "0x5CCC4"
     ],
     "vanilla_item": 77772204,
-    "tags": []
+    "tags": [
+      "riddle_tower"
+    ]
   },
   {
     "name": "Rogueport Sewers Pit Entrance: Star Piece",
@@ -4717,7 +5657,9 @@
       "0x1FB68"
     ],
     "vanilla_item": 77772177,
-    "tags": []
+    "tags": [
+      "pit"
+    ]
   },
   {
     "name": "Pit of 100 Trials Floor 10: Sleepy Stomp",
@@ -4727,7 +5669,9 @@
       "0x11320"
     ],
     "vanilla_item": 0,
-    "tags": []
+    "tags": [
+      "pit"
+    ]
   },
   {
     "name": "Pit of 100 Trials Floor 20: Fire Drive",
@@ -4737,7 +5681,9 @@
       "0x11324"
     ],
     "vanilla_item": 77772058,
-    "tags": []
+    "tags": [
+      "pit"
+    ]
   },
   {
     "name": "Pit of 100 Trials Floor 30: Zap Tap",
@@ -4747,7 +5693,9 @@
       "0x11328"
     ],
     "vanilla_item": 77772214,
-    "tags": []
+    "tags": [
+      "pit"
+    ]
   },
   {
     "name": "Pit of 100 Trials Floor 40: Pity Flower",
@@ -4757,7 +5705,9 @@
       "0x1132C"
     ],
     "vanilla_item": 77772136,
-    "tags": []
+    "tags": [
+      "pit"
+    ]
   },
   {
     "name": "Pit of 100 Trials Floor 50: Strange Sack",
@@ -4767,7 +5717,9 @@
       "0x11330"
     ],
     "vanilla_item": 77772185,
-    "tags": []
+    "tags": [
+      "pit"
+    ]
   },
   {
     "name": "Pit of 100 Trials Floor 60: Double Dip",
@@ -4777,7 +5729,9 @@
       "0x11334"
     ],
     "vanilla_item": 77772046,
-    "tags": []
+    "tags": [
+      "pit"
+    ]
   },
   {
     "name": "Pit of 100 Trials Floor 70: Double Dip P",
@@ -4787,7 +5741,9 @@
       "0x11338"
     ],
     "vanilla_item": 77772047,
-    "tags": []
+    "tags": [
+      "pit"
+    ]
   },
   {
     "name": "Pit of 100 Trials Floor 80: Bump Attack",
@@ -4797,7 +5753,9 @@
       "0x1133C"
     ],
     "vanilla_item": 77772019,
-    "tags": []
+    "tags": [
+      "pit"
+    ]
   },
   {
     "name": "Pit of 100 Trials Floor 90: Lucky Day",
@@ -4807,7 +5765,9 @@
       "0x11340"
     ],
     "vanilla_item": 77772110,
-    "tags": []
+    "tags": [
+      "pit"
+    ]
   },
   {
     "name": "Pit of 100 Trials Floor 100: Return Postage",
@@ -4817,6 +5777,8 @@
       "0x11344"
     ],
     "vanilla_item": 77772157,
-    "tags": []
+    "tags": [
+      "pit"
+    ]
   }
 ]

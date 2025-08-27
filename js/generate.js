@@ -447,6 +447,7 @@ async function extractAndPatchFiles(isoData, locationData, settings) {
         if (relData) {
             const locationsToProcess = getLocationsToPatch(relName, locationData);
             if (locationsToProcess.length > 0) {
+                console.log(`Patching ${locationsToProcess.length} locations in ${relName}`);
                 extractedRELFiles[relName] = applyLocationPatches(relName, relData, locationsToProcess);
             }
         }
@@ -456,12 +457,15 @@ async function extractAndPatchFiles(isoData, locationData, settings) {
     if (extractedDOL) {
         const dolLocations = getLocationsToPatch('dol', locationData);
         if (dolLocations.length > 0) {
+            console.log(`Patching ${dolLocations.length} locations in DOL`);
             const view = new DataView(extractedDOL.buffer);
             dolLocations.forEach(location => {
                 const itemToPlace = location.getEffectiveItem();
+                const romId = convertToRomId(itemToPlace);
                 location.getAllOffsets().forEach(offset => {
                     if (offset + 4 <= extractedDOL.length) {
-                        view.setUint32(offset, itemToPlace, false);
+                        view.setUint32(offset, romId, false); // false = big-endian
+                        console.log(`  DOL Location "${location.name}" at offset 0x${offset.toString(16)}: ${location.vanillaItem} -> ${romId}`);
                     }
                 });
             });
@@ -1037,6 +1041,16 @@ let allLocations = null;
 let allItems = null;
 let itemIdToRomId = new Map();
 
+// Define progression items that affect accessibility
+const progressionItems = [
+    'Progressive Hammer', 'Progressive Boots', 'Paper Curse', 'Plane Curse', 
+    'Tube Curse', 'Boat Curse', 'Goombella', 'Koops', 'Flurrie', 'Yoshi', 
+    'Vivian', 'Bobbery', 'Ms. Mowz', 'Blimp Ticket', 'Train Ticket', 
+    'Contact Lens', 'Sun Stone', 'Moon Stone', 'Necklace', 'Diamond Star',
+    'Emerald Star', 'Gold Star', 'Ruby Star', 'Sapphire Star', 'Garnet Star', 
+    'Crystal Star'
+];
+
 // Function to initialize items from JSON file
 async function initializeItems() {
     try {
@@ -1103,25 +1117,32 @@ function prepareLocationsForRandomization(settings) {
         throw new Error('Locations not initialized. Call initializeLocations() first.');
     }
     
+    console.log('Starting logical item placement test...');
+    
+    // Clone the locations for modification
+    const locationCollection = allLocations.clone();
     const availableLocations = [];
     const excludedLocations = [];
     
     // Get all non-tattle json (always available)
-    const mainLocations = allLocations.filter(location => !location.isTattle());
+    const mainLocations = locationCollection.locations.filter(location => !location.isTattle());
     availableLocations.push(...mainLocations);
     
     console.log(`Added ${mainLocations.length} main locations`);
     
     // Add tattle json if Tattlesanity is enabled
     if (settings.tattlesanity) {
-        const tattles = allLocations.getTattleLocations();
+        const tattles = locationCollection.getTattleLocations();
         availableLocations.push(...tattles);
         console.log(`Added ${tattles.length} tattle locations (Tattlesanity enabled)`);
     } else {
-        const tattles = allLocations.getTattleLocations();
+        const tattles = locationCollection.getTattleLocations();
         excludedLocations.push(...tattles);
         console.log(`Excluded ${tattles.length} tattle locations (Tattlesanity disabled)`);
     }
+    
+    // Perform logical item placement test
+    performLogicalItemPlacement(availableLocations, settings);
     
     // Filter json by REL file if needed (for debugging or specific builds)
     const locationsByRel = {};
@@ -1143,6 +1164,314 @@ function prepareLocationsForRandomization(settings) {
         byRel: locationsByRel,
         total: availableLocations.length
     };
+}
+
+// Logical item placement test function
+async function performLogicalItemPlacement(locations, settings) {
+    console.log('=== LOGICAL ITEM PLACEMENT TEST ===');
+    
+    const startTime = Date.now();
+    
+    try {
+        // Load region logic
+        const regionLogic = await loadRegionLogic();
+        
+        // Initialize spoiler generator
+        const spoilerGen = new SpoilerGenerator();
+        const seed = settings.seed || generateRandomSeed();
+        const settingsString = getSettingsString();
+        spoilerGen.initialize(seed, settings, settingsString);
+        spoilerGen.addProgressionLog('Starting randomization', '', '', null);
+        
+        // Create starting game state
+        const gameState = GameState.createStartingState();
+        console.log('Starting game state:', gameState.getStats());
+        spoilerGen.addProgressionLog('Created starting game state', '', '', gameState);
+        
+        // Create item pool for all locations
+        const itemPool = createFullItemPool(locations.length);
+        console.log(`Created item pool with ${itemPool.length} items for ${locations.length} locations`);
+        
+        // Shuffle the item pool
+        shuffleArray(itemPool);
+        
+        // Goal: Ensure we can reach "Palace of Shadow Final Staircase: Ultra Shroom"
+        const goalLocation = locations.find(loc => loc.name === "Palace of Shadow Final Staircase: Ultra Shroom");
+        if (goalLocation) {
+            console.log(`Goal location found: ${goalLocation.name} in region ${goalLocation.getRegionTag()}`);
+        } else {
+            console.warn('Goal location "Palace of Shadow Final Staircase: Ultra Shroom" not found!');
+        }
+        
+        let placedItems = 0;
+        let accessibilityChecks = 0;
+        let placementAttempts = 0;
+        let currentSphere = 1;
+        let itemPoolIndex = 0;
+        
+        // Track items placed in current sphere
+        let sphereItems = [];
+        
+        // Separate progression items from filler items
+        const progressionPool = itemPool.filter(item => progressionItems.includes(item));
+        const fillerPool = itemPool.filter(item => !progressionItems.includes(item));
+        
+        console.log(`Split item pool: ${progressionPool.length} progression, ${fillerPool.length} filler`);
+        shuffleArray(progressionPool);
+        shuffleArray(fillerPool);
+        
+        // Forward-fill algorithm for 100% accessibility
+        let remainingProgressionItems = [...progressionPool];
+        let remainingFillerItems = [...fillerPool];
+        
+        while (placedItems < locations.length) {
+            // Get currently accessible empty locations
+            const accessibleLocations = locations.filter(location => {
+                accessibilityChecks++;
+                return location.isEmpty() && 
+                       location.isAvailable() && 
+                       location.isAccessible(gameState, regionLogic);
+            });
+            
+            if (accessibleLocations.length === 0) {
+                console.error('No accessible locations remaining - randomization failed!');
+                break;
+            }
+            
+            console.log(`Sphere ${currentSphere}: ${accessibleLocations.length} accessible locations, ${remainingProgressionItems.length} progression items left`);
+            
+            let spherePlacementCount = 0;
+            let placedProgressionInSphere = false;
+            
+            // Place progression items in accessible locations until we run out or fill all accessible locations
+            for (const targetLocation of accessibleLocations) {
+                if (remainingProgressionItems.length === 0) break;
+                
+                const itemToPlace = remainingProgressionItems.shift();
+                const itemId = getItemIdByName(itemToPlace) || 77772177;
+                
+                // Place the item
+                targetLocation.placeItem(itemId);
+                placedItems++;
+                spherePlacementCount++;
+                placedProgressionInSphere = true;
+                
+                // Update game state immediately
+                gameState.addItem(itemToPlace, 1);
+                
+                // Add to spoiler data
+                spoilerGen.addLocationItemPair(targetLocation, itemToPlace, itemId, currentSphere.toString());
+                spoilerGen.addProgressionLog(`Placed progression item`, itemToPlace, targetLocation.name, gameState);
+                
+                // Add to current sphere
+                sphereItems.push({
+                    itemName: itemToPlace,
+                    location: targetLocation
+                });
+                
+                console.log(`Placed progression "${itemToPlace}" at "${targetLocation.name}"`);
+            }
+            
+            // After placing progression items, perform a region sweep
+            if (placedProgressionInSphere) {
+                const newRegions = performRegionSweep(gameState, regionLogic);
+                if (newRegions.length > 0) {
+                    console.log(`Region sweep unlocked: ${newRegions.join(', ')}`);
+                    spoilerGen.addProgressionLog(`Unlocked regions`, newRegions.join(', '), '', gameState);
+                }
+            }
+            
+            // Fill any remaining accessible locations in this sphere with filler items
+            const stillAccessible = locations.filter(location => {
+                return location.isEmpty() && 
+                       location.isAvailable() && 
+                       location.isAccessible(gameState, regionLogic);
+            });
+            
+            for (const targetLocation of stillAccessible) {
+                if (remainingFillerItems.length === 0) {
+                    // Generate more filler if needed
+                    remainingFillerItems.push('Star Piece', '10 Coins', 'Mushroom', 'Honey Syrup', 'Super Shroom', 'Shine Sprite');
+                }
+                
+                const itemToPlace = remainingFillerItems.shift();
+                const itemId = getItemIdByName(itemToPlace) || 77772177;
+                
+                targetLocation.placeItem(itemId);
+                placedItems++;
+                spherePlacementCount++;
+                
+                spoilerGen.addLocationItemPair(targetLocation, itemToPlace, itemId, currentSphere.toString());
+                
+                sphereItems.push({
+                    itemName: itemToPlace,
+                    location: targetLocation
+                });
+                
+                console.log(`Placed filler "${itemToPlace}" at "${targetLocation.name}"`);
+            }
+            
+            // Finalize current sphere
+            if (sphereItems.length > 0) {
+                spoilerGen.addItemSphere(currentSphere, sphereItems, gameState);
+                console.log(`Completed sphere ${currentSphere} with ${spherePlacementCount} items`);
+                sphereItems = [];
+                currentSphere++;
+            }
+            
+            // Safety check to prevent infinite loops
+            placementAttempts++;
+            if (placementAttempts > 50) {
+                console.error('Maximum placement attempts reached - stopping randomization');
+                break;
+            }
+        }
+        
+        // Finalize any remaining sphere items
+        if (sphereItems.length > 0) {
+            spoilerGen.addItemSphere(currentSphere, sphereItems, gameState);
+        }
+        
+        // Statistics
+        const totalLocations = locations.length;
+        const accessibleCount = locations.filter(loc => loc.isAccessible(gameState, regionLogic)).length;
+        const filledCount = locations.filter(loc => loc.hasPlacedItem()).length;
+        const generationTime = Date.now() - startTime;
+        
+        const stats = {
+            totalLocations,
+            accessibleCount,
+            filledCount,
+            accessibilityChecks,
+            placementAttempts,
+            generationTime
+        };
+        
+        spoilerGen.setStatistics(stats);
+        spoilerGen.addProgressionLog('Randomization completed', '', '', gameState);
+        
+        console.log('=== PLACEMENT RESULTS ===');
+        console.log(`Total locations: ${totalLocations}`);
+        console.log(`Currently accessible: ${accessibleCount}`);
+        console.log(`Items placed: ${filledCount}`);
+        console.log(`Accessibility checks performed: ${accessibilityChecks}`);
+        console.log(`Generation time: ${generationTime}ms`);
+        console.log(`Final game state:`, gameState.getStats());
+        
+        // Show sample placed items
+        const placedLocations = locations.filter(loc => loc.hasPlacedItem()).slice(0, 10);
+        console.log('Sample placed items:');
+        placedLocations.forEach(loc => {
+            console.log(`  ${loc.name}: Item ID ${loc.placed_item} (Region: ${loc.getRegionTag() || 'unknown'})`);
+        });
+        
+        // Generate and download spoiler file
+        console.log('Generating spoiler file...');
+        spoilerGen.downloadSpoiler(`ttyd_spoiler_${seed}.txt`, 'txt');
+        console.log('Spoiler file generated!');
+        
+    } catch (error) {
+        console.error('Error during logical item placement:', error);
+    }
+}
+
+// Helper function to load region logic
+async function loadRegionLogic() {
+    try {
+        const response = await fetch('json/regions.json');
+        if (!response.ok) {
+            throw new Error('Failed to load regions.json');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading region logic:', error);
+        return {}; // Return empty object as fallback
+    }
+}
+
+// Helper function to create item pool
+async function createItemPool() {
+    try {
+        // Import ItemPool if available
+        if (typeof ItemPool !== 'undefined') {
+            const pool = new ItemPool();
+            const itemNames = [
+                'Progressive Hammer', 'Progressive Boots', 'Paper Curse', 'Plane Curse',
+                'Tube Curse', 'Boat Curse', 'Goombella', 'Koops', 'Flurrie', 'Yoshi',
+                'Vivian', 'Bobbery', 'Star Piece', '10 Coins', 'Mushroom', 'Honey Syrup'
+            ];
+            pool.populatePool(itemNames);
+            return pool;
+        }
+    } catch (error) {
+        console.error('Error creating item pool:', error);
+    }
+    return null;
+}
+
+// Helper function to get item ID by name
+function getItemIdByName(itemName) {
+    if (!allItems) return null;
+    
+    const item = allItems.find(i => i.name === itemName);
+    return item ? item.id : null;
+}
+
+// Comprehensive region sweep function using regions.json and parser
+function performRegionSweep(gameState, regionLogic) {
+    const newlyAccessibleRegions = [];
+    
+    // Check all regions in the region logic from regions.json
+    for (const [regionName, logicExpression] of Object.entries(regionLogic)) {
+        // Skip if we already have this region
+        if (gameState.regions.has(regionName)) {
+            continue;
+        }
+        
+        // Parse and evaluate the logic expression using the parser system
+        try {
+            // Use the parser to convert the JSON expression to a function
+            if (typeof parseExpression === 'undefined') {
+                console.warn('parseExpression not available, falling back to simple region update');
+                updateAccessibleRegions(gameState, regionLogic);
+                return [];
+            }
+            
+            // Parse the logic expression and evaluate it
+            const logicFunc = parseExpression(logicExpression);
+            if (logicFunc && logicFunc(gameState)) {
+                gameState.addRegion(regionName);
+                newlyAccessibleRegions.push(regionName);
+            }
+        } catch (error) {
+            console.warn(`Error evaluating logic for region ${regionName}:`, error);
+        }
+    }
+    
+    return newlyAccessibleRegions;
+}
+
+// Fallback simple region accessibility update
+function updateAccessibleRegions(gameState, regionLogic) {
+    // Simple region accessibility update based on items
+    if (gameState.has('Progressive Hammer', 1)) {
+        gameState.addRegion('petal_right');
+    }
+    if (gameState.has('Progressive Hammer', 1) && gameState.has('Progressive Boots', 1)) {
+        gameState.addRegion('hooktails_castle');
+    }
+    if (gameState.has('Paper Curse')) {
+        gameState.addRegion('boggly_woods');
+    }
+    if (gameState.has('Flurrie')) {
+        gameState.addRegion('great_tree');
+    }
+    if (gameState.has('Blimp Ticket')) {
+        gameState.addRegion('glitzville');
+    }
+    if (gameState.has('Tube Curse')) {
+        gameState.addRegion('twilight_trail');
+    }
 }
 
 // Function to get json that need to be patched in specific REL files
@@ -1193,6 +1522,72 @@ function applyLocationPatches(relName, relData, locationPatches) {
     return modifiedRelData;
 }
 
+// Helper function to convert item ID to ROM ID
+function convertToRomId(itemId) {
+    // Try to use the mapping if available
+    if (itemIdToRomId && itemIdToRomId.has(itemId)) {
+        return itemIdToRomId.get(itemId);
+    }
+    
+    // Fallback: assume itemId is already a ROM ID
+    return itemId;
+}
+
+// Create a full item pool to fill all locations
+function createFullItemPool(locationCount) {
+    console.log(`Creating item pool for ${locationCount} locations`);
+    
+    // Get all available items from ITEM_FREQUENCIES
+    const allItems = [];
+    
+    // Add items based on their frequencies
+    for (const [itemName, frequency] of Object.entries(ITEM_FREQUENCIES)) {
+        if (frequency > 0) {
+            for (let i = 0; i < frequency; i++) {
+                allItems.push(itemName);
+            }
+        }
+    }
+    
+    console.log(`Base item pool has ${allItems.length} items from frequencies`);
+    
+    // If we need more items to fill all locations, add filler items
+    while (allItems.length < locationCount) {
+        // Add common filler items in order of preference
+        const fillerItems = [
+            "10 Coins",
+            "Star Piece", 
+            "Mushroom",
+            "Super Shroom",
+            "Honey Syrup",
+            "Shine Sprite"
+        ];
+        
+        for (const filler of fillerItems) {
+            if (allItems.length < locationCount) {
+                allItems.push(filler);
+            }
+        }
+    }
+    
+    // If we have too many items, trim to exact count needed
+    if (allItems.length > locationCount) {
+        allItems.splice(locationCount);
+    }
+    
+    console.log(`Final item pool has ${allItems.length} items for ${locationCount} locations`);
+    return allItems;
+}
+
+// Utility function to shuffle an array using Fisher-Yates algorithm
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 // Load user presets when page loads
 document.addEventListener('DOMContentLoaded', function() {
     loadUserPresets();
@@ -1206,8 +1601,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize tooltip system
     initializeTooltips();
     
-    // Initialize location data
-    initializeLocations().catch(error => {
-        console.error('Failed to initialize json:', error);
+    // Initialize item and location data
+    Promise.all([
+        initializeItems().catch(error => {
+            console.error('Failed to initialize items:', error);
+        }),
+        initializeLocations().catch(error => {
+            console.error('Failed to initialize locations:', error);
+        })
+    ]).then(() => {
+        console.log('All data initialization complete');
     });
 });

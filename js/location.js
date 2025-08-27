@@ -9,15 +9,17 @@ class Location {
      * @param {number} vanillaItem - The vanilla item ID at this location
      * @param {Array<string>} tags - Array of tags describing this location (e.g., ["tattle"])
      * @param {number|null} placedItem - The item ID that has been placed at this location (null if empty)
+     * @param {boolean} locked - Whether this location is locked from randomization
      */
-    constructor(name, id, rel, offsets = [], vanillaItem = 0, tags = [], placedItem = null) {
+    constructor(name, id, rel, offsets = [], vanillaItem = 0, tags = [], placedItem = null, locked = false) {
         this.name = name;
         this.id = id;
         this.rel = rel;
         this.offsets = offsets;
         this.vanillaItem = vanillaItem;
         this.tags = tags;
-        this.placedItem = placedItem;
+        this.placed_item = placedItem;
+        this.locked = locked;
     }
 
     /**
@@ -123,7 +125,8 @@ class Location {
             changes.offsets !== undefined ? changes.offsets : [...this.offsets],
             changes.vanillaItem !== undefined ? changes.vanillaItem : this.vanillaItem,
             changes.tags !== undefined ? changes.tags : [...this.tags],
-            changes.placedItem !== undefined ? changes.placedItem : this.placedItem
+            changes.placed_item !== undefined ? changes.placed_item : this.placed_item,
+            changes.locked !== undefined ? changes.locked : this.locked
         );
     }
 
@@ -132,14 +135,14 @@ class Location {
      * @param {number} itemId - The item ID to place at this location
      */
     placeItem(itemId) {
-        this.placedItem = itemId;
+        this.placed_item = itemId;
     }
 
     /**
      * Removes the placed item from this location
      */
     clearPlacedItem() {
-        this.placedItem = null;
+        this.placed_item = null;
     }
 
     /**
@@ -147,7 +150,7 @@ class Location {
      * @returns {boolean} True if an item has been placed at this location
      */
     hasPlacedItem() {
-        return this.placedItem !== null;
+        return this.placed_item !== null;
     }
 
     /**
@@ -155,7 +158,7 @@ class Location {
      * @returns {number} The item ID that should be at this location
      */
     getEffectiveItem() {
-        return this.hasPlacedItem() ? this.placedItem : this.vanillaItem;
+        return this.hasPlacedItem() ? this.placed_item : this.vanillaItem;
     }
 
     /**
@@ -163,7 +166,105 @@ class Location {
      * @returns {boolean} True if no item has been placed at this location
      */
     isEmpty() {
-        return this.placedItem === null;
+        return this.placed_item === null;
+    }
+
+    /**
+     * Locks this location from randomization
+     */
+    lock() {
+        this.locked = true;
+    }
+
+    /**
+     * Unlocks this location for randomization
+     */
+    unlock() {
+        this.locked = false;
+    }
+
+    /**
+     * Checks if this location is locked from randomization
+     * @returns {boolean} True if the location is locked
+     */
+    isLocked() {
+        return this.locked;
+    }
+
+    /**
+     * Checks if this location is available for randomization
+     * @returns {boolean} True if the location is not locked
+     */
+    isAvailable() {
+        return !this.locked;
+    }
+
+    /**
+     * Gets the region tag for this location (first region tag found)
+     * @returns {string|null} The region tag, or null if none found
+     */
+    getRegionTag() {
+        const regionTags = [
+            'rogueport_westside', 'sewers_westside', 'sewers_westside_ground',
+            'petal_left', 'petal_right', 'hooktails_castle', 'twilight_town',
+            'twilight_trail', 'fahr_outpost', 'xnaut_fortress', 'boggly_woods',
+            'great_tree', 'glitzville', 'creepy_steeple', 'keelhaul_key',
+            'pirates_grotto', 'excess_express', 'riverside', 'poshley_heights',
+            'palace', 'riddle_tower', 'pit'
+        ];
+        
+        return this.tags.find(tag => regionTags.includes(tag)) || null;
+    }
+
+    /**
+     * Checks if this location is accessible given the current game state
+     * @param {Object} gameState - Current game state object with items and abilities
+     * @param {Object} regionLogic - Region logic map loaded from regions.json
+     * @returns {boolean} True if the location is accessible
+     */
+    isAccessible(gameState, regionLogic) {
+        const regionTag = this.getRegionTag();
+        if (!regionTag || !regionLogic[regionTag]) {
+            return true; // Default to accessible if no region logic found
+        }
+
+        const logic = regionLogic[regionTag];
+        return this._evaluateLogic(logic, gameState);
+    }
+
+    /**
+     * Evaluates a logic expression against the game state
+     * @param {Object} logic - Logic expression object
+     * @param {Object} gameState - Current game state
+     * @returns {boolean} True if logic requirements are met
+     * @private
+     */
+    _evaluateLogic(logic, gameState) {
+        if (logic.has) {
+            return gameState.has(logic.has);
+        }
+        
+        if (logic.function) {
+            // Assume StateLogic is available globally
+            if (typeof StateLogic !== 'undefined' && StateLogic[logic.function]) {
+                return StateLogic[logic.function](gameState);
+            }
+            return false;
+        }
+        
+        if (logic.can_reach) {
+            return gameState.canReach(logic.can_reach.target, logic.can_reach.type);
+        }
+        
+        if (logic.and) {
+            return logic.and.every(subLogic => this._evaluateLogic(subLogic, gameState));
+        }
+        
+        if (logic.or) {
+            return logic.or.some(subLogic => this._evaluateLogic(subLogic, gameState));
+        }
+        
+        return true; // Default to accessible if no recognized logic
     }
 
     /**
@@ -178,7 +279,8 @@ class Location {
             Array.isArray(this.offsets) &&
             typeof this.vanillaItem === 'number' &&
             Array.isArray(this.tags) &&
-            (this.placedItem === null || typeof this.placedItem === 'number')
+            (this.placed_item === null || typeof this.placed_item === 'number') &&
+            typeof this.locked === 'boolean'
         );
     }
 }
@@ -321,20 +423,148 @@ class LocationCollection {
 
 
     /**
-     * Gets statistics about placed items
-     * @returns {Object} Object with placement statistics
+     * Gets all locked locations
+     * @returns {Array<Location>} Array of locked locations
      */
-    getPlacementStats() {
+    getLockedLocations() {
+        return this.locations.filter(location => location.isLocked());
+    }
+
+    /**
+     * Gets all available (unlocked) locations
+     * @returns {Array<Location>} Array of available locations
+     */
+    getAvailableLocations() {
+        return this.locations.filter(location => location.isAvailable());
+    }
+
+    /**
+     * Locks all locations with a specific tag
+     * @param {string} tag - The tag to lock locations by
+     */
+    lockLocationsByTag(tag) {
+        this.getLocationsByTag(tag).forEach(location => location.lock());
+    }
+
+    /**
+     * Unlocks all locations with a specific tag
+     * @param {string} tag - The tag to unlock locations by
+     */
+    unlockLocationsByTag(tag) {
+        this.getLocationsByTag(tag).forEach(location => location.unlock());
+    }
+
+    /**
+     * Locks all locations
+     */
+    lockAllLocations() {
+        this.locations.forEach(location => location.lock());
+    }
+
+    /**
+     * Unlocks all locations
+     */
+    unlockAllLocations() {
+        this.locations.forEach(location => location.unlock());
+    }
+
+    /**
+     * Gets all accessible locations given the current game state
+     * @param {Object} gameState - Current game state object
+     * @param {Object} regionLogic - Region logic map from regions.json
+     * @returns {Array<Location>} Array of accessible locations
+     */
+    getAccessibleLocations(gameState, regionLogic) {
+        return this.locations.filter(location => 
+            location.isAccessible(gameState, regionLogic) && location.isAvailable()
+        );
+    }
+
+    /**
+     * Gets all inaccessible locations given the current game state
+     * @param {Object} gameState - Current game state object
+     * @param {Object} regionLogic - Region logic map from regions.json
+     * @returns {Array<Location>} Array of inaccessible locations
+     */
+    getInaccessibleLocations(gameState, regionLogic) {
+        return this.locations.filter(location => 
+            !location.isAccessible(gameState, regionLogic)
+        );
+    }
+
+    /**
+     * Gets all accessible and empty locations for item placement
+     * @param {Object} gameState - Current game state object
+     * @param {Object} regionLogic - Region logic map from regions.json
+     * @returns {Array<Location>} Array of accessible, empty locations
+     */
+    getAccessibleEmptyLocations(gameState, regionLogic) {
+        return this.locations.filter(location => 
+            location.isAccessible(gameState, regionLogic) && 
+            location.isEmpty() && 
+            location.isAvailable()
+        );
+    }
+
+    /**
+     * Gets locations by region tag that are accessible
+     * @param {string} regionTag - The region tag to filter by
+     * @param {Object} gameState - Current game state object
+     * @param {Object} regionLogic - Region logic map from regions.json
+     * @returns {Array<Location>} Array of accessible locations in the region
+     */
+    getAccessibleLocationsByRegion(regionTag, gameState, regionLogic) {
+        return this.getLocationsByTag(regionTag).filter(location =>
+            location.isAccessible(gameState, regionLogic) && location.isAvailable()
+        );
+    }
+
+    /**
+     * Creates a copy of this LocationCollection
+     * @returns {LocationCollection} New LocationCollection with cloned locations
+     */
+    clone() {
+        const newCollection = new LocationCollection();
+        newCollection.locations = this.locations.map(location => location.clone());
+        return newCollection;
+    }
+
+    /**
+     * Gets statistics about placed items and accessibility
+     * @param {Object} gameState - Current game state object (optional)
+     * @param {Object} regionLogic - Region logic map from regions.json (optional)
+     * @returns {Object} Object with placement and accessibility statistics
+     */
+    getPlacementStats(gameState = null, regionLogic = null) {
         const total = this.locations.length;
         const placed = this.getLocationsWithPlacedItems().length;
         const empty = total - placed;
+        const locked = this.getLockedLocations().length;
+        const available = this.getAvailableLocations().length;
         
-        return {
+        const stats = {
             total,
             placed,
             empty,
-            percentageFilled: total > 0 ? (placed / total * 100).toFixed(1) : 0
+            locked,
+            available,
+            percentageFilled: total > 0 ? (placed / total * 100).toFixed(1) : 0,
+            percentageLocked: total > 0 ? (locked / total * 100).toFixed(1) : 0
         };
+
+        // Add accessibility stats if game state is provided
+        if (gameState && regionLogic) {
+            const accessible = this.getAccessibleLocations(gameState, regionLogic).length;
+            const inaccessible = total - accessible;
+            const accessibleEmpty = this.getAccessibleEmptyLocations(gameState, regionLogic).length;
+            
+            stats.accessible = accessible;
+            stats.inaccessible = inaccessible;
+            stats.accessibleEmpty = accessibleEmpty;
+            stats.percentageAccessible = total > 0 ? (accessible / total * 100).toFixed(1) : 0;
+        }
+
+        return stats;
     }
 }
 
