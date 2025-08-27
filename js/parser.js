@@ -124,8 +124,8 @@ const StateLogic = {
 
     fahr_outpost(state) {
         return StateLogic.ultra_hammer(state) && 
-               ((state.canReach("Rogueport Sewers Westside Ground", "Region") && StateLogic.ultra_boots(state)) || 
-                (state.canReach("Rogueport Sewers Westside", "Region") && state.has("Yoshi")));
+               ((state.canReach("sewers_westside_ground", "Region") && StateLogic.ultra_boots(state)) || 
+                (state.canReach("sewers_westside", "Region") && state.has("Yoshi")));
     },
 
     moon(state) {
@@ -147,8 +147,9 @@ const StateLogic = {
                state.has("Bobbery") || StateLogic.tube_curse(state) || StateLogic.ultra_hammer(state));
     },
 
-    palace(state, chapters) {
-        return StateLogic.ttyd(state) && state.has("required_stars", chapters);
+    palace(state, chapters = 7) {
+        const starsCount = state.getStarsCount ? state.getStarsCount() : 0;
+        return StateLogic.ttyd(state) && starsCount >= chapters;
     },
 
     riddle_tower(state) {
@@ -172,6 +173,10 @@ const StateLogic = {
 
     key_any(state) {
         return state.has("Red Key") || state.has("Blue Key");
+    },
+
+    stars(state) {
+        return state.getStarsCount ? state.getStarsCount() : 0;
     }
 };
 

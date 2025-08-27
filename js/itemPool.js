@@ -94,6 +94,8 @@ const ITEM_FREQUENCIES = {
     "Crystal Star": 0,
     "Progressive Boots": 2,
     "Progressive Hammer": 2
+    // Note: Items with frequency 1 are removed since that's the default
+    // Only items with frequency 0 (disabled) or >1 (multiple copies) need to be listed
 };
 
 /**

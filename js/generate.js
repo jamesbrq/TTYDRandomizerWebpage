@@ -356,12 +356,14 @@ function customPrompt(message, title = 'Input Required', defaultValue = '', onCo
     ], { defaultValue, placeholder: 'Enter value...' });
 }
 
-// ROM file handling
+// ROM file handling (COMMENTED OUT FOR TESTING)
+/*
 let selectedROMFile = null;
 
 // Global variables for extracted files
 let extractedDOL = null;
 let extractedRELFiles = {};
+*/
 
 // REL file definitions
 const REL_FILES = {
@@ -396,7 +398,8 @@ const REL_FILES = {
     yuu: "yuu"
 };
 
-// Handle ROM file selection
+// Handle ROM file selection (COMMENTED OUT FOR TESTING)
+/*
 function handleROMSelection(event) {
     const file = event.target.files[0];
     if (file) {
@@ -416,7 +419,10 @@ function handleROMSelection(event) {
         }
     }
 }
+*/
 
+// ROM processing functions (COMMENTED OUT FOR TESTING)
+/*
 async function extractAndPatchFiles(isoData, locationData, settings) {
     console.log('Extracting and patching files...');
     const { addOrReplace } = await import('./gciso.js');
@@ -509,8 +515,10 @@ async function extractAndPatchFiles(isoData, locationData, settings) {
         }
     });
 }
+*/
 
-// Function to patch the extracted DOL file directly
+// DOL patching functions (COMMENTED OUT FOR TESTING)
+/*
 async function patchDOL() {
     if (!extractedDOL) {
         console.warn('No DOL file extracted to patch');
@@ -560,6 +568,7 @@ async function patchDOL() {
         console.error('Error patching DOL:', error);
     }
 }
+*/
 
 // Function to get settings from the UI
 function getSettingsFromUI() {
@@ -663,7 +672,8 @@ function generateRandomSeed() {
     return Math.random().toString(36).substring(2, 18).toUpperCase();
 }
 
-// Function to patch DOL with settings
+/*
+// Function to patch DOL with settings (COMMENTED OUT FOR TESTING)
 function patchDOLSettings(view, settings) {
     // Helper function to write string at offset
     function writeString(offset, str, maxLength) {
@@ -747,8 +757,10 @@ function patchDOLSettings(view, settings) {
 
     console.log('Applied DOL settings patches');
 }
+*/
 
-// Function to patch the icon files using IPS
+/*
+// Function to patch the icon files using IPS (COMMENTED OUT FOR TESTING)
 async function patchIcons(isoData) {
     try {
         // Import the IPS function
@@ -822,14 +834,18 @@ async function patchIcons(isoData) {
         console.error('Error patching icons:', error);
     }
 }
+*/
 
 
-// Main function for generating randomized ROM
+// Main function for generating test randomization (ROM features commented out)
 async function generateRandomizedROM() {
+    // Skip ROM file check for testing
+    /*
     if (!selectedROMFile) {
         console.error('No ROM file selected');
         return;
     }
+    */
     
     if (!allLocations) {
         console.error('Locations not initialized');
@@ -837,15 +853,17 @@ async function generateRandomizedROM() {
     }
     
     try {
-        console.log('Starting ROM generation...');
+        console.log('Starting test randomization generation...');
         
         // Get settings from UI
         const settings = getSettingsFromUI();
         
-        // Prepare json for randomization based on settings
-        console.log('Preparing json for randomization...');
+        // Prepare locations for randomization based on settings
+        console.log('Preparing locations for randomization...');
         const locationData = prepareLocationsForRandomization(settings);
         
+        // Skip ROM processing for testing
+        /*
         // Read the ROM file
         const romBuffer = await selectedROMFile.arrayBuffer();
         console.log(`ROM loaded: ${romBuffer.byteLength} bytes`);
@@ -882,11 +900,13 @@ async function generateRandomizedROM() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+        */
         
-        console.log(`ROM generation completed! Processed ${locationData.total} locations.`);
+        console.log(`Test randomization completed! Processed ${locationData.total} locations.`);
+        console.log('Spoiler file should have been generated and downloaded.');
         
     } catch (error) {
-        console.error('Error generating randomized ROM:', error);
+        console.error('Error generating test randomization:', error);
     }
 }
 
@@ -1039,17 +1059,11 @@ function initializeTooltips() {
 
 let allLocations = null;
 let allItems = null;
+let allRules = null;
 let itemIdToRomId = new Map();
 
-// Define progression items that affect accessibility
-const progressionItems = [
-    'Progressive Hammer', 'Progressive Boots', 'Paper Curse', 'Plane Curse', 
-    'Tube Curse', 'Boat Curse', 'Goombella', 'Koops', 'Flurrie', 'Yoshi', 
-    'Vivian', 'Bobbery', 'Ms. Mowz', 'Blimp Ticket', 'Train Ticket', 
-    'Contact Lens', 'Sun Stone', 'Moon Stone', 'Necklace', 'Diamond Star',
-    'Emerald Star', 'Gold Star', 'Ruby Star', 'Sapphire Star', 'Garnet Star', 
-    'Crystal Star'
-];
+// Progression items will be loaded dynamically from items.json
+let progressionItems = [];
 
 // Function to initialize items from JSON file
 async function initializeItems() {
@@ -1067,11 +1081,37 @@ async function initializeItems() {
             itemIdToRomId.set(item.id, item.rom_id);
         });
         
+        // Build progression items list from items.json
+        progressionItems = allItems
+            .filter(item => item.progression === 'progression')
+            .map(item => item.itemName);
+        
         console.log(`Loaded ${allItems.length} items`);
+        console.log(`Found ${progressionItems.length} progression items:`, progressionItems);
         return allItems;
         
     } catch (error) {
         console.error('Error loading item data:', error);
+        throw error;
+    }
+}
+
+// Function to initialize rules from JSON file
+async function initializeRules() {
+    try {
+        console.log('Loading rules data...');
+        
+        const rulesResponse = await fetch('json/rules.json');
+        if (!rulesResponse.ok) {
+            throw new Error('Failed to load rules.json');
+        }
+        allRules = await rulesResponse.json();
+        
+        console.log(`Loaded ${Object.keys(allRules).length} location rules`);
+        return allRules;
+        
+    } catch (error) {
+        console.error('Error loading rules data:', error);
         throw error;
     }
 }
@@ -1111,10 +1151,181 @@ async function initializeLocations() {
     }
 }
 
+// Function to evaluate accessibility rules from rules.json
+function evaluateAccessibilityRule(rule, gameState) {
+    if (!rule) return true;
+    
+    if (rule.has) {
+        if (typeof rule.has === 'string') {
+            return gameState.has(rule.has, rule.count || 1);
+        } else if (rule.has.item) {
+            // Special case for stars - use the stars function instead
+            if (rule.has.item === 'stars') {
+                const starsCount = gameState.getStarsCount ? gameState.getStarsCount() : 0;
+                return starsCount >= (rule.has.count || 1);
+            }
+            return gameState.has(rule.has.item, rule.has.count || 1);
+        }
+    }
+    
+    if (rule.function) {
+        return evaluateFunction(rule.function, gameState);
+    }
+    
+    if (rule.can_reach) {
+        return isLocationAccessible(rule.can_reach, gameState);
+    }
+    
+    if (rule.and) {
+        return rule.and.every(subrule => evaluateAccessibilityRule(subrule, gameState));
+    }
+    
+    if (rule.or) {
+        return rule.or.some(subrule => evaluateAccessibilityRule(subrule, gameState));
+    }
+    
+    return true;
+}
+
+// Function to evaluate function-based rules
+function evaluateFunction(funcName, gameState) {
+    let result = false;
+    let debugInfo = '';
+    
+    switch (funcName) {
+        case 'super_boots':
+            result = gameState.has('Progressive Boots', 1);
+            debugInfo = `Progressive Boots count: ${gameState.getItemCount('Progressive Boots')}`;
+            break;
+        case 'ultra_boots':
+            result = gameState.has('Progressive Boots', 2);
+            debugInfo = `Progressive Boots count: ${gameState.getItemCount('Progressive Boots')}`;
+            break;
+        case 'super_hammer':
+            result = gameState.has('Progressive Hammer', 1);
+            debugInfo = `Progressive Hammer count: ${gameState.getItemCount('Progressive Hammer')}`;
+            break;
+        case 'ultra_hammer':
+            result = gameState.has('Progressive Hammer', 2);
+            debugInfo = `Progressive Hammer count: ${gameState.getItemCount('Progressive Hammer')}`;
+            break;
+        case 'tube_curse':
+            result = gameState.has('Tube Curse');
+            debugInfo = `Tube Curse count: ${gameState.getItemCount('Tube Curse')}`;
+            break;
+        case 'key_any':
+            result = gameState.has('Red Key') || gameState.has('Blue Key');
+            debugInfo = `Red Key: ${gameState.getItemCount('Red Key')}, Blue Key: ${gameState.getItemCount('Blue Key')}`;
+            break;
+        case 'ttyd':
+            // ttyd logic from parser.js: (Plane Curse OR super_hammer OR (Flurrie AND (Bobbery OR tube_curse OR (Contact Lens AND Paper Curse))))
+            const hasPlane = gameState.has('Plane Curse');
+            const hasSuperHammer = gameState.has('Progressive Hammer', 1);
+            const hasFlurrie = gameState.has('Flurrie');
+            const hasBobbery = gameState.has('Bobbery');
+            const hasTubeCurse = gameState.has('Paper Curse') && gameState.has('Tube Curse');
+            const hasContactLensPaper = gameState.has('Contact Lens') && gameState.has('Paper Curse');
+            result = hasPlane || hasSuperHammer || (hasFlurrie && (hasBobbery || hasTubeCurse || hasContactLensPaper));
+            debugInfo = `Plane: ${hasPlane}, SuperHammer: ${hasSuperHammer}, Flurrie: ${hasFlurrie}, Bobbery: ${hasBobbery}, TubeCurse: ${hasTubeCurse}, ContactLensPaper: ${hasContactLensPaper}`;
+            break;
+        case 'pit':
+            // pit logic from parser.js: Paper Curse AND Plane Curse
+            const hasPaperCurse = gameState.has('Paper Curse');
+            const hasPlaneCurse = gameState.has('Plane Curse');
+            result = hasPaperCurse && hasPlaneCurse;
+            debugInfo = `Paper Curse: ${hasPaperCurse}, Plane Curse: ${hasPlaneCurse}`;
+            break;
+        case 'riverside':
+            // riverside logic from parser.js: complex requirements with multiple items
+            const hasVivian = gameState.has('Vivian');
+            const hasAutograph = gameState.has('Autograph');
+            const hasRaggedDiary = gameState.has('Ragged Diary');
+            const hasBlanket = gameState.has('Blanket');
+            const hasVitalPaper = gameState.has('Vital Paper');
+            const hasTrainTicket = gameState.has('Train Ticket');
+            result = hasVivian && hasAutograph && hasRaggedDiary && hasBlanket && hasVitalPaper && hasTrainTicket;
+            debugInfo = `Vivian: ${hasVivian}, Autograph: ${hasAutograph}, RaggedDiary: ${hasRaggedDiary}, Blanket: ${hasBlanket}, VitalPaper: ${hasVitalPaper}, TrainTicket: ${hasTrainTicket}`;
+            break;
+        case 'keelhaul_key':
+            result = gameState.regions.has('keelhaul_key');
+            debugInfo = `Has keelhaul_key region: ${gameState.regions.has('keelhaul_key')}`;
+            break;
+        case 'fahr_outpost':
+            // fahr_outpost logic from parser.js: ultra_hammer AND ((canReach westside ground AND ultra_boots) OR (canReach westside AND Yoshi))
+            const hasUltraHammerFO = gameState.has('Progressive Hammer', 2);
+            const canReachWestsideGround = gameState.canReach('sewers_westside_ground', 'Region');
+            const hasUltraBootsFO = gameState.has('Progressive Boots', 2);
+            const canReachWestside = gameState.canReach('sewers_westside', 'Region');
+            const hasYoshiFO = gameState.has('Yoshi');
+            result = hasUltraHammerFO && ((canReachWestsideGround && hasUltraBootsFO) || (canReachWestside && hasYoshiFO));
+            debugInfo = `Ultra Hammer: ${hasUltraHammerFO}, Westside Ground: ${canReachWestsideGround}, Ultra Boots: ${hasUltraBootsFO}, Westside: ${canReachWestside}, Yoshi: ${hasYoshiFO}`;
+            break;
+        case 'poshley_heights':
+            // poshley_heights logic from parser.js: Station Key 1 AND Elevator Key (Riverside) AND super_hammer AND ultra_boots
+            const hasStationKey1 = gameState.has('Station Key 1');
+            const hasElevatorKey = gameState.has('Elevator Key (Riverside)');
+            const hasSuperHammerPH = gameState.has('Progressive Hammer', 1);
+            const hasUltraBootsPH = gameState.has('Progressive Boots', 2);
+            result = hasStationKey1 && hasElevatorKey && hasSuperHammerPH && hasUltraBootsPH;
+            debugInfo = `Station Key 1: ${hasStationKey1}, Elevator Key: ${hasElevatorKey}, Super Hammer: ${hasSuperHammerPH}, Ultra Boots: ${hasUltraBootsPH}`;
+            break;
+        case 'moon':
+            // moon logic from parser.js: Bobbery AND Goldbob Guide
+            const hasBobberryMoon = gameState.has('Bobbery');
+            const hasGoldbobGuide = gameState.has('Goldbob Guide');
+            result = hasBobberryMoon && hasGoldbobGuide;
+            debugInfo = `Bobbery: ${hasBobberryMoon}, Goldbob Guide: ${hasGoldbobGuide}`;
+            break;
+        case 'palace':
+            // palace logic from parser.js: ttyd(state) AND required_stars
+            // Note: The chapters parameter isn't available in this context, so we'll use a reasonable default
+            const hasTtydAccess = evaluateFunction('ttyd', gameState);
+            const starsCount = gameState.getStarsCount ? gameState.getStarsCount() : 0;
+            const requiredStars = starsCount >= 7; // Need 7 Crystal Stars for palace access
+            result = hasTtydAccess && requiredStars;
+            debugInfo = `TTYD access: ${hasTtydAccess}, Stars count: ${starsCount}, Required stars (7): ${requiredStars}`;
+            break;
+        case 'riddle_tower':
+            // riddle_tower logic from parser.js: tube_curse AND Palace Key AND Bobbery AND Boat Curse AND Star Key AND Palace Key (Riddle Tower) x8
+            const hasTubeCurseRT = gameState.has('Paper Curse') && gameState.has('Tube Curse');
+            const hasPalaceKey = gameState.has('Palace Key');
+            const hasBobberryRT = gameState.has('Bobbery');
+            const hasBoatCurse = gameState.has('Boat Curse');
+            const hasStarKey = gameState.has('Star Key');
+            const hasPalaceKeyRT = gameState.has('Palace Key (Riddle Tower)', 8);
+            result = hasTubeCurseRT && hasPalaceKey && hasBobberryRT && hasBoatCurse && hasStarKey && hasPalaceKeyRT;
+            debugInfo = `Tube Curse: ${hasTubeCurseRT}, Palace Key: ${hasPalaceKey}, Bobbery: ${hasBobberryRT}, Boat Curse: ${hasBoatCurse}, Star Key: ${hasStarKey}, Palace Key RT (8): ${hasPalaceKeyRT}`;
+            break;
+        default:
+            console.warn(`Unknown function: ${funcName}`);
+            return false;
+    }
+    
+    if (!result && ['super_boots', 'ultra_boots', 'super_hammer', 'ultra_hammer', 'tube_curse', 'fahr_outpost', 'palace', 'moon'].includes(funcName)) {
+        console.log(`Function ${funcName} FAILED: ${debugInfo}`);
+    }
+    
+    return result;
+}
+
+// Function to check if a specific location is accessible
+function isLocationAccessible(locationName, gameState) {
+    if (!allRules || !allRules[locationName]) {
+        console.warn(`No rule found for location: ${locationName}`);
+        return true;
+    }
+    
+    return evaluateAccessibilityRule(allRules[locationName], gameState);
+}
+
 // Function to prepare json for randomization based on settings
 function prepareLocationsForRandomization(settings) {
     if (!allLocations) {
         throw new Error('Locations not initialized. Call initializeLocations() first.');
+    }
+    
+    if (!allRules) {
+        throw new Error('Rules not initialized. Call initializeRules() first.');
     }
     
     console.log('Starting logical item placement test...');
@@ -1166,35 +1377,147 @@ function prepareLocationsForRandomization(settings) {
     };
 }
 
+// Function to apply item locks - ensuring specific items are placed at specific locations
+function applyItemLocks(locations, settings, spoilerGen) {
+    console.log('=== APPLYING ITEM LOCKS ===');
+    
+    // Define starting partners mapping
+    const startingPartners = [
+        "Goombella", // 1
+        "Koops",     // 2
+        "Bobbery",   // 3
+        "Yoshi",     // 4
+        "Flurrie",   // 5
+        "Vivian",    // 6
+        "Ms. Mowz"   // 7
+    ];
+    
+    // Define item locks - location name -> item name
+    const itemLocks = {
+        "Rogueport Center: Goombella": startingPartners[settings.starting_partner - 1],
+        "Hooktail's Castle Hooktail's Room: Diamond Star": "Diamond Star",
+        "Great Tree Entrance: Emerald Star": "Emerald Star", 
+        "Glitzville Arena: Gold Star": "Gold Star",
+        "Creepy Steeple Upper Room: Ruby Star": "Ruby Star",
+        "Pirate's Grotto Cortez' Hoard: Sapphire Star": "Sapphire Star",
+        "Poshley Heights Sanctum Altar: Garnet Star": "Garnet Star",
+        "X-Naut Fortress Boss Room: Crystal Star": "Crystal Star"
+    };
+    
+    let locksApplied = 0;
+    
+    // Apply each lock
+    Object.entries(itemLocks).forEach(([locationName, itemName]) => {
+        // Find the location
+        const targetLocation = locations.find(loc => loc.name === locationName);
+        
+        if (targetLocation) {
+            // Get the item ID
+            const itemId = getItemIdByName(itemName);
+            if (itemId) {
+                // Lock the item to this location
+                targetLocation.placeItem(itemId);
+                targetLocation.locked = true; // Mark as locked
+                locksApplied++;
+                
+                console.log(`Locked "${itemName}" (ID: ${itemId}) to "${locationName}"`);
+                
+                // Add to spoiler log
+                if (spoilerGen) {
+                    spoilerGen.addProgressionLog(`Applied item lock`, itemName, locationName, null);
+                }
+            } else {
+                console.warn(`Could not find item ID for "${itemName}" - lock skipped`);
+            }
+        } else {
+            console.warn(`Could not find location "${locationName}" - lock skipped`);
+        }
+    });
+    
+    console.log(`Applied ${locksApplied} item locks out of ${Object.keys(itemLocks).length} total locks`);
+    return locksApplied;
+}
+
 // Logical item placement test function
 async function performLogicalItemPlacement(locations, settings) {
     console.log('=== LOGICAL ITEM PLACEMENT TEST ===');
-    
+
     const startTime = Date.now();
-    
+
     try {
+        // Ensure items and rules are loaded before starting
+        if (!allItems) {
+            console.log('Items not loaded, initializing...');
+            await initializeItems();
+        }
+        if (!allRules) {
+            console.log('Rules not loaded, initializing...');
+            await initializeRules();
+        }
+
+        console.log(`Using ${allItems ? allItems.length : 0} items and ${allRules ? Object.keys(allRules).length : 0} rules`);
+
+        // Debug: Check if items are actually loaded
+        if (allItems && allItems.length > 0) {
+            console.log(`First few items:`, allItems.slice(0, 5));
+            // Test getItemIdByName function
+            const testId = getItemIdByName('Progressive Hammer');
+            console.log(`Test: Progressive Hammer ID = ${testId}`);
+        } else {
+            console.error('allItems is null or empty!');
+        }
+
         // Load region logic
         const regionLogic = await loadRegionLogic();
-        
+
         // Initialize spoiler generator
         const spoilerGen = new SpoilerGenerator();
         const seed = settings.seed || generateRandomSeed();
         const settingsString = getSettingsString();
         spoilerGen.initialize(seed, settings, settingsString);
         spoilerGen.addProgressionLog('Starting randomization', '', '', null);
-        
+
         // Create starting game state
-        const gameState = GameState.createStartingState();
+        let gameState = GameState.createStartingState();
         console.log('Starting game state:', gameState.getStats());
         spoilerGen.addProgressionLog('Created starting game state', '', '', gameState);
-        
-        // Create item pool for all locations
-        const itemPool = createFullItemPool(locations.length);
+
+        // Create item pool for all locations, excluding locked items
+        const startingPartnerName = settings.starting_partner === 1 ? "Goombella" :
+                                   settings.starting_partner === 2 ? "Koops" :
+                                   settings.starting_partner === 3 ? "Bobbery" :
+                                   settings.starting_partner === 4 ? "Yoshi" :
+                                   settings.starting_partner === 5 ? "Flurrie" :
+                                   settings.starting_partner === 6 ? "Vivian" : "Ms. Mowz";
+
+        const lockedItems = [
+            startingPartnerName,
+            "Diamond Star", "Emerald Star", "Gold Star", "Ruby Star",
+            "Sapphire Star", "Garnet Star", "Crystal Star"
+        ];
+
+        console.log(`Excluding locked items: ${lockedItems.join(', ')}`);
+
+        // Define critical items for debugging
+        const criticalItems = ['Progressive Boots', 'Progressive Hammer', 'Tube Curse', 'Yoshi', 'Vivian', 'Wedding Ring'];
+
+        const itemPool = createFullItemPool(locations.length, lockedItems, progressionItems);
         console.log(`Created item pool with ${itemPool.length} items for ${locations.length} locations`);
-        
+
+        // Debug: Check critical items in full item pool BEFORE any processing
+        console.log('\n=== FULL ITEM POOL VERIFICATION ===');
+        criticalItems.forEach(item => {
+            const count = itemPool.filter(i => i === item).length;
+            console.log(`${item}: ${count} copies in full item pool`);
+        });
+
         // Shuffle the item pool
         shuffleArray(itemPool);
-        
+        console.log('Item pool shuffled');
+
+        // Apply item locks to ensure important items are placed correctly
+        applyItemLocks(locations, settings, spoilerGen);
+
         // Goal: Ensure we can reach "Palace of Shadow Final Staircase: Ultra Shroom"
         const goalLocation = locations.find(loc => loc.name === "Palace of Shadow Final Staircase: Ultra Shroom");
         if (goalLocation) {
@@ -1202,174 +1525,483 @@ async function performLogicalItemPlacement(locations, settings) {
         } else {
             console.warn('Goal location "Palace of Shadow Final Staircase: Ultra Shroom" not found!');
         }
-        
+
         let placedItems = 0;
         let accessibilityChecks = 0;
         let placementAttempts = 0;
         let currentSphere = 1;
         let itemPoolIndex = 0;
-        
+
         // Track items placed in current sphere
         let sphereItems = [];
-        
+
         // Separate progression items from filler items
         const progressionPool = itemPool.filter(item => progressionItems.includes(item));
         const fillerPool = itemPool.filter(item => !progressionItems.includes(item));
-        
+
         console.log(`Split item pool: ${progressionPool.length} progression, ${fillerPool.length} filler`);
+        console.log(`Progression items available:`, progressionPool);
+
+        // Critical check: Verify key items are actually in progression pool
+        console.log('\n=== CRITICAL ITEM VERIFICATION ===');
+        criticalItems.forEach(item => {
+            const inPool = progressionPool.includes(item);
+            const count = progressionPool.filter(i => i === item).length;
+            console.log(`${item}: in pool = ${inPool}, count = ${count}`);
+
+            // If not found, check if it was excluded
+            if (!inPool) {
+                const wasLocked = lockedItems.includes(item);
+                const inFullPool = itemPool.includes(item);
+                console.log(`  ❌ ${item} missing! locked=${wasLocked}, inFullPool=${inFullPool}`);
+            }
+        });
+
+        // Debug: Check for specific missing items
+        const missingItems = ['Yoshi', 'Tube Curse', 'Progressive Hammer', 'Progressive Boots', 'Vivian'];
+        console.log('Checking for missing items:');
+        missingItems.forEach(item => {
+            const inProgressionList = progressionItems.includes(item);
+            const inProgressionPool = progressionPool.includes(item);
+            const inLockedItems = lockedItems.includes(item);
+            const inFullItemPool = itemPool.includes(item);
+            console.log(`  ${item}: progression=${inProgressionList}, pool=${inProgressionPool}, locked=${inLockedItems}, fullPool=${inFullItemPool}`);
+        });
+
+        // Enhanced debug: Show progression item stats
+        console.log(`\nProgression items summary:`);
+        console.log(`  Total from items.json: ${progressionItems.length}`);
+        console.log(`  In progression pool: ${progressionPool.length}`);
+        console.log(`  Locked items: ${lockedItems.join(', ')}`);
+
+        // Show sample of progression items that ARE in the pool
+        const availableProgressionSample = progressionPool.slice(0, 10);
+        console.log(`  Sample available progression: ${availableProgressionSample.join(', ')}`);
+
+        // Check if Progressive items are being excluded by item frequencies
+        console.log(`\nItem frequency check:`);
+        missingItems.forEach(item => {
+            const frequency = ITEM_FREQUENCIES[item];
+            if (frequency !== undefined) {
+                console.log(`  ${item}: frequency override = ${frequency}`);
+            } else {
+                console.log(`  ${item}: using default frequency (1)`);
+            }
+        });
         shuffleArray(progressionPool);
         shuffleArray(fillerPool);
-        
-        // Forward-fill algorithm for 100% accessibility
+
+        // Forward-fill algorithm focused on accessibility and completion
         let remainingProgressionItems = [...progressionPool];
         let remainingFillerItems = [...fillerPool];
-        
-        while (placedItems < locations.length) {
-            // Get currently accessible empty locations
-            const accessibleLocations = locations.filter(location => {
-                accessibilityChecks++;
-                return location.isEmpty() && 
-                       location.isAvailable() && 
-                       location.isAccessible(gameState, regionLogic);
-            });
-            
-            if (accessibleLocations.length === 0) {
-                console.error('No accessible locations remaining - randomization failed!');
-                break;
-            }
-            
-            console.log(`Sphere ${currentSphere}: ${accessibleLocations.length} accessible locations, ${remainingProgressionItems.length} progression items left`);
-            
-            let spherePlacementCount = 0;
-            let placedProgressionInSphere = false;
-            
-            // Place progression items in accessible locations until we run out or fill all accessible locations
-            for (const targetLocation of accessibleLocations) {
-                if (remainingProgressionItems.length === 0) break;
-                
-                const itemToPlace = remainingProgressionItems.shift();
-                const itemId = getItemIdByName(itemToPlace) || 77772177;
-                
-                // Place the item
-                targetLocation.placeItem(itemId);
-                placedItems++;
-                spherePlacementCount++;
-                placedProgressionInSphere = true;
-                
-                // Update game state immediately
-                gameState.addItem(itemToPlace, 1);
-                
-                // Add to spoiler data
-                spoilerGen.addLocationItemPair(targetLocation, itemToPlace, itemId, currentSphere.toString());
-                spoilerGen.addProgressionLog(`Placed progression item`, itemToPlace, targetLocation.name, gameState);
-                
-                // Add to current sphere
-                sphereItems.push({
-                    itemName: itemToPlace,
-                    location: targetLocation
+        let generationAttempt = 1;
+        const maxGenerationAttempts = 10;
+
+        // Try new logical placement algorithm first
+        console.log('=== TRYING NEW LOGICAL PLACEMENT ALGORITHM ===');
+        console.log('LogicalItemPlacer available:', typeof LogicalItemPlacer !== 'undefined');
+        console.log('Settings:', settings);
+        console.log('Items in pool:', itemPool.length);
+        console.log('Rules loaded:', Object.keys(allRules).length);
+
+        let newAlgorithmSucceeded = false;
+        try {
+            console.log('Creating LogicalItemPlacer...');
+            const placer = new LogicalItemPlacer(locations, itemPool, allRules, regionLogic, settings);
+            console.log('Placer created, calling place()...');
+
+            const placementResult = await placer.place();
+
+            console.log('✅ New logical placement completed successfully');
+            console.log(`Placed items in ${placementResult.size} locations`);
+            gameState = placer.gameState.clone();
+            newAlgorithmSucceeded = true;
+
+        } catch (error) {
+            console.error('❌ New logical placement failed:', error);
+            console.error('Error stack:', error.stack);
+            console.log('Falling back to old algorithm...');
+        }
+
+        let generationSuccessful = newAlgorithmSucceeded;
+
+        // Main generation loop with retry logic (fallback if new algorithm failed)
+        if (!newAlgorithmSucceeded) {
+            while (generationAttempt <= maxGenerationAttempts) {
+            console.log(`=== GENERATION ATTEMPT ${generationAttempt} ===`);
+
+            // Reset state for new attempt if needed
+            if (generationAttempt > 1) {
+                // Clear all placed items except locked ones
+                locations.forEach(location => {
+                    if (!location.locked) {
+                        location.clearPlacedItem();
+                    }
                 });
-                
-                console.log(`Placed progression "${itemToPlace}" at "${targetLocation.name}"`);
+
+                // Reset counters and state
+                placedItems = locations.filter(loc => loc.locked).length || 0;
+                gameState = GameState.createStartingState();
+
+                // Add locked items back to game state
+                locations.forEach(location => {
+                    if (location.locked && location.hasPlacedItem()) {
+                        const itemName = getItemNameById(location.placed_item);
+                        if (itemName) {
+                            gameState.addItem(itemName, 1);
+                        }
+                    }
+                });
+
+                // Reset item pools
+                remainingProgressionItems = [...progressionPool];
+                remainingFillerItems = [...fillerPool];
+                shuffleArray(remainingProgressionItems);
+                shuffleArray(remainingFillerItems);
+
+                console.log(`Retry attempt ${generationAttempt}: Reset to ${placedItems} locked items`);
             }
-            
-            // After placing progression items, perform a region sweep
-            if (placedProgressionInSphere) {
+
+            let attemptFailed = false;
+            let iterationCount = 0;
+            const maxIterations = 200;
+
+            // Continue placing items until all locations are filled
+            while (placedItems < locations.length && !attemptFailed && iterationCount < maxIterations) {
+                iterationCount++;
+                let progressMade = false;
+
+                // Perform region sweep to update accessible regions
                 const newRegions = performRegionSweep(gameState, regionLogic);
                 if (newRegions.length > 0) {
                     console.log(`Region sweep unlocked: ${newRegions.join(', ')}`);
                     spoilerGen.addProgressionLog(`Unlocked regions`, newRegions.join(', '), '', gameState);
                 }
-            }
-            
-            // Fill any remaining accessible locations in this sphere with filler items
-            const stillAccessible = locations.filter(location => {
-                return location.isEmpty() && 
-                       location.isAvailable() && 
-                       location.isAccessible(gameState, regionLogic);
-            });
-            
-            for (const targetLocation of stillAccessible) {
-                if (remainingFillerItems.length === 0) {
-                    // Generate more filler if needed
-                    remainingFillerItems.push('Star Piece', '10 Coins', 'Mushroom', 'Honey Syrup', 'Super Shroom', 'Shine Sprite');
+
+                // Get currently accessible empty locations based on current game state
+                const accessibleLocations = getAccessibleEmptyLocations(locations, gameState, regionLogic);
+                const emptyLocations = locations.filter(loc => loc.isEmpty() && !loc.locked && loc.isAvailable()).length;
+
+                console.log(`Current game state has ${gameState.items.size} unique items, ${gameState.regions.size} regions`);
+                console.log(`${emptyLocations} empty locations, ${accessibleLocations.length} accessible`);
+
+                if (accessibleLocations.length === 0) {
+                    if (emptyLocations > 0) {
+                        console.error(`CRITICAL: ${emptyLocations} empty locations but none accessible!`);
+                        console.error(`Game state:`, gameState.getStats());
+                        console.error(`Available regions:`, Array.from(gameState.regions));
+
+                        // Show detailed game state items - focus on progression items only
+                        console.error(`Current progression items in game state:`);
+                        const progressionInState = [];
+                        const otherItemsInState = [];
+
+                        gameState.items.forEach((count, itemName) => {
+                            if (progressionItems.includes(itemName)) {
+                                progressionInState.push(`${itemName}: ${count}`);
+                            } else {
+                                otherItemsInState.push(`${itemName}: ${count}`);
+                            }
+                        });
+
+                        console.error(`  Progression items (${progressionInState.length}):`, progressionInState);
+                        console.error(`  Other items (${otherItemsInState.length}):`, otherItemsInState.slice(0, 10));
+
+                        // Show empty locations by region
+                        const emptyByRegion = {};
+                        const emptyLocationsList = locations.filter(loc => loc.isEmpty() && !loc.locked && loc.isAvailable());
+                        emptyLocationsList.forEach(loc => {
+                            const region = loc.getRegionTag() || 'unknown';
+                            if (!emptyByRegion[region]) emptyByRegion[region] = [];
+                            emptyByRegion[region].push(loc.name);
+                        });
+
+                        console.error(`Empty locations by region:`);
+                        Object.entries(emptyByRegion).forEach(([region, locs]) => {
+                            console.error(`  ${region}: ${locs.length} locations`);
+                            if (locs.length <= 3) {
+                                console.error(`    Examples: ${locs.join(', ')}`);
+                            }
+                        });
+
+                        // Show a sample of inaccessible locations for debugging
+                        const sampleInaccessible = emptyLocationsList.slice(0, 5);
+                        console.error(`Sample inaccessible locations:`);
+                        sampleInaccessible.forEach(loc => {
+                            const rule = allRules[loc.name];
+                            console.error(`  - ${loc.name}: has rule = ${!!rule}`);
+                            if (rule) {
+                                console.error(`    Rule:`, JSON.stringify(rule));
+                                try {
+                                    const accessible = evaluateAccessibilityRule(rule, gameState);
+                                    console.error(`    Rule evaluation: ${accessible}`);
+                                } catch (error) {
+                                    console.error(`    Rule error: ${error.message}`);
+                                }
+                            }
+                        });
+                    }
+                    console.warn(`No accessible locations found with ${placedItems}/${locations.length} items placed`);
+                    attemptFailed = true;
+                    break;
                 }
-                
-                const itemToPlace = remainingFillerItems.shift();
-                const itemId = getItemIdByName(itemToPlace) || 77772177;
-                
-                targetLocation.placeItem(itemId);
-                placedItems++;
-                spherePlacementCount++;
-                
-                spoilerGen.addLocationItemPair(targetLocation, itemToPlace, itemId, currentSphere.toString());
-                
-                sphereItems.push({
-                    itemName: itemToPlace,
-                    location: targetLocation
-                });
-                
-                console.log(`Placed filler "${itemToPlace}" at "${targetLocation.name}"`);
+
+                console.log(`Iteration ${iterationCount}: ${accessibleLocations.length} accessible locations, ${remainingProgressionItems.length} progression + ${remainingFillerItems.length} filler items remaining`);
+
+                // Debug: Check critical items in remaining pools
+                if (iterationCount % 10 === 1) { // Every 10 iterations
+                    console.log(`Critical items remaining: ${criticalItems.map(item => `${item}=${remainingProgressionItems.filter(i => i === item).length + remainingFillerItems.filter(i => i === item).length}`).join(', ')}`);
+                }
+
+                // Strategic item placement: place one item at a time and re-evaluate accessibility
+                let placedThisIteration = false;
+
+                // Priority 1: Place a progression item if we have one
+                if (remainingProgressionItems.length > 0 && accessibleLocations.length > 0) {
+                    const itemToPlace = remainingProgressionItems.shift();
+
+                    // Balanced placement strategy: mix of early and late locations
+                    const sortedLocations = [...accessibleLocations].sort((a, b) => {
+                        const regionA = a.getRegionTag() || 'unknown';
+                        const regionB = b.getRegionTag() || 'unknown';
+
+                        // Balanced priority: some progression in early areas, some in late areas
+                        const regionPriority = {
+                            // Late game (high priority when available)
+                            'palace': 80, 'riddle_tower': 75, 'xnaut_fortress': 70, 'fahr_outpost': 65,
+                            // Mid game
+                            'poshley_heights': 50, 'keelhaul_key': 45, 'excess_express': 40, 'creepy_steeple': 35,
+                            'twilight_town': 30, 'twilight_trail': 30, 'glitzville': 25, 'great_tree': 20, 'boggly_woods': 15,
+                            // Early game (ensure some progression here)
+                            'hooktails_castle': 10, 'petal_left': 8, 'petal_right': 8,
+                            'rogueport_westside': 5, 'sewers_westside': 5, 'sewers_westside_ground': 5,
+                            'unknown': 3, 'pit': 1 // Pit should have lower priority for progression items
+                        };
+
+                        return (regionPriority[regionB] || 0) - (regionPriority[regionA] || 0);
+                    });
+
+                    // Occasionally place in earlier areas to ensure progression flow
+                    let targetLocation;
+                    if (placedItems < 50 && Math.random() < 0.4) {
+                        // For first 50 items, 40% chance to prefer earlier accessible areas
+                        const earlyAccessible = sortedLocations.filter(loc => {
+                            const region = loc.getRegionTag() || 'unknown';
+                            return ['unknown', 'rogueport_westside', 'sewers_westside', 'sewers_westside_ground',
+                                    'petal_left', 'boggly_woods', 'great_tree'].includes(region);
+                        });
+                        targetLocation = earlyAccessible.length > 0 ? earlyAccessible[0] : sortedLocations[0];
+                    } else {
+                        targetLocation = sortedLocations[0];
+                    }
+                    const itemId = getItemIdByName(itemToPlace);
+
+                    if (itemId && targetLocation) {
+                        // Place the item
+                        targetLocation.placeItem(itemId);
+                        placedItems++;
+                        placedThisIteration = true;
+                        progressMade = true;
+
+                        // Update game state
+                        gameState.addItem(itemToPlace, 1);
+
+                        const isCritical = criticalItems.includes(itemToPlace);
+                        const criticalMarker = isCritical ? '🔑' : '';
+                        const regionTag = targetLocation.getRegionTag() || 'unknown';
+                        console.log(`Placed ${criticalMarker}progression "${itemToPlace}" at "${targetLocation.name}" (${regionTag}) (${placedItems}/${locations.length})`);
+
+                        // Add to spoiler data
+                        spoilerGen.addLocationItemPair(targetLocation, itemToPlace, itemId, "placement");
+                    }
+                }
+
+                // Priority 2: Fill remaining accessible locations with filler items (up to a reasonable limit per iteration)
+                if (!placedThisIteration || accessibleLocations.length > remainingProgressionItems.length + 5) {
+                    const maxFillerPerIteration = Math.min(10, accessibleLocations.length);
+                    let fillerPlaced = 0;
+
+                    for (const targetLocation of accessibleLocations) {
+                        if (targetLocation.hasPlacedItem() || fillerPlaced >= maxFillerPerIteration) continue;
+
+                        // Generate more filler if needed
+                        if (remainingFillerItems.length === 0) {
+                            remainingFillerItems.push(...['Star Piece', '10 Coins', 'Mushroom', 'Honey Syrup', 'Super Shroom', 'Shine Sprite']);
+                        }
+
+                        const itemToPlace = remainingFillerItems.shift();
+                        if (itemToPlace) {
+                            const itemId = getItemIdByName(itemToPlace) || 77772177;
+
+                            // Place the item
+                            targetLocation.placeItem(itemId);
+                            placedItems++;
+                            fillerPlaced++;
+                            progressMade = true;
+
+                            // Update game state (filler items can matter for logic too)
+                            gameState.addItem(itemToPlace, 1);
+
+                            // Add to spoiler data
+                            spoilerGen.addLocationItemPair(targetLocation, itemToPlace, itemId, "placement");
+                        }
+                    }
+
+                    if (fillerPlaced > 0) {
+                        console.log(`Placed ${fillerPlaced} filler items in accessible locations`);
+                    }
+                }
+
+                // If no progress was made, we're stuck
+                if (!progressMade) {
+                    console.error(`No progress made in iteration ${iterationCount} - generation stuck`);
+                    attemptFailed = true;
+                    break;
+                }
             }
-            
-            // Finalize current sphere
-            if (sphereItems.length > 0) {
-                spoilerGen.addItemSphere(currentSphere, sphereItems, gameState);
-                console.log(`Completed sphere ${currentSphere} with ${spherePlacementCount} items`);
-                sphereItems = [];
-                currentSphere++;
-            }
-            
-            // Safety check to prevent infinite loops
-            placementAttempts++;
-            if (placementAttempts > 50) {
-                console.error('Maximum placement attempts reached - stopping randomization');
+
+            // Check if generation was successful
+            if (placedItems >= locations.length && !attemptFailed) {
+                console.log(`=== GENERATION SUCCESSFUL ON ATTEMPT ${generationAttempt} ===`);
+                console.log(`Completed in ${iterationCount} iterations`);
                 break;
+            } else if (generationAttempt >= maxGenerationAttempts) {
+                console.error(`=== GENERATION FAILED AFTER ${maxGenerationAttempts} ATTEMPTS ===`);
+                console.error(`Final state: ${placedItems}/${locations.length} locations filled`);
+
+                // Check what happened to critical items
+                console.log('\n=== CRITICAL ITEMS FINAL STATUS ===');
+                criticalItems.forEach(item => {
+                    const inGameState = gameState.getItemCount(item);
+                    const remainingInProgression = remainingProgressionItems.filter(i => i === item).length;
+                    const remainingInFiller = remainingFillerItems.filter(i => i === item).length;
+                    console.log(`${item}: placed=${inGameState}, remaining_prog=${remainingInProgression}, remaining_filler=${remainingInFiller}`);
+                });
+                break;
+            } else {
+                console.warn(`Generation attempt ${generationAttempt} failed, retrying...`);
+                generationAttempt++;
             }
+        } // End of while loop
+        } // End of if (!newAlgorithmSucceeded)
+
+        // Calculate logical spheres for spoiler generation
+        console.log(`=== BASIC PLACEMENT COMPLETE - CALCULATING SPHERES ===`);
+        let totalSpheres = 0;
+        try {
+            totalSpheres = calculateAndAssignSpheres(locations, spoilerGen, gameState, regionLogic);
+            console.log(`Sphere calculation completed: ${totalSpheres} spheres calculated`);
+        } catch (error) {
+            console.error('Sphere calculation failed:', error);
+            totalSpheres = 0;
         }
-        
-        // Finalize any remaining sphere items
-        if (sphereItems.length > 0) {
-            spoilerGen.addItemSphere(currentSphere, sphereItems, gameState);
-        }
-        
-        // Statistics
+
+        // Final validation and statistics
         const totalLocations = locations.length;
-        const accessibleCount = locations.filter(loc => loc.isAccessible(gameState, regionLogic)).length;
         const filledCount = locations.filter(loc => loc.hasPlacedItem()).length;
+        const lockedCount = locations.filter(loc => loc.locked).length;
+
+        // Perform final region sweep to get all accessible regions
+        performRegionSweep(gameState, regionLogic);
+
+        const accessibleCount = locations.filter(loc => {
+            const locationRule = allRules[loc.name];
+            if (locationRule) {
+                return evaluateAccessibilityRule(locationRule, gameState);
+            } else {
+                return loc.isAccessible ? loc.isAccessible(gameState, regionLogic) : true;
+            }
+        }).length;
+
         const generationTime = Date.now() - startTime;
-        
+
+        // Verify 100% completion
+        generationSuccessful = (filledCount === totalLocations) && (accessibleCount === totalLocations);
+
         const stats = {
             totalLocations,
             accessibleCount,
             filledCount,
+            lockedCount,
             accessibilityChecks,
             placementAttempts,
-            generationTime
+            generationTime,
+            generationSuccessful,
+            totalAttempts: generationAttempt,
+            finalRegionCount: gameState.regions.size,
+            finalItemCount: gameState.items.size
         };
-        
+
         spoilerGen.setStatistics(stats);
         spoilerGen.addProgressionLog('Randomization completed', '', '', gameState);
-        
+
+        // Log final validation results
+        if (generationSuccessful) {
+            console.log(`✅ RANDOMIZATION FULLY SUCCESSFUL!`);
+            console.log(`✅ All ${totalLocations} locations filled and accessible`);
+        } else {
+            console.warn(`⚠️  RANDOMIZATION INCOMPLETE:`);
+            console.warn(`⚠️  ${filledCount}/${totalLocations} locations filled`);
+            console.warn(`⚠️  ${accessibleCount}/${totalLocations} locations accessible`);
+        }
+
         console.log('=== PLACEMENT RESULTS ===');
         console.log(`Total locations: ${totalLocations}`);
         console.log(`Currently accessible: ${accessibleCount}`);
         console.log(`Items placed: ${filledCount}`);
+        console.log(`Logical spheres calculated: ${totalSpheres}`);
         console.log(`Accessibility checks performed: ${accessibilityChecks}`);
         console.log(`Generation time: ${generationTime}ms`);
         console.log(`Final game state:`, gameState.getStats());
-        
+
         // Show sample placed items
         const placedLocations = locations.filter(loc => loc.hasPlacedItem()).slice(0, 10);
         console.log('Sample placed items:');
         placedLocations.forEach(loc => {
             console.log(`  ${loc.name}: Item ID ${loc.placed_item} (Region: ${loc.getRegionTag() || 'unknown'})`);
         });
-        
+
+        // Show inaccessible locations for debugging
+        if (!generationSuccessful) {
+            console.log('\n=== DEBUGGING INACCESSIBLE LOCATIONS ===');
+            const inaccessibleLocations = locations.filter(loc => !loc.isAccessible(gameState, regionLogic));
+            console.log(`Found ${inaccessibleLocations.length} inaccessible locations:`);
+
+            // Group by region for easier analysis
+            const regionGroups = {};
+            inaccessibleLocations.forEach(loc => {
+                const region = loc.getRegionTag() || 'unknown';
+                if (!regionGroups[region]) regionGroups[region] = [];
+                regionGroups[region].push(loc);
+            });
+
+            Object.entries(regionGroups).forEach(([region, locs]) => {
+                console.log(`\n  Region: ${region} (${locs.length} locations)`);
+                locs.slice(0, 5).forEach(loc => { // Show first 5 locations per region
+                    console.log(`    ${loc.name}`);
+                    const regionTag = loc.getRegionTag();
+                    if (regionTag && regionLogic[regionTag]) {
+                        console.log(`      Region logic: ${JSON.stringify(regionLogic[regionTag])}`);
+                        // Check if we can determine accessibility using the region logic evaluation we have
+                        if (regionLogic[regionTag].function) {
+                            const funcResult = evaluateFunction(regionLogic[regionTag].function, gameState);
+                            console.log(`      Function '${regionLogic[regionTag].function}' result: ${funcResult}`);
+                        }
+                    } else {
+                        console.log(`      No region logic found for: ${regionTag}`);
+                    }
+                });
+                if (locs.length > 5) {
+                    console.log(`    ... and ${locs.length - 5} more locations`);
+                }
+            });
+        }
+
         // Generate and download spoiler file
         console.log('Generating spoiler file...');
         spoilerGen.downloadSpoiler(`ttyd_spoiler_${seed}.txt`, 'txt');
         console.log('Spoiler file generated!');
-        
+
     } catch (error) {
         console.error('Error during logical item placement:', error);
     }
@@ -1413,42 +2045,440 @@ async function createItemPool() {
 function getItemIdByName(itemName) {
     if (!allItems) return null;
     
-    const item = allItems.find(i => i.name === itemName);
+    const item = allItems.find(i => i.itemName === itemName);
     return item ? item.id : null;
+}
+
+// Helper function to get item name by ID (reverse lookup)
+function getItemNameById(itemId) {
+    if (!allItems) return null;
+    
+    const item = allItems.find(i => i.id === itemId);
+    return item ? item.itemName : null;
+}
+
+// Comprehensive function to get accessible empty locations with both region and location logic
+function getAccessibleEmptyLocations(locations, gameState, regionLogic) {
+    const accessibleLocations = [];
+    
+    for (const location of locations) {
+        // Skip filled or locked locations
+        if (!location.isEmpty() || !location.isAvailable() || location.locked) {
+            continue;
+        }
+        
+        // ALWAYS apply access rules - no exceptions
+        let isAccessible = false;
+        const locationRule = allRules[location.name];
+        
+        if (locationRule) {
+            try {
+                isAccessible = evaluateAccessibilityRule(locationRule, gameState);
+            } catch (error) {
+                console.error(`Error evaluating rule for ${location.name}:`, error);
+                isAccessible = false; // Default to NOT accessible if rule fails
+            }
+        } else {
+            // No rule means always accessible (like starting area locations)
+            isAccessible = true;
+        }
+        
+        if (isAccessible) {
+            accessibleLocations.push(location);
+        }
+    }
+    
+    return accessibleLocations;
+}
+
+// Function to find valid locations for a specific item (prevents self-locking)
+function findValidLocationsForItem(itemName, accessibleLocations, gameState, regionLogic) {
+    return accessibleLocations.filter(location => {
+        // Basic safety checks first
+        if (!location.isEmpty() || !location.isAvailable() || location.locked) {
+            return false;
+        }
+        
+        // Check if this location would become inaccessible if we placed the item here
+        const locationRule = allRules[location.name];
+        if (locationRule) {
+            // Test accessibility without the item we're trying to place
+            const gameStateWithoutItem = gameState.clone();
+            const canAccessWithoutItem = evaluateAccessibilityRule(locationRule, gameStateWithoutItem);
+            
+            if (!canAccessWithoutItem) {
+                // Location requires this item to access - this would be self-locking
+                console.warn(`Preventing self-lock: "${itemName}" cannot be placed at "${location.name}"`);
+                return false;
+            }
+        }
+        
+        // Simple circular dependency check (more lenient)
+        if (wouldCreateSimpleCircularDependency(itemName, location.name)) {
+            console.warn(`Preventing simple circular dependency: "${itemName}" at "${location.name}"`);
+            return false;
+        }
+        
+        return true;
+    });
+}
+
+// Simplified circular dependency check (less restrictive)
+function wouldCreateSimpleCircularDependency(itemName, locationName) {
+    const locationRule = allRules[locationName];
+    if (!locationRule) return false;
+    
+    // Only check direct requirements, not nested ones
+    if (locationRule.has) {
+        if (typeof locationRule.has === 'string' && locationRule.has === itemName) {
+            return true;
+        } else if (locationRule.has.item && locationRule.has.item === itemName) {
+            return true;
+        }
+    }
+    
+    // Check function-based rules
+    if (locationRule.function) {
+        const functionRequirements = getFunctionRequirements(locationRule.function);
+        if (functionRequirements.includes(itemName)) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+// Function to choose the optimal location from valid options
+function chooseOptimalLocation(validLocations, itemName, gameState) {
+    // Prioritize locations that are less likely to cause issues
+    // For now, just return the first valid location, but this could be enhanced
+    // to prefer locations in earlier regions or with simpler requirements
+    
+    // Sort by preference: simpler requirements first
+    validLocations.sort((a, b) => {
+        const aRule = allRules[a.name];
+        const bRule = allRules[b.name];
+        
+        // Prefer locations with no specific rules (simpler)
+        if (!aRule && bRule) return -1;
+        if (aRule && !bRule) return 1;
+        
+        // Both have rules or both don't - use first available
+        return 0;
+    });
+    
+    return validLocations[0];
+}
+
+// Function to check if placing an item would create circular dependency
+function wouldCreateCircularDependency(itemName, locationName, gameState) {
+    // Check if the location rule directly or indirectly requires this item
+    const locationRule = allRules[locationName];
+    if (!locationRule) return false;
+    
+    // Create a set to track items we've checked to prevent infinite recursion
+    const checkedItems = new Set();
+    
+    function checkRuleForItem(rule, targetItem) {
+        if (!rule || checkedItems.has(targetItem)) return false;
+        checkedItems.add(targetItem);
+        
+        // Direct item requirement
+        if (rule.has) {
+            if (typeof rule.has === 'string' && rule.has === targetItem) {
+                return true;
+            } else if (rule.has.item && rule.has.item === targetItem) {
+                return true;
+            }
+        }
+        
+        // Check nested rules
+        if (rule.and && rule.and.some(subrule => checkRuleForItem(subrule, targetItem))) {
+            return true;
+        }
+        if (rule.or && rule.or.every(subrule => checkRuleForItem(subrule, targetItem))) {
+            return true; // All OR conditions require the item
+        }
+        
+        // Check function-based rules
+        if (rule.function) {
+            const functionRequirements = getFunctionRequirements(rule.function);
+            if (functionRequirements.includes(targetItem)) {
+                return true;
+            }
+        }
+        
+        // Check can_reach rules recursively
+        if (rule.can_reach) {
+            const reachRule = allRules[rule.can_reach];
+            if (reachRule && checkRuleForItem(reachRule, targetItem)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    return checkRuleForItem(locationRule, itemName);
+}
+
+// Helper function to get requirements from function names
+function getFunctionRequirements(funcName) {
+    switch (funcName) {
+        case 'super_boots':
+        case 'ultra_boots':
+            return ['Progressive Boots'];
+        case 'super_hammer':
+        case 'ultra_hammer':
+            return ['Progressive Hammer'];
+        case 'tube_curse':
+            return ['Tube Curse'];
+        case 'key_any':
+            return ['Red Key', 'Blue Key']; // Either one
+        default:
+            return [];
+    }
+}
+
+// Simple region accessibility check (fallback)
+function isRegionAccessible(regionName, gameState) {
+    // Basic region accessibility logic
+    switch (regionName) {
+        case 'petal_right':
+            return gameState.has('Progressive Hammer', 1);
+        case 'hooktails_castle':
+            return gameState.has('Progressive Hammer', 1) && gameState.has('Progressive Boots', 1);
+        case 'boggly_woods':
+            return gameState.has('Paper Curse');
+        case 'great_tree':
+            return gameState.has('Flurrie');
+        case 'glitzville':
+            return gameState.has('Blimp Ticket');
+        case 'twilight_trail':
+            return gameState.has('Tube Curse');
+        case 'keelhaul_key':
+            return gameState.has('Sun Stone') && gameState.has('Moon Stone');
+        case 'fahr_outpost':
+            return gameState.has('Train Ticket');
+        case 'thousand_year_door':
+            return gameState.has('Crystal Star'); // Simplified
+        case 'pit_of_trials':
+            return gameState.has('Contact Lens'); // Simplified
+        default:
+            return true; // Unknown regions are accessible by default
+    }
+}
+
+// Calculate proper spheres after all items have been placed
+function calculateAndAssignSpheres(locations, spoilerGen, finalGameState, regionLogic) {
+    console.log(`Calculating logical spheres for ${locations.length} locations...`);
+    
+    // Start with empty game state (just like the player would)
+    let simulatedGameState = GameState.createStartingState();
+    let currentSphere = 1;
+    let sphereItems = [];
+    let processedLocations = new Set();
+    
+    console.log(`Starting sphere calculation with empty game state:`, simulatedGameState.getStats());
+    
+    // Add locked items to starting state (these are sphere 0/starting items)
+    // BUT exclude Crystal Stars - they should be earned, not starting items
+    const crystalStars = ["Diamond Star", "Emerald Star", "Gold Star", "Ruby Star", "Sapphire Star", "Garnet Star", "Crystal Star"];
+    
+    locations.forEach(location => {
+        if (location.locked && location.hasPlacedItem()) {
+            const itemName = getItemNameById(location.placed_item);
+            if (itemName && !crystalStars.includes(itemName)) {
+                simulatedGameState.addItem(itemName, 1);
+                processedLocations.add(location.name);
+                console.log(`Starting item: ${itemName} at ${location.name}`);
+            } else if (itemName && crystalStars.includes(itemName)) {
+                console.log(`Excluding Crystal Star from starting items: ${itemName} at ${location.name}`);
+            }
+        }
+    });
+    
+    console.log(`After adding starting items:`, simulatedGameState.getStats());
+    console.log(`Starting items processed: ${processedLocations.size} locations`);
+    
+    // Perform initial region sweep with starting items
+    const initialRegions = performRegionSweep(simulatedGameState, regionLogic);
+    console.log(`Initial region sweep completed. Regions accessible:`, Array.from(simulatedGameState.regions));
+    
+    let foundNewLocations = true;
+    
+    while (foundNewLocations && processedLocations.size < locations.length) {
+        foundNewLocations = false;
+        sphereItems = [];
+        
+        console.log(`=== CALCULATING SPHERE ${currentSphere} ===`);
+        console.log(`Current game state:`, simulatedGameState.getStats());
+        
+        // Find all locations accessible with current game state
+        const accessibleLocations = locations.filter(location => {
+            // Skip if already processed or not filled
+            if (processedLocations.has(location.name) || !location.hasPlacedItem()) {
+                return false;
+            }
+            
+            // Check if location is accessible with current game state
+            const locationRule = allRules[location.name];
+            if (locationRule) {
+                return evaluateAccessibilityRule(locationRule, simulatedGameState);
+            } else {
+                // Fallback to original accessibility check
+                return location.isAccessible ? location.isAccessible(simulatedGameState, regionLogic) : true;
+            }
+        });
+        
+        console.log(`Found ${accessibleLocations.length} accessible locations in sphere ${currentSphere}`);
+        
+        // Process each accessible location
+        accessibleLocations.forEach(location => {
+            const itemName = getItemNameById(location.placed_item);
+            if (itemName) {
+                // Add item to simulated game state (ALL items affect logic)
+                simulatedGameState.addItem(itemName, 1);
+                
+                // Check if this is a progression item
+                const itemData = allItems.find(item => item.itemName === itemName);
+                const isProgressionItem = itemData && itemData.progression === 'progression';
+                
+                // Only add progression items to spheres
+                if (isProgressionItem) {
+                    sphereItems.push({
+                        itemName: itemName,
+                        location: location
+                    });
+                    console.log(`Sphere ${currentSphere}: ${itemName} at ${location.name}`);
+                }
+                
+                // Mark as processed and continue search
+                processedLocations.add(location.name);
+                foundNewLocations = true;
+                
+                // Update spoiler data with correct sphere (all items get sphere numbers)
+                spoilerGen.addLocationItemPair(location, itemName, location.placed_item, currentSphere.toString());
+            }
+        });
+        
+        // Perform region sweep after adding all items from this sphere
+        if (foundNewLocations) {
+            const newRegions = performRegionSweep(simulatedGameState, regionLogic);
+            if (newRegions.length > 0) {
+                console.log(`Sphere ${currentSphere} unlocked regions: ${newRegions.join(', ')}`);
+            }
+            
+            // Add sphere to spoiler generator (only if we found progression items)
+            if (sphereItems.length > 0) {
+                spoilerGen.addItemSphere(currentSphere, sphereItems, simulatedGameState.clone());
+                console.log(`Completed sphere ${currentSphere} with ${sphereItems.length} progression items`);
+            } else {
+                console.log(`Sphere ${currentSphere}: No progression items found, but ${accessibleLocations.length} locations processed`);
+            }
+            
+            currentSphere++;
+        } else if (processedLocations.size < locations.length) {
+            // No accessible locations found, but we have unprocessed locations
+            // This might indicate a problem with the randomization
+            const unprocessedLocations = locations.filter(loc => !processedLocations.has(loc.name) && loc.hasPlacedItem());
+            console.warn(`No accessible locations found, but ${unprocessedLocations.length} locations remain unprocessed:`);
+            unprocessedLocations.slice(0, 5).forEach(loc => {
+                console.warn(`  - ${loc.name}: ${getItemNameById(loc.placed_item)}`);
+            });
+            break;
+        }
+    }
+    
+    console.log(`=== SPHERE CALCULATION COMPLETE ===`);
+    console.log(`Processed ${processedLocations.size}/${locations.length} locations across ${currentSphere - 1} spheres`);
+    
+    return currentSphere - 1;
 }
 
 // Comprehensive region sweep function using regions.json and parser
 function performRegionSweep(gameState, regionLogic) {
     const newlyAccessibleRegions = [];
     
-    // Check all regions in the region logic from regions.json
-    for (const [regionName, logicExpression] of Object.entries(regionLogic)) {
-        // Skip if we already have this region
-        if (gameState.regions.has(regionName)) {
-            continue;
-        }
+    // Simple approach - check if regions.json is available
+    if (!regionLogic || Object.keys(regionLogic).length === 0) {
+        // Use fallback region logic
+        return performSimpleRegionSweep(gameState);
+    }
+    
+    let foundNewRegions = true;
+    let sweepAttempts = 0;
+    const maxSweepAttempts = 10; // Prevent infinite loops
+    
+    // Keep sweeping until no new regions are found (handle chain dependencies)  
+    while (foundNewRegions && sweepAttempts < maxSweepAttempts) {
+        foundNewRegions = false;
+        sweepAttempts++;
         
-        // Parse and evaluate the logic expression using the parser system
-        try {
-            // Use the parser to convert the JSON expression to a function
-            if (typeof parseExpression === 'undefined') {
-                console.warn('parseExpression not available, falling back to simple region update');
-                updateAccessibleRegions(gameState, regionLogic);
-                return [];
+        // Check all regions in the region logic from regions.json
+        for (const [regionName, logicExpression] of Object.entries(regionLogic)) {
+            // Skip if we already have this region
+            if (gameState.regions.has(regionName)) {
+                continue;
             }
             
-            // Parse the logic expression and evaluate it
-            const logicFunc = parseExpression(logicExpression);
-            if (logicFunc && logicFunc(gameState)) {
+            let regionAccessible = false;
+            
+            // Parse and evaluate the logic expression using the parser system
+            try {
+                // Use the parser to convert the JSON expression to a function
+                if (typeof parseExpression !== 'undefined') {
+                    const logicFunc = parseExpression(logicExpression);
+                    regionAccessible = logicFunc && logicFunc(gameState);
+                } else {
+                    // Fallback to simple region check
+                    regionAccessible = isRegionAccessible(regionName, gameState);
+                }
+            } catch (error) {
+                console.warn(`Error evaluating logic for region ${regionName}:`, error);
+                // Try fallback check
+                regionAccessible = isRegionAccessible(regionName, gameState);
+            }
+            
+            if (regionAccessible) {
                 gameState.addRegion(regionName);
                 newlyAccessibleRegions.push(regionName);
+                foundNewRegions = true;
             }
-        } catch (error) {
-            console.warn(`Error evaluating logic for region ${regionName}:`, error);
         }
     }
     
+    if (sweepAttempts >= maxSweepAttempts) {
+        console.warn(`Region sweep stopped after ${maxSweepAttempts} attempts to prevent infinite loop`);
+    }
+    
     return newlyAccessibleRegions;
+}
+
+// Simple fallback region sweep
+function performSimpleRegionSweep(gameState) {
+    const newRegions = [];
+    const regionsToCheck = [
+        { name: 'petal_right', condition: () => gameState.has('Progressive Hammer', 1) },
+        { name: 'hooktails_castle', condition: () => gameState.has('Progressive Hammer', 1) && gameState.has('Progressive Boots', 1) },
+        { name: 'boggly_woods', condition: () => gameState.has('Paper Curse') },
+        { name: 'great_tree', condition: () => gameState.has('Flurrie') },
+        { name: 'glitzville', condition: () => gameState.has('Blimp Ticket') },
+        { name: 'twilight_trail', condition: () => gameState.has('Tube Curse') },
+        { name: 'keelhaul_key', condition: () => gameState.has('Sun Stone') && gameState.has('Moon Stone') },
+        { name: 'fahr_outpost', condition: () => gameState.has('Train Ticket') },
+        { name: 'thousand_year_door', condition: () => gameState.has('Crystal Star') },
+        { name: 'pit_of_trials', condition: () => gameState.has('Contact Lens') }
+    ];
+    
+    for (const region of regionsToCheck) {
+        if (!gameState.regions.has(region.name) && region.condition()) {
+            gameState.addRegion(region.name);
+            newRegions.push(region.name);
+        }
+    }
+    
+    return newRegions;
 }
 
 // Fallback simple region accessibility update
@@ -1474,7 +2504,9 @@ function updateAccessibleRegions(gameState, regionLogic) {
     }
 }
 
-// Function to get json that need to be patched in specific REL files
+/*
+// ROM patching functions (COMMENTED OUT FOR TESTING)
+// Function to get locations that need to be patched in specific REL files
 function getLocationsToPatch(relName, locationData) {
     if (!locationData || !locationData.available) {
         return [];
@@ -1532,28 +2564,52 @@ function convertToRomId(itemId) {
     // Fallback: assume itemId is already a ROM ID
     return itemId;
 }
+*/
 
 // Create a full item pool to fill all locations
-function createFullItemPool(locationCount) {
-    console.log(`Creating item pool for ${locationCount} locations`);
+function createFullItemPool(locationCount, excludedItems = [], progressionItems = []) {
+    console.log(`Creating item pool for ${locationCount} locations, excluding ${excludedItems.length} locked items`);
     
-    // Get all available items from ITEM_FREQUENCIES
-    const allItems = [];
+    if (!allItems) {
+        throw new Error('allItems not loaded - cannot create item pool');
+    }
     
-    // Add items based on their frequencies
-    for (const [itemName, frequency] of Object.entries(ITEM_FREQUENCIES)) {
+    const itemPool = [];
+    
+    // Process every item from items.json
+    console.log(`Processing ${allItems.length} items from items.json`);
+    
+    for (const item of allItems) {
+        const itemName = item.itemName;
+        
+        // Skip excluded/locked items
+        if (excludedItems.includes(itemName)) {
+            console.log(`Skipping locked item: ${itemName}`);
+            continue;
+        }
+        
+        // Check if item has a specific frequency override
+        let frequency = 1; // Default frequency
+        if (itemName in ITEM_FREQUENCIES) {
+            frequency = ITEM_FREQUENCIES[itemName];
+        }
+        
+        // Add the item the specified number of times (0 = skip, 1+ = add that many)
+        for (let i = 0; i < frequency; i++) {
+            itemPool.push(itemName);
+        }
+        
         if (frequency > 0) {
-            for (let i = 0; i < frequency; i++) {
-                allItems.push(itemName);
-            }
+            console.log(`Added ${itemName} x${frequency} to item pool`);
+        } else {
+            console.log(`Skipped ${itemName} (frequency 0)`);
         }
     }
     
-    console.log(`Base item pool has ${allItems.length} items from frequencies`);
+    console.log(`Base item pool has ${itemPool.length} items from all items`);
     
     // If we need more items to fill all locations, add filler items
-    while (allItems.length < locationCount) {
-        // Add common filler items in order of preference
+    while (itemPool.length < locationCount) {
         const fillerItems = [
             "10 Coins",
             "Star Piece", 
@@ -1564,19 +2620,71 @@ function createFullItemPool(locationCount) {
         ];
         
         for (const filler of fillerItems) {
-            if (allItems.length < locationCount) {
-                allItems.push(filler);
+            if (itemPool.length < locationCount) {
+                itemPool.push(filler);
             }
         }
     }
     
     // If we have too many items, trim to exact count needed
-    if (allItems.length > locationCount) {
-        allItems.splice(locationCount);
+    if (itemPool.length > locationCount) {
+        console.log(`Trimming item pool from ${itemPool.length} to ${locationCount} items`);
+        
+        // Before trimming, ensure ALL progression items are preserved (no exceptions!)
+        const allProgressionItemsInPool = [];
+        
+        // Extract ALL progression items from the pool first
+        progressionItems.forEach(progressionItem => {
+            let index = itemPool.indexOf(progressionItem);
+            while (index !== -1) {
+                allProgressionItemsInPool.push(itemPool.splice(index, 1)[0]);
+                console.log(`Preserved progression item: ${progressionItem}`);
+                index = itemPool.indexOf(progressionItem);
+            }
+        });
+        
+        console.log(`Preserved ${allProgressionItemsInPool.length} total progression items`);
+        
+        // Verify no progression items were missed
+        const remainingProgressionInPool = itemPool.filter(item => progressionItems.includes(item));
+        if (remainingProgressionInPool.length > 0) {
+            console.warn(`WARNING: ${remainingProgressionInPool.length} progression items still in filler pool:`, remainingProgressionInPool);
+        }
+        
+        // Calculate how many filler items we need to remove
+        const itemsToRemove = itemPool.length + allProgressionItemsInPool.length - locationCount;
+        if (itemsToRemove > 0) {
+            // Remove filler items from the end (least important)
+            itemPool.splice(itemPool.length - itemsToRemove);
+            console.log(`Removed ${itemsToRemove} filler items during trim`);
+        }
+        
+        // Add ALL progression items back to the pool
+        itemPool.push(...allProgressionItemsInPool);
+        console.log(`Final pool has ${itemPool.length} items with ALL ${allProgressionItemsInPool.length} progression items preserved`);
+        
+        // Final verification: count progression items in final pool
+        const finalProgressionCount = itemPool.filter(item => progressionItems.includes(item)).length;
+        const expectedProgressionCount = progressionItems.filter(item => !excludedItems.includes(item)).length;
+        console.log(`Final verification: ${finalProgressionCount}/${expectedProgressionCount} non-excluded progression items in pool`);
+        
+        if (finalProgressionCount !== expectedProgressionCount) {
+            console.error(`❌ PROGRESSION ITEM MISMATCH! Expected ${expectedProgressionCount}, got ${finalProgressionCount}`);
+            
+            // Show which progression items are missing
+            const missingProgression = progressionItems.filter(item => 
+                !excludedItems.includes(item) && !itemPool.includes(item)
+            );
+            if (missingProgression.length > 0) {
+                console.error(`Missing progression items:`, missingProgression);
+            }
+        } else {
+            console.log(`✅ All non-excluded progression items preserved in pool`);
+        }
     }
     
-    console.log(`Final item pool has ${allItems.length} items for ${locationCount} locations`);
-    return allItems;
+    console.log(`Final item pool has ${itemPool.length} items for ${locationCount} locations`);
+    return itemPool;
 }
 
 // Utility function to shuffle an array using Fisher-Yates algorithm
@@ -1592,22 +2700,27 @@ function shuffleArray(array) {
 document.addEventListener('DOMContentLoaded', function() {
     loadUserPresets();
     
-    // Set up ROM file input handler
+    // Set up ROM file input handler (COMMENTED OUT FOR TESTING)
+    /*
     const romInput = document.getElementById('romFileInput');
     if (romInput) {
         romInput.addEventListener('change', handleROMSelection);
     }
+    */
     
     // Initialize tooltip system
     initializeTooltips();
     
-    // Initialize item and location data
+    // Initialize item, location, and rules data
     Promise.all([
         initializeItems().catch(error => {
             console.error('Failed to initialize items:', error);
         }),
         initializeLocations().catch(error => {
             console.error('Failed to initialize locations:', error);
+        }),
+        initializeRules().catch(error => {
+            console.error('Failed to initialize rules:', error);
         })
     ]).then(() => {
         console.log('All data initialization complete');

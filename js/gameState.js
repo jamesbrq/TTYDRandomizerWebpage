@@ -3,6 +3,7 @@ class GameState {
     constructor() {
         this.items = new Map(); // item name -> count
         this.regions = new Set(); // accessible regions
+        this.stars = 0; // Count of Crystal Stars obtained
     }
 
     /**
@@ -13,6 +14,11 @@ class GameState {
     addItem(itemName, count = 1) {
         const currentCount = this.items.get(itemName) || 0;
         this.items.set(itemName, currentCount + count);
+        
+        // Track Crystal Stars for stars progression
+        if (this._isCrystalStar(itemName)) {
+            this.stars += count;
+        }
     }
 
     /**
@@ -22,11 +28,18 @@ class GameState {
      */
     removeItem(itemName, count = 1) {
         const currentCount = this.items.get(itemName) || 0;
+        const actualRemoveCount = Math.min(count, currentCount);
         const newCount = Math.max(0, currentCount - count);
+        
         if (newCount === 0) {
             this.items.delete(itemName);
         } else {
             this.items.set(itemName, newCount);
+        }
+        
+        // Update Crystal Stars count
+        if (this._isCrystalStar(itemName)) {
+            this.stars = Math.max(0, this.stars - actualRemoveCount);
         }
     }
 
@@ -48,6 +61,33 @@ class GameState {
      */
     getItemCount(itemName) {
         return this.items.get(itemName) || 0;
+    }
+
+    /**
+     * Gets the current Crystal Stars count
+     * @returns {number} Number of Crystal Stars obtained
+     */
+    getStarsCount() {
+        return this.stars;
+    }
+
+    /**
+     * Checks if an item name is a Crystal Star
+     * @private
+     * @param {string} itemName - The name of the item
+     * @returns {boolean} True if the item is a Crystal Star
+     */
+    _isCrystalStar(itemName) {
+        const crystalStars = [
+            "Diamond Star",
+            "Emerald Star", 
+            "Gold Star",
+            "Ruby Star",
+            "Sapphire Star",
+            "Garnet Star",
+            "Crystal Star"
+        ];
+        return crystalStars.includes(itemName);
     }
 
     /**
@@ -102,6 +142,7 @@ class GameState {
     clear() {
         this.items.clear();
         this.regions.clear();
+        this.stars = 0;
     }
 
     /**
@@ -112,6 +153,7 @@ class GameState {
         const newState = new GameState();
         newState.items = new Map(this.items);
         newState.regions = new Set(this.regions);
+        newState.stars = this.stars;
         return newState;
     }
 
@@ -122,10 +164,11 @@ class GameState {
     loadFromJSON(json) {
         this.items.clear();
         this.regions.clear();
+        this.stars = 0;
 
         if (json.items) {
             for (const [itemName, count] of Object.entries(json.items)) {
-                this.items.set(itemName, count);
+                this.addItem(itemName, count); // Use addItem to properly track Crystal Stars
             }
         }
 
@@ -133,6 +176,11 @@ class GameState {
             for (const regionName of json.regions) {
                 this.regions.add(regionName);
             }
+        }
+
+        // Support explicit stars count in JSON (for backwards compatibility)
+        if (json.stars !== undefined) {
+            this.stars = json.stars;
         }
     }
 
@@ -143,7 +191,8 @@ class GameState {
     toJSON() {
         return {
             items: Object.fromEntries(this.items),
-            regions: Array.from(this.regions)
+            regions: Array.from(this.regions),
+            stars: this.stars
         };
     }
 

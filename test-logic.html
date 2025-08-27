@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTYD Randomizer Logic Tests</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            text-align: center;
+            background: linear-gradient(45deg, #2196F3, #4CAF50);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .test-section {
+            background: white;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+        button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #1976D2;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .results {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #FF9800; }
+        .info { color: #2196F3; }
+        
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1976D2;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #666;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎮 TTYD Randomizer Logic Tests</h1>
+        <p>Comprehensive testing framework for location and region logical requirements</p>
+    </div>
+
+    <div class="test-section">
+        <h3>Test Controls</h3>
+        <button id="runAllTests" onclick="runAllTests()">🚀 Run All Tests</button>
+        <button id="testEmptyBaseline" onclick="runEmptyBaseline()">📋 Test Empty Baseline</button>
+        <button id="testProgression" onclick="runProgression()">📈 Test Progression</button>
+        <button id="testSpecific" onclick="runSpecific()">🎯 Test Specific Rules</button>
+        <button id="testLocations" onclick="runLocationRules()">🗺️ Test Location Rules</button>
+        <button id="clearResults" onclick="clearResults()">🗑️ Clear Results</button>
+        
+        <div id="progressContainer" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <div id="progressText">Initializing tests...</div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test Statistics</h3>
+        <div class="stats" id="statsContainer">
+            <div class="stat-item">
+                <div class="stat-number" id="totalTests">0</div>
+                <div>Total Tests</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="passedTests">0</div>
+                <div>Passed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="failedTests">0</div>
+                <div>Failed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="errorsFound">0</div>
+                <div>Errors</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test Results</h3>
+        <div id="testResults" class="results">
+            <div class="loading">Click a test button to begin testing...</div>
+        </div>
+    </div>
+
+    <!-- Load all required scripts -->
+    <script src="js/gameState.js"></script>
+    <script src="js/location.js"></script>
+    <script src="js/parser.js"></script>
+    <script src="js/logicTests.js"></script>
+
+    <script>
+        let testFramework;
+        let regionLogic, locationRules, locationCollection;
+
+        // Initialize the testing framework
+        async function initializeTests() {
+            console.log("Initializing test framework...");
+            
+            try {
+                // Load game data
+                const [regionsResponse, rulesResponse, locationsResponse] = await Promise.all([
+                    fetch('json/regions.json'),
+                    fetch('json/rules.json'),
+                    fetch('json/locations.json')
+                ]);
+
+                regionLogic = await regionsResponse.json();
+                locationRules = await rulesResponse.json();
+                const locationData = await locationsResponse.json();
+
+                // Create location collection
+                locationCollection = new LocationCollection();
+                locationCollection.loadFromJSON(locationData);
+
+                // Initialize test framework
+                testFramework = new LogicTestFramework();
+                await testFramework.initialize(regionLogic, locationRules, locationCollection);
+                
+                console.log("Test framework initialized successfully!");
+                return true;
+            } catch (error) {
+                console.error("Failed to initialize tests:", error);
+                showResults(`❌ Failed to initialize tests: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function runAllTests() {
+            if (!testFramework) {
+                const initialized = await initializeTests();
+                if (!initialized) return;
+            }
+
+            showProgress(true, "Running all tests...");
+            disableButtons(true);
+
+            try {
+                const results = await testFramework.runAllTests();
+                displayAllResults(results);
+                updateStats(results);
+            } catch (error) {
+                showResults(`❌ Error running tests: ${error.message}`, 'error');
+            } finally {
+                showProgress(false);
+                disableButtons(false);
+            }
+        }
+
+        async function runEmptyBaseline() {
+            if (!testFramework) {
+                const initialized = await initializeTests();
+                if (!initialized) return;
+            }
+
+            showProgress(true, "Testing empty gamestate baseline...");
+            disableButtons(true);
+
+            try {
+                const result = testFramework.testEmptyGamestateBaseline();
+                displaySingleResult("Empty Gamestate Baseline", result);
+            } catch (error) {
+                showResults(`❌ Error running baseline test: ${error.message}`, 'error');
+            } finally {
+                showProgress(false);
+                disableButtons(false);
+            }
+        }
+
+        async function runProgression() {
+            if (!testFramework) {
+                const initialized = await initializeTests();
+                if (!initialized) return;
+            }
+
+            showProgress(true, "Testing progressive item unlocking...");
+            disableButtons(true);
+
+            try {
+                const result = testFramework.testProgressiveItemUnlocking();
+                displaySingleResult("Progressive Item Unlocking", result);
+            } catch (error) {
+                showResults(`❌ Error running progression test: ${error.message}`, 'error');
+            } finally {
+                showProgress(false);
+                disableButtons(false);
+            }
+        }
+
+        async function runSpecific() {
+            if (!testFramework) {
+                const initialized = await initializeTests();
+                if (!initialized) return;
+            }
+
+            showProgress(true, "Testing specific requirements...");
+            disableButtons(true);
+
+            try {
+                const result = testFramework.testSpecificRequirements();
+                displaySingleResult("Specific Requirements", result);
+            } catch (error) {
+                showResults(`❌ Error running specific tests: ${error.message}`, 'error');
+            } finally {
+                showProgress(false);
+                disableButtons(false);
+            }
+        }
+
+        async function runLocationRules() {
+            if (!testFramework) {
+                const initialized = await initializeTests();
+                if (!initialized) return;
+            }
+
+            showProgress(true, "Testing location rules...");
+            disableButtons(true);
+
+            try {
+                const result = testFramework.testLocationRules();
+                displaySingleResult("Location Rules", result);
+            } catch (error) {
+                showResults(`❌ Error running location tests: ${error.message}`, 'error');
+            } finally {
+                showProgress(false);
+                disableButtons(false);
+            }
+        }
+
+        function displayAllResults(results) {
+            let output = "=== COMPLETE TEST SUITE RESULTS ===\n\n";
+            
+            for (const [testName, result] of Object.entries(results)) {
+                output += `📊 ${testName.toUpperCase()}\n`;
+                output += "═".repeat(50) + "\n";
+                output += formatTestResult(result);
+                output += "\n" + "─".repeat(50) + "\n\n";
+            }
+
+            showResults(output, 'info');
+        }
+
+        function displaySingleResult(testName, result) {
+            let output = `=== ${testName.toUpperCase()} RESULTS ===\n`;
+            output += "═".repeat(50) + "\n";
+            output += formatTestResult(result);
+            
+            showResults(output, 'info');
+        }
+
+        function formatTestResult(result) {
+            let output = "";
+
+            if (result.errors && result.errors.length > 0) {
+                output += `❌ ERRORS (${result.errors.length}):\n`;
+                result.errors.forEach(error => {
+                    output += `  • ${error}\n`;
+                });
+                output += "\n";
+            }
+
+            if (result.accessible && result.inaccessible) {
+                output += `✅ ACCESSIBLE (${result.accessible.length}):\n`;
+                result.accessible.slice(0, 10).forEach(item => {
+                    output += `  • ${item}\n`;
+                });
+                if (result.accessible.length > 10) {
+                    output += `  ... and ${result.accessible.length - 10} more\n`;
+                }
+                output += "\n";
+
+                output += `🚫 INACCESSIBLE (${result.inaccessible.length}):\n`;
+                result.inaccessible.slice(0, 10).forEach(item => {
+                    output += `  • ${item}\n`;
+                });
+                if (result.inaccessible.length > 10) {
+                    output += `  ... and ${result.inaccessible.length - 10} more\n`;
+                }
+                output += "\n";
+            }
+
+            if (result.progressionTests) {
+                output += `📈 PROGRESSION ANALYSIS:\n`;
+                result.progressionTests.forEach(step => {
+                    const issues = step.missing.length + step.unexpectedAccessible.length;
+                    const status = issues === 0 ? "✅" : "⚠️";
+                    output += `  ${status} ${step.stepName}: ${step.actualAccessible.length} accessible`;
+                    if (issues > 0) {
+                        output += ` (${issues} issues)`;
+                    }
+                    output += "\n";
+                });
+                output += "\n";
+            }
+
+            if (result.tests) {
+                output += `🧪 SPECIFIC TESTS:\n`;
+                result.tests.forEach(test => {
+                    const status = test.passed ? "✅" : "❌";
+                    output += `  ${status} ${test.testName}\n`;
+                    test.details.forEach(detail => {
+                        output += `    ${detail}\n`;
+                    });
+                });
+                output += "\n";
+            }
+
+            if (result.locationTests) {
+                output += `🗺️ LOCATION TESTS:\n`;
+                result.locationTests.forEach(test => {
+                    const status = test.passed ? "✅" : "❌";
+                    output += `  ${status} ${test.locationName}: Expected ${test.expected}, Got ${test.actual}\n`;
+                });
+                output += "\n";
+            }
+
+            return output;
+        }
+
+        function updateStats(results) {
+            let totalTests = 0;
+            let passedTests = 0; 
+            let failedTests = 0;
+            let errorsFound = 0;
+
+            for (const result of Object.values(results)) {
+                if (result.errors) {
+                    errorsFound += result.errors.length;
+                }
+
+                if (result.tests) {
+                    totalTests += result.tests.length;
+                    passedTests += result.tests.filter(t => t.passed).length;
+                    failedTests += result.tests.filter(t => !t.passed).length;
+                }
+
+                if (result.locationTests) {
+                    totalTests += result.locationTests.length;
+                    passedTests += result.locationTests.filter(t => t.passed).length;
+                    failedTests += result.locationTests.filter(t => !t.passed).length;
+                }
+
+                if (result.progressionTests) {
+                    totalTests += result.progressionTests.length;
+                    passedTests += result.progressionTests.filter(step => 
+                        step.missing.length === 0 && step.unexpectedAccessible.length === 0).length;
+                    failedTests += result.progressionTests.filter(step => 
+                        step.missing.length > 0 || step.unexpectedAccessible.length > 0).length;
+                }
+            }
+
+            document.getElementById('totalTests').textContent = totalTests;
+            document.getElementById('passedTests').textContent = passedTests;
+            document.getElementById('failedTests').textContent = failedTests;
+            document.getElementById('errorsFound').textContent = errorsFound;
+        }
+
+        function showResults(content, type = 'info') {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = `<pre class="${type}">${content}</pre>`;
+        }
+
+        function showProgress(show, text = '') {
+            const progressContainer = document.getElementById('progressContainer');
+            const progressText = document.getElementById('progressText');
+            
+            if (show) {
+                progressContainer.style.display = 'block';
+                progressText.textContent = text;
+                // Simulate progress
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 20;
+                    if (progress > 90) progress = 90;
+                    document.getElementById('progressBar').style.width = progress + '%';
+                }, 200);
+                progressContainer.interval = interval;
+            } else {
+                if (progressContainer.interval) {
+                    clearInterval(progressContainer.interval);
+                }
+                document.getElementById('progressBar').style.width = '100%';
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        function disableButtons(disabled) {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.id !== 'clearResults') {
+                    button.disabled = disabled;
+                }
+            });
+        }
+
+        function clearResults() {
+            showResults("Click a test button to begin testing...", 'loading');
+            document.getElementById('totalTests').textContent = '0';
+            document.getElementById('passedTests').textContent = '0';
+            document.getElementById('failedTests').textContent = '0';
+            document.getElementById('errorsFound').textContent = '0';
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            console.log("TTYD Logic Test Framework loaded");
+            showResults("Test framework ready! Click 'Run All Tests' to begin comprehensive testing.", 'info');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test New Algorithm</title>
+    <script src="js/gameState.js"></script>
+    <script src="js/parser.js"></script>
+    <script src="js/location.js"></script>
+    <script src="js/itemPool.js"></script>
+    <script>
+        // Mock functions that might be missing
+        if (typeof getItemIdByName === 'undefined') {
+            window.getItemIdByName = function(itemName) {
+                return 77772000 + Math.floor(Math.random() * 1000); // Mock ID
+            };
+        }
+        if (typeof performRegionSweep === 'undefined') {
+            window.performRegionSweep = function(gameState, regionLogic) {
+                return []; // Mock function
+            };
+        }
+    </script>
+    <script src="js/generate.js"></script>
+    <script src="js/logicalPlacement.js"></script>
+</head>
+<body>
+    <h1>Testing New Logical Placement Algorithm</h1>
+    <p>Check console for output...</p>
+    
+    <script>
+        console.log('Testing new algorithm loading...');
+        
+        // Test if LogicalItemPlacer class is available
+        if (typeof LogicalItemPlacer !== 'undefined') {
+            console.log('✅ LogicalItemPlacer class loaded successfully');
+            
+            // Create a simple test
+            const locations = [];
+            const items = ['Progressive Hammer', 'Star Piece'];
+            const rules = {};
+            const regionLogic = {};
+            const settings = { starting_partner: 1 };
+            
+            try {
+                const placer = new LogicalItemPlacer(locations, items, rules, regionLogic, settings);
+                console.log('✅ LogicalItemPlacer instance created successfully');
+                console.log('Placer has methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(placer)));
+            } catch (error) {
+                console.error('❌ Error creating LogicalItemPlacer:', error);
+            }
+        } else {
+            console.error('❌ LogicalItemPlacer class not found');
+        }
+    </script>
+</body>
+</html>
