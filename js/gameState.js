@@ -113,8 +113,17 @@ class GameState {
      * @returns {boolean} True if the region is reachable
      */
     canReach(target, type) {
-        // For now, just check if the region is in our accessible regions set
         if (type === "Region") {
+            // Check if StateLogic function exists for this region
+            if (typeof StateLogic !== 'undefined' && StateLogic[target]) {
+                try {
+                    return StateLogic[target](this);
+                } catch (error) {
+                    console.warn(`Error evaluating StateLogic.${target}:`, error);
+                    return false;
+                }
+            }
+            // Fallback: check if the region is in our accessible regions set
             return this.regions.has(target);
         }
         return false;
@@ -218,51 +227,6 @@ class GameState {
         const state = new GameState();
         // Add basic starting regions (usually just Rogueport)
         state.addRegion("Rogueport");
-        return state;
-    }
-
-    /**
-     * Creates a game state for testing with many items
-     * @returns {GameState} GameState with many items for testing
-     */
-    static createTestState() {
-        const state = new GameState();
-        
-        // Add basic items
-        state.addItem("Progressive Hammer", 2); // Ultra Hammer
-        state.addItem("Progressive Boots", 2);  // Ultra Boots
-        state.addItem("Paper Curse", 1);
-        state.addItem("Plane Curse", 1);
-        state.addItem("Tube Curse", 1);
-        state.addItem("Boat Curse", 1);
-        
-        // Add partners
-        state.addItem("Goombella", 1);
-        state.addItem("Koops", 1);
-        state.addItem("Flurrie", 1);
-        state.addItem("Yoshi", 1);
-        state.addItem("Vivian", 1);
-        state.addItem("Bobbery", 1);
-        
-        // Add key items
-        state.addItem("Blimp Ticket", 1);
-        state.addItem("Train Ticket", 1);
-        state.addItem("Contact Lens", 1);
-        state.addItem("Sun Stone", 1);
-        state.addItem("Moon Stone", 1);
-        state.addItem("Necklace", 1);
-        
-        // Add many regions as accessible
-        const regions = [
-            "Rogueport", "rogueport_westside", "sewers_westside", "sewers_westside_ground",
-            "petal_left", "petal_right", "hooktails_castle", "twilight_town", "twilight_trail",
-            "fahr_outpost", "xnaut_fortress", "boggly_woods", "great_tree", "glitzville",
-            "creepy_steeple", "keelhaul_key", "pirates_grotto", "excess_express",
-            "riverside", "poshley_heights", "palace", "riddle_tower", "pit"
-        ];
-        
-        regions.forEach(region => state.addRegion(region));
-        
         return state;
     }
 }

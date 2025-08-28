@@ -126,6 +126,7 @@
         <button id="testProgression" onclick="runProgression()">📈 Test Progression</button>
         <button id="testSpecific" onclick="runSpecific()">🎯 Test Specific Rules</button>
         <button id="testLocations" onclick="runLocationRules()">🗺️ Test Location Rules</button>
+        <button id="testEndgame" onclick="runEndgameRegions()">🏰 Test Endgame Regions</button>
         <button id="clearResults" onclick="clearResults()">🗑️ Clear Results</button>
         
         <div id="progressContainer" style="display: none;">
@@ -303,6 +304,26 @@
                 displaySingleResult("Location Rules", result);
             } catch (error) {
                 showResults(`❌ Error running location tests: ${error.message}`, 'error');
+            } finally {
+                showProgress(false);
+                disableButtons(false);
+            }
+        }
+
+        async function runEndgameRegions() {
+            if (!testFramework) {
+                const initialized = await initializeTests();
+                if (!initialized) return;
+            }
+
+            showProgress(true, "Testing endgame regions...");
+            disableButtons(true);
+
+            try {
+                const result = testFramework.testEndgameRegions();
+                displaySingleResult("Endgame Regions", result);
+            } catch (error) {
+                showResults(`❌ Error running endgame tests: ${error.message}`, 'error');
             } finally {
                 showProgress(false);
                 disableButtons(false);

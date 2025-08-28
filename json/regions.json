@@ -3,10 +3,10 @@
     "function": "westside"
   },
   "sewers_westside": {
-    "function": "sewer_westside"
+    "function": "sewers_westside"
   },
   "sewers_westside_ground": {
-    "function": "sewer_westside_ground"
+    "function": "sewers_westside_ground"
   },
   "petal_left": {
     "function": "petal_left"

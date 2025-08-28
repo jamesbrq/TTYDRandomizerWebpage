@@ -456,7 +456,8 @@ class LogicTestFramework {
             emptyBaseline: this.testEmptyGamestateBaseline(),
             progressiveUnlocking: this.testProgressiveItemUnlocking(),
             specificRequirements: this.testSpecificRequirements(),
-            locationRules: this.testLocationRules()
+            locationRules: this.testLocationRules(),
+            endgameRegions: this.testEndgameRegions()
         };
 
         this._printTestSummary(allResults);
@@ -599,6 +600,175 @@ class LogicTestFramework {
                 const passed = result.locationTests.filter(t => t.passed).length;
                 console.log(`  🎯 ${passed}/${result.locationTests.length} location tests passed`);
             }
+        }
+    }
+
+    /**
+     * Test 5: Endgame Region Requirements
+     * Tests the specific problematic endgame regions that commonly fail
+     */
+    testEndgameRegions() {
+        console.log("=== Testing Endgame Regions ===");
+        const results = {
+            errors: [],
+            tests: []
+        };
+
+        // Test cases for the three problematic endgame regions
+        const testCases = [
+            {
+                regionName: "fahr_outpost",
+                description: "Fahr Outpost with full requirements",
+                setupState: (state) => {
+                    // Add all requirements for fahr_outpost
+                    state.addItem("Progressive Hammer", 2); // ultra_hammer
+                    state.addItem("Progressive Boots", 2); // ultra_boots
+                    state.addItem("Paper Curse");
+                    state.addItem("Tube Curse");
+                    state.addItem("Bobbery");
+                    state.addItem("Contact Lens");
+                    state.addItem("Yoshi");
+                    state.addItem("Flurrie");
+                },
+                shouldBeAccessible: true
+            },
+            {
+                regionName: "poshley_heights", 
+                description: "Poshley Heights with required keys and abilities",
+                setupState: (state) => {
+                    state.addItem("Station Key 1");
+                    state.addItem("Elevator Key (Riverside)");
+                    state.addItem("Progressive Hammer", 1); // super_hammer
+                    state.addItem("Progressive Boots", 2); // ultra_boots
+                },
+                shouldBeAccessible: true
+            },
+            {
+                regionName: "riddle_tower",
+                description: "Riddle Tower with all Palace Keys",
+                setupState: (state) => {
+                    state.addItem("Paper Curse");
+                    state.addItem("Tube Curse");
+                    state.addItem("Palace Key");
+                    state.addItem("Bobbery");
+                    state.addItem("Boat Curse");
+                    state.addItem("Star Key");
+                    // Add 8 copies of Palace Key (Riddle Tower)
+                    state.addItem("Palace Key (Riddle Tower)", 8);
+                },
+                shouldBeAccessible: true
+            },
+            {
+                regionName: "fahr_outpost",
+                description: "Fahr Outpost missing ultra_hammer",
+                setupState: (state) => {
+                    state.addItem("Progressive Hammer", 1); // only super_hammer
+                    state.addItem("Progressive Boots", 2);
+                    state.addItem("Yoshi");
+                },
+                shouldBeAccessible: false
+            },
+            {
+                regionName: "poshley_heights",
+                description: "Poshley Heights missing Station Key 1",
+                setupState: (state) => {
+                    // Missing Station Key 1
+                    state.addItem("Elevator Key (Riverside)");
+                    state.addItem("Progressive Hammer", 1);
+                    state.addItem("Progressive Boots", 2);
+                },
+                shouldBeAccessible: false
+            }
+        ];
+
+        for (const testCase of testCases) {
+            const state = new GameState();
+            testCase.setupState(state);
+
+            try {
+                let isAccessible = false;
+                
+                // Use StateLogic to test region accessibility
+                if (typeof StateLogic !== 'undefined' && StateLogic[testCase.regionName]) {
+                    isAccessible = StateLogic[testCase.regionName](state);
+                } else {
+                    results.errors.push(`No StateLogic function found for region: ${testCase.regionName}`);
+                    continue;
+                }
+
+                const testResult = {
+                    testName: testCase.description,
+                    passed: isAccessible === testCase.shouldBeAccessible,
+                    details: [
+                        `Region: ${testCase.regionName}`,
+                        `Expected: ${testCase.shouldBeAccessible}`,
+                        `Actual: ${isAccessible}`,
+                        `Items: ${Array.from(state.getAllItems().entries()).map(([item, count]) => 
+                            count > 1 ? `${item} x${count}` : item).join(', ')}`
+                    ]
+                };
+
+                results.tests.push(testResult);
+
+                // Add detailed debugging for failures
+                if (!testResult.passed) {
+                    this._debugEndgameRegionFailure(testCase.regionName, state, testResult.details);
+                }
+
+            } catch (error) {
+                results.errors.push(`${testCase.description}: ${error.message}`);
+            }
+        }
+
+        this.testResults.push(results);
+        return results;
+    }
+
+    /**
+     * Debug helper for endgame region failures
+     */
+    _debugEndgameRegionFailure(regionName, state, details) {
+        if (regionName === 'fahr_outpost') {
+            const ultraHammer = StateLogic.ultra_hammer(state);
+            const sewerWestsideGround = state.canReach("sewers_westside_ground", "Region");
+            const ultraBoots = StateLogic.ultra_boots(state);
+            const sewerWestside = state.canReach("sewers_westside", "Region");
+            const hasYoshi = state.has("Yoshi");
+            
+            details.push(`Debug fahr_outpost:`);
+            details.push(`  ultra_hammer: ${ultraHammer} (Progressive Hammer: ${state.getItemCount("Progressive Hammer")})`);
+            details.push(`  sewers_westside_ground: ${sewerWestsideGround}`);
+            details.push(`  ultra_boots: ${ultraBoots} (Progressive Boots: ${state.getItemCount("Progressive Boots")})`);
+            details.push(`  sewers_westside: ${sewerWestside}`);
+            details.push(`  Yoshi: ${hasYoshi}`);
+            
+        } else if (regionName === 'poshley_heights') {
+            const stationKey1 = state.has("Station Key 1");
+            const elevatorKey = state.has("Elevator Key (Riverside)");
+            const superHammer = StateLogic.super_hammer(state);
+            const ultraBoots = StateLogic.ultra_boots(state);
+            
+            details.push(`Debug poshley_heights:`);
+            details.push(`  Station Key 1: ${stationKey1}`);
+            details.push(`  Elevator Key (Riverside): ${elevatorKey}`);
+            details.push(`  super_hammer: ${superHammer}`);
+            details.push(`  ultra_boots: ${ultraBoots}`);
+            
+        } else if (regionName === 'riddle_tower') {
+            const tubeCurse = StateLogic.tube_curse(state);
+            const palaceKey = state.has("Palace Key");
+            const bobbery = state.has("Bobbery");
+            const boatCurse = state.has("Boat Curse");
+            const starKey = state.has("Star Key");
+            const palaceKeyRT = state.getItemCount("Palace Key (Riddle Tower)");
+            
+            details.push(`Debug riddle_tower:`);
+            details.push(`  tube_curse: ${tubeCurse}`);
+            details.push(`  Palace Key: ${palaceKey}`);
+            details.push(`  Bobbery: ${bobbery}`);
+            details.push(`  Boat Curse: ${boatCurse}`);
+            details.push(`  Star Key: ${starKey}`);
+            details.push(`  Palace Key (Riddle Tower): ${palaceKeyRT}/8`);
         }
     }
 

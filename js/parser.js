@@ -33,7 +33,7 @@ async function loadLogicFromJson(url) {
 }
 
 const StateLogic = {
-    westside(state) {
+    rogueport_westside(state) {
         return state.has("Contact Lens") || state.has("Bobbery") || 
                StateLogic.tube_curse(state) || StateLogic.ultra_hammer(state);
     },
@@ -93,7 +93,7 @@ const StateLogic = {
         return StateLogic.twilight_town(state) && StateLogic.tube_curse(state);
     },
 
-    steeple(state) {
+    creepy_steeple(state) {
         return state.has("Paper Curse") && state.has("Flurrie") && StateLogic.super_boots(state);
     },
 
@@ -142,7 +142,7 @@ const StateLogic = {
         return state.has("Paper Curse") && state.has("Plane Curse");
     },
 
-    pit_westside_ground(state) {
+    sewers_westside_ground(state) {
         return state.has("Flurrie") && ((state.has("Contact Lens") && state.has("Paper Curse")) || 
                state.has("Bobbery") || StateLogic.tube_curse(state) || StateLogic.ultra_hammer(state));
     },
@@ -177,7 +177,16 @@ const StateLogic = {
 
     stars(state) {
         return state.getStarsCount ? state.getStarsCount() : 0;
-    }
+    },
+
+    // Aliases for plural versions (to match region names in fahr_outpost logic)
+    sewers_westside(state) {
+        return StateLogic.sewer_westside(state);
+    },
+
+    xnaut_fortress(state) {
+        return StateLogic.moon(state) && StateLogic.fahr_outpost(state);
+    },
 };
 
 // Example usage

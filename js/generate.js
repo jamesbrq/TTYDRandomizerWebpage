@@ -1443,6 +1443,10 @@ async function performLogicalItemPlacement(locations, settings) {
     console.log('=== LOGICAL ITEM PLACEMENT TEST ===');
 
     const startTime = Date.now();
+    
+    // Validate all required StateLogic functions exist
+    console.log('=== VALIDATING STATELOGIC FUNCTIONS ===');
+    await validateStateLogicFunctions();
 
     try {
         // Ensure items and rules are loaded before starting
@@ -1501,8 +1505,10 @@ async function performLogicalItemPlacement(locations, settings) {
         // Define critical items for debugging
         const criticalItems = ['Progressive Boots', 'Progressive Hammer', 'Tube Curse', 'Yoshi', 'Vivian', 'Wedding Ring'];
 
-        const itemPool = createFullItemPool(locations.length, lockedItems, progressionItems);
-        console.log(`Created item pool with ${itemPool.length} items for ${locations.length} locations`);
+        // Create item pool for unlocked locations only (total locations - locked locations)
+        const unlockedLocationCount = locations.length - lockedItems.length;
+        const itemPool = createFullItemPool(unlockedLocationCount, lockedItems, progressionItems);
+        console.log(`Created item pool with ${itemPool.length} items for ${unlockedLocationCount} unlocked locations (${locations.length} total - ${lockedItems.length} locked)`);
 
         // Debug: Check critical items in full item pool BEFORE any processing
         console.log('\n=== FULL ITEM POOL VERIFICATION ===');
@@ -1591,299 +1597,94 @@ async function performLogicalItemPlacement(locations, settings) {
         shuffleArray(progressionPool);
         shuffleArray(fillerPool);
 
-        // Forward-fill algorithm focused on accessibility and completion
-        let remainingProgressionItems = [...progressionPool];
-        let remainingFillerItems = [...fillerPool];
-        let generationAttempt = 1;
-        const maxGenerationAttempts = 10;
+        // Variables for clean logical placement
 
-        // Try new logical placement algorithm first
-        console.log('=== TRYING NEW LOGICAL PLACEMENT ALGORITHM ===');
-        console.log('LogicalItemPlacer available:', typeof LogicalItemPlacer !== 'undefined');
-        console.log('Settings:', settings);
-        console.log('Items in pool:', itemPool.length);
-        console.log('Rules loaded:', Object.keys(allRules).length);
-
+        // Try new logical placement algorithm with retry logic
         let newAlgorithmSucceeded = false;
-        try {
-            console.log('Creating LogicalItemPlacer...');
-            const placer = new LogicalItemPlacer(locations, itemPool, allRules, regionLogic, settings);
-            console.log('Placer created, calling place()...');
+        let placementAttempt = 1;
+        const maxPlacementAttempts = 5;
+        
+        // Debug: Check if LogicalItemPlacer is available
+        console.log('=== CHECKING NEW ALGORITHM AVAILABILITY ===');
+        console.log('LogicalItemPlacer type:', typeof LogicalItemPlacer);
+        console.log('LogicalItemPlacer available:', typeof LogicalItemPlacer !== 'undefined');
+        console.log('Window LogicalItemPlacer:', typeof window.LogicalItemPlacer);
+        
+        if (typeof LogicalItemPlacer === 'undefined') {
+            throw new Error('LogicalItemPlacer class not found! Make sure logicalPlacement.js is loaded.');
+        } else {
+            while (!newAlgorithmSucceeded && placementAttempt <= maxPlacementAttempts) {
+                console.log(`=== LOGICAL PLACEMENT ATTEMPT ${placementAttempt}/${maxPlacementAttempts} ===`);
+                console.log('Settings:', settings);
+                console.log('Items in pool:', itemPool.length);
+                console.log('Rules loaded:', Object.keys(allRules).length);
+            
+            // Reset locations for retry
+            if (placementAttempt > 1) {
+                locations.forEach(loc => {
+                    if (!loc.locked) {
+                        loc.placed_item = null;
+                    }
+                });
+                gameState = GameState.createStartingState();
+                console.log(`🔄 Retry ${placementAttempt}: Reset locations and game state`);
+            }
 
-            const placementResult = await placer.place();
+            try {
+                console.log('Creating LogicalItemPlacer...');
+                const placer = new LogicalItemPlacer(locations, itemPool, allRules, regionLogic, settings);
+                console.log('Placer created, calling place()...');
 
-            console.log('✅ New logical placement completed successfully');
-            console.log(`Placed items in ${placementResult.size} locations`);
-            gameState = placer.gameState.clone();
-            newAlgorithmSucceeded = true;
+                const placementResult = await placer.place();
 
-        } catch (error) {
-            console.error('❌ New logical placement failed:', error);
-            console.error('Error stack:', error.stack);
-            console.log('Falling back to old algorithm...');
+                console.log('✅ New logical placement completed successfully');
+                console.log(`Placed items in ${placementResult.size} locations`);
+                gameState = placer.gameState.clone();
+                
+                // Validate the placement immediately
+                console.log('🔍 Validating logical progression...');
+                const sphereValidation = validateSphereProgression(locations, gameState, allRules, regionLogic);
+                
+                if (sphereValidation.isValid) {
+                    console.log(`✅ Sphere validation passed: ${sphereValidation.totalProgressionFound} progression items in ${sphereValidation.spheres} spheres`);
+                    newAlgorithmSucceeded = true;
+                } else {
+                    console.warn(`❌ Sphere validation failed: ${sphereValidation.reason}`);
+                    if (placementAttempt < maxPlacementAttempts) {
+                        console.warn('🔄 Retrying generation...');
+                        throw new Error(`Validation failed: ${sphereValidation.reason}`);
+                    } else {
+                        console.error('Max placement attempts reached, generation failed');
+                        break;
+                    }
+                }
+
+            } catch (error) {
+                console.error(`❌ Logical placement attempt ${placementAttempt} failed:`, error);
+                if (placementAttempt < maxPlacementAttempts && error.message && error.message.includes('Validation failed')) {
+                    console.log('Retrying generation due to validation failure...');
+                } else if (placementAttempt >= maxPlacementAttempts) {
+                    console.error('Max placement attempts reached, generation failed');
+                    console.error('Error stack:', error.stack);
+                    break;
+                } else {
+                    console.error('Error stack:', error.stack);
+                    console.log('Generation failed with error');
+                    break;
+                }
+            }
+            
+            placementAttempt++;
+        }
+        } // Close the else block
+
+        // If the new algorithm failed completely, throw error
+        if (!newAlgorithmSucceeded) {
+            throw new Error('LogicalItemPlacer failed to generate a valid seed after all attempts');
         }
 
-        let generationSuccessful = newAlgorithmSucceeded;
-
-        // Main generation loop with retry logic (fallback if new algorithm failed)
-        if (!newAlgorithmSucceeded) {
-            while (generationAttempt <= maxGenerationAttempts) {
-            console.log(`=== GENERATION ATTEMPT ${generationAttempt} ===`);
-
-            // Reset state for new attempt if needed
-            if (generationAttempt > 1) {
-                // Clear all placed items except locked ones
-                locations.forEach(location => {
-                    if (!location.locked) {
-                        location.clearPlacedItem();
-                    }
-                });
-
-                // Reset counters and state
-                placedItems = locations.filter(loc => loc.locked).length || 0;
-                gameState = GameState.createStartingState();
-
-                // Add locked items back to game state
-                locations.forEach(location => {
-                    if (location.locked && location.hasPlacedItem()) {
-                        const itemName = getItemNameById(location.placed_item);
-                        if (itemName) {
-                            gameState.addItem(itemName, 1);
-                        }
-                    }
-                });
-
-                // Reset item pools
-                remainingProgressionItems = [...progressionPool];
-                remainingFillerItems = [...fillerPool];
-                shuffleArray(remainingProgressionItems);
-                shuffleArray(remainingFillerItems);
-
-                console.log(`Retry attempt ${generationAttempt}: Reset to ${placedItems} locked items`);
-            }
-
-            let attemptFailed = false;
-            let iterationCount = 0;
-            const maxIterations = 200;
-
-            // Continue placing items until all locations are filled
-            while (placedItems < locations.length && !attemptFailed && iterationCount < maxIterations) {
-                iterationCount++;
-                let progressMade = false;
-
-                // Perform region sweep to update accessible regions
-                const newRegions = performRegionSweep(gameState, regionLogic);
-                if (newRegions.length > 0) {
-                    console.log(`Region sweep unlocked: ${newRegions.join(', ')}`);
-                    spoilerGen.addProgressionLog(`Unlocked regions`, newRegions.join(', '), '', gameState);
-                }
-
-                // Get currently accessible empty locations based on current game state
-                const accessibleLocations = getAccessibleEmptyLocations(locations, gameState, regionLogic);
-                const emptyLocations = locations.filter(loc => loc.isEmpty() && !loc.locked && loc.isAvailable()).length;
-
-                console.log(`Current game state has ${gameState.items.size} unique items, ${gameState.regions.size} regions`);
-                console.log(`${emptyLocations} empty locations, ${accessibleLocations.length} accessible`);
-
-                if (accessibleLocations.length === 0) {
-                    if (emptyLocations > 0) {
-                        console.error(`CRITICAL: ${emptyLocations} empty locations but none accessible!`);
-                        console.error(`Game state:`, gameState.getStats());
-                        console.error(`Available regions:`, Array.from(gameState.regions));
-
-                        // Show detailed game state items - focus on progression items only
-                        console.error(`Current progression items in game state:`);
-                        const progressionInState = [];
-                        const otherItemsInState = [];
-
-                        gameState.items.forEach((count, itemName) => {
-                            if (progressionItems.includes(itemName)) {
-                                progressionInState.push(`${itemName}: ${count}`);
-                            } else {
-                                otherItemsInState.push(`${itemName}: ${count}`);
-                            }
-                        });
-
-                        console.error(`  Progression items (${progressionInState.length}):`, progressionInState);
-                        console.error(`  Other items (${otherItemsInState.length}):`, otherItemsInState.slice(0, 10));
-
-                        // Show empty locations by region
-                        const emptyByRegion = {};
-                        const emptyLocationsList = locations.filter(loc => loc.isEmpty() && !loc.locked && loc.isAvailable());
-                        emptyLocationsList.forEach(loc => {
-                            const region = loc.getRegionTag() || 'unknown';
-                            if (!emptyByRegion[region]) emptyByRegion[region] = [];
-                            emptyByRegion[region].push(loc.name);
-                        });
-
-                        console.error(`Empty locations by region:`);
-                        Object.entries(emptyByRegion).forEach(([region, locs]) => {
-                            console.error(`  ${region}: ${locs.length} locations`);
-                            if (locs.length <= 3) {
-                                console.error(`    Examples: ${locs.join(', ')}`);
-                            }
-                        });
-
-                        // Show a sample of inaccessible locations for debugging
-                        const sampleInaccessible = emptyLocationsList.slice(0, 5);
-                        console.error(`Sample inaccessible locations:`);
-                        sampleInaccessible.forEach(loc => {
-                            const rule = allRules[loc.name];
-                            console.error(`  - ${loc.name}: has rule = ${!!rule}`);
-                            if (rule) {
-                                console.error(`    Rule:`, JSON.stringify(rule));
-                                try {
-                                    const accessible = evaluateAccessibilityRule(rule, gameState);
-                                    console.error(`    Rule evaluation: ${accessible}`);
-                                } catch (error) {
-                                    console.error(`    Rule error: ${error.message}`);
-                                }
-                            }
-                        });
-                    }
-                    console.warn(`No accessible locations found with ${placedItems}/${locations.length} items placed`);
-                    attemptFailed = true;
-                    break;
-                }
-
-                console.log(`Iteration ${iterationCount}: ${accessibleLocations.length} accessible locations, ${remainingProgressionItems.length} progression + ${remainingFillerItems.length} filler items remaining`);
-
-                // Debug: Check critical items in remaining pools
-                if (iterationCount % 10 === 1) { // Every 10 iterations
-                    console.log(`Critical items remaining: ${criticalItems.map(item => `${item}=${remainingProgressionItems.filter(i => i === item).length + remainingFillerItems.filter(i => i === item).length}`).join(', ')}`);
-                }
-
-                // Strategic item placement: place one item at a time and re-evaluate accessibility
-                let placedThisIteration = false;
-
-                // Priority 1: Place a progression item if we have one
-                if (remainingProgressionItems.length > 0 && accessibleLocations.length > 0) {
-                    const itemToPlace = remainingProgressionItems.shift();
-
-                    // Balanced placement strategy: mix of early and late locations
-                    const sortedLocations = [...accessibleLocations].sort((a, b) => {
-                        const regionA = a.getRegionTag() || 'unknown';
-                        const regionB = b.getRegionTag() || 'unknown';
-
-                        // Balanced priority: some progression in early areas, some in late areas
-                        const regionPriority = {
-                            // Late game (high priority when available)
-                            'palace': 80, 'riddle_tower': 75, 'xnaut_fortress': 70, 'fahr_outpost': 65,
-                            // Mid game
-                            'poshley_heights': 50, 'keelhaul_key': 45, 'excess_express': 40, 'creepy_steeple': 35,
-                            'twilight_town': 30, 'twilight_trail': 30, 'glitzville': 25, 'great_tree': 20, 'boggly_woods': 15,
-                            // Early game (ensure some progression here)
-                            'hooktails_castle': 10, 'petal_left': 8, 'petal_right': 8,
-                            'rogueport_westside': 5, 'sewers_westside': 5, 'sewers_westside_ground': 5,
-                            'unknown': 3, 'pit': 1 // Pit should have lower priority for progression items
-                        };
-
-                        return (regionPriority[regionB] || 0) - (regionPriority[regionA] || 0);
-                    });
-
-                    // Occasionally place in earlier areas to ensure progression flow
-                    let targetLocation;
-                    if (placedItems < 50 && Math.random() < 0.4) {
-                        // For first 50 items, 40% chance to prefer earlier accessible areas
-                        const earlyAccessible = sortedLocations.filter(loc => {
-                            const region = loc.getRegionTag() || 'unknown';
-                            return ['unknown', 'rogueport_westside', 'sewers_westside', 'sewers_westside_ground',
-                                    'petal_left', 'boggly_woods', 'great_tree'].includes(region);
-                        });
-                        targetLocation = earlyAccessible.length > 0 ? earlyAccessible[0] : sortedLocations[0];
-                    } else {
-                        targetLocation = sortedLocations[0];
-                    }
-                    const itemId = getItemIdByName(itemToPlace);
-
-                    if (itemId && targetLocation) {
-                        // Place the item
-                        targetLocation.placeItem(itemId);
-                        placedItems++;
-                        placedThisIteration = true;
-                        progressMade = true;
-
-                        // Update game state
-                        gameState.addItem(itemToPlace, 1);
-
-                        const isCritical = criticalItems.includes(itemToPlace);
-                        const criticalMarker = isCritical ? '🔑' : '';
-                        const regionTag = targetLocation.getRegionTag() || 'unknown';
-                        console.log(`Placed ${criticalMarker}progression "${itemToPlace}" at "${targetLocation.name}" (${regionTag}) (${placedItems}/${locations.length})`);
-
-                        // Add to spoiler data
-                        spoilerGen.addLocationItemPair(targetLocation, itemToPlace, itemId, "placement");
-                    }
-                }
-
-                // Priority 2: Fill remaining accessible locations with filler items (up to a reasonable limit per iteration)
-                if (!placedThisIteration || accessibleLocations.length > remainingProgressionItems.length + 5) {
-                    const maxFillerPerIteration = Math.min(10, accessibleLocations.length);
-                    let fillerPlaced = 0;
-
-                    for (const targetLocation of accessibleLocations) {
-                        if (targetLocation.hasPlacedItem() || fillerPlaced >= maxFillerPerIteration) continue;
-
-                        // Generate more filler if needed
-                        if (remainingFillerItems.length === 0) {
-                            remainingFillerItems.push(...['Star Piece', '10 Coins', 'Mushroom', 'Honey Syrup', 'Super Shroom', 'Shine Sprite']);
-                        }
-
-                        const itemToPlace = remainingFillerItems.shift();
-                        if (itemToPlace) {
-                            const itemId = getItemIdByName(itemToPlace) || 77772177;
-
-                            // Place the item
-                            targetLocation.placeItem(itemId);
-                            placedItems++;
-                            fillerPlaced++;
-                            progressMade = true;
-
-                            // Update game state (filler items can matter for logic too)
-                            gameState.addItem(itemToPlace, 1);
-
-                            // Add to spoiler data
-                            spoilerGen.addLocationItemPair(targetLocation, itemToPlace, itemId, "placement");
-                        }
-                    }
-
-                    if (fillerPlaced > 0) {
-                        console.log(`Placed ${fillerPlaced} filler items in accessible locations`);
-                    }
-                }
-
-                // If no progress was made, we're stuck
-                if (!progressMade) {
-                    console.error(`No progress made in iteration ${iterationCount} - generation stuck`);
-                    attemptFailed = true;
-                    break;
-                }
-            }
-
-            // Check if generation was successful
-            if (placedItems >= locations.length && !attemptFailed) {
-                console.log(`=== GENERATION SUCCESSFUL ON ATTEMPT ${generationAttempt} ===`);
-                console.log(`Completed in ${iterationCount} iterations`);
-                break;
-            } else if (generationAttempt >= maxGenerationAttempts) {
-                console.error(`=== GENERATION FAILED AFTER ${maxGenerationAttempts} ATTEMPTS ===`);
-                console.error(`Final state: ${placedItems}/${locations.length} locations filled`);
-
-                // Check what happened to critical items
-                console.log('\n=== CRITICAL ITEMS FINAL STATUS ===');
-                criticalItems.forEach(item => {
-                    const inGameState = gameState.getItemCount(item);
-                    const remainingInProgression = remainingProgressionItems.filter(i => i === item).length;
-                    const remainingInFiller = remainingFillerItems.filter(i => i === item).length;
-                    console.log(`${item}: placed=${inGameState}, remaining_prog=${remainingInProgression}, remaining_filler=${remainingInFiller}`);
-                });
-                break;
-            } else {
-                console.warn(`Generation attempt ${generationAttempt} failed, retrying...`);
-                generationAttempt++;
-            }
-        } // End of while loop
-        } // End of if (!newAlgorithmSucceeded)
+        console.log('✅ Generation completed successfully using LogicalItemPlacer');
+        let generationSuccessful = true;
 
         // Calculate logical spheres for spoiler generation
         console.log(`=== BASIC PLACEMENT COMPLETE - CALCULATING SPHERES ===`);
@@ -1915,19 +1716,22 @@ async function performLogicalItemPlacement(locations, settings) {
 
         const generationTime = Date.now() - startTime;
 
-        // Verify 100% completion
+        // Verify 100% completion (sphere validation already done during placement)
         generationSuccessful = (filledCount === totalLocations) && (accessibleCount === totalLocations);
+        
+        // LogicalItemPlacer already validated the seed, so it's guaranteed to be logically sound
+        let sphereValidation = { isValid: true, totalProgressionFound: 'validated during placement' };
 
         const stats = {
             totalLocations,
             accessibleCount,
             filledCount,
             lockedCount,
-            accessibilityChecks,
-            placementAttempts,
+            accessibilityChecks: 0, // Not used in new algorithm
+            placementAttempts: placementAttempt,
             generationTime,
             generationSuccessful,
-            totalAttempts: generationAttempt,
+            totalAttempts: placementAttempt,
             finalRegionCount: gameState.regions.size,
             finalItemCount: gameState.items.size
         };
@@ -1939,10 +1743,14 @@ async function performLogicalItemPlacement(locations, settings) {
         if (generationSuccessful) {
             console.log(`✅ RANDOMIZATION FULLY SUCCESSFUL!`);
             console.log(`✅ All ${totalLocations} locations filled and accessible`);
+            console.log(`✅ Sphere progression validation: ${sphereValidation.totalProgressionFound || 'N/A'} progression items found`);
         } else {
-            console.warn(`⚠️  RANDOMIZATION INCOMPLETE:`);
+            console.warn(`⚠️  RANDOMIZATION FAILED:`);
             console.warn(`⚠️  ${filledCount}/${totalLocations} locations filled`);
             console.warn(`⚠️  ${accessibleCount}/${totalLocations} locations accessible`);
+            if (!sphereValidation.isValid) {
+                console.warn(`⚠️  Sphere validation failed: ${sphereValidation.reason}`);
+            }
         }
 
         console.log('=== PLACEMENT RESULTS ===');
@@ -1950,7 +1758,7 @@ async function performLogicalItemPlacement(locations, settings) {
         console.log(`Currently accessible: ${accessibleCount}`);
         console.log(`Items placed: ${filledCount}`);
         console.log(`Logical spheres calculated: ${totalSpheres}`);
-        console.log(`Accessibility checks performed: ${accessibilityChecks}`);
+        console.log(`Placement attempts: ${placementAttempt}`);
         console.log(`Generation time: ${generationTime}ms`);
         console.log(`Final game state:`, gameState.getStats());
 
@@ -2004,6 +1812,7 @@ async function performLogicalItemPlacement(locations, settings) {
 
     } catch (error) {
         console.error('Error during logical item placement:', error);
+        throw error; // Re-throw to let caller handle
     }
 }
 
@@ -2242,31 +2051,181 @@ function getFunctionRequirements(funcName) {
 
 // Simple region accessibility check (fallback)
 function isRegionAccessible(regionName, gameState) {
-    // Basic region accessibility logic
-    switch (regionName) {
-        case 'petal_right':
-            return gameState.has('Progressive Hammer', 1);
-        case 'hooktails_castle':
-            return gameState.has('Progressive Hammer', 1) && gameState.has('Progressive Boots', 1);
-        case 'boggly_woods':
-            return gameState.has('Paper Curse');
-        case 'great_tree':
-            return gameState.has('Flurrie');
-        case 'glitzville':
-            return gameState.has('Blimp Ticket');
-        case 'twilight_trail':
-            return gameState.has('Tube Curse');
-        case 'keelhaul_key':
-            return gameState.has('Sun Stone') && gameState.has('Moon Stone');
-        case 'fahr_outpost':
-            return gameState.has('Train Ticket');
-        case 'thousand_year_door':
-            return gameState.has('Crystal Star'); // Simplified
-        case 'pit_of_trials':
-            return gameState.has('Contact Lens'); // Simplified
-        default:
-            return true; // Unknown regions are accessible by default
+    // Use proper StateLogic functions from parser.js
+    if (typeof StateLogic !== 'undefined' && StateLogic[regionName]) {
+        try {
+            const result = StateLogic[regionName](gameState);
+            console.log(`🌍 Region ${regionName}: ${result} (using StateLogic)`);
+            return result;
+        } catch (error) {
+            console.error(`❌ Error evaluating StateLogic.${regionName}:`, error);
+            throw new Error(`StateLogic function for ${regionName} failed: ${error.message}`);
+        }
     }
+    
+    // CRITICAL ERROR: StateLogic function missing
+    console.error(`❌ MISSING StateLogic function: ${regionName}`);
+    throw new Error(`Required StateLogic function '${regionName}' is missing. All regions must have StateLogic functions for proper randomization.`);
+}
+
+// Validate that all required StateLogic functions exist before starting randomization
+async function validateStateLogicFunctions() {
+    console.log('Checking StateLogic availability...');
+    
+    if (typeof StateLogic === 'undefined') {
+        throw new Error('StateLogic is not defined! Make sure parser.js is loaded properly.');
+    }
+    
+    // List of all regions that need StateLogic functions based on the codebase
+    const requiredStateLogicFunctions = [
+        'sewers_westside', 'sewers_westside_ground', 'petal_left', 'petal_right', 
+        'hooktails_castle', 'twilight_town', 'twilight_trail', 'fahr_outpost', 
+        'boggly_woods', 'great_tree', 'glitzville', 'creepy_steeple', 'keelhaul_key',
+        'pirates_grotto', 'excess_express', 'riverside', 'poshley_heights', 
+        'palace', 'riddle_tower', 'pit', 'ttyd',
+        // Movement ability functions
+        'super_hammer', 'ultra_hammer', 'super_boots', 'ultra_boots',
+        'tube_curse'
+        // Note: paper_curse, plane_curse, boat_curse are checked via state.has() not StateLogic functions
+    ];
+    
+    const missingFunctions = [];
+    
+    console.log(`Validating ${requiredStateLogicFunctions.length} required StateLogic functions...`);
+    
+    for (const functionName of requiredStateLogicFunctions) {
+        if (typeof StateLogic[functionName] !== 'function') {
+            missingFunctions.push(functionName);
+        }
+    }
+    
+    if (missingFunctions.length > 0) {
+        console.error(`❌ MISSING StateLogic functions: ${missingFunctions.join(', ')}`);
+        throw new Error(`Missing required StateLogic functions: ${missingFunctions.join(', ')}. All regions and movement abilities must have StateLogic functions for proper randomization.`);
+    }
+    
+    console.log('✅ All required StateLogic functions found');
+}
+
+// Validate sphere progression to ensure seed is logically beatable
+function validateSphereProgression(locations, finalGameState, allRules, regionLogic) {
+    console.log('=== VALIDATING SPHERE PROGRESSION ===');
+    
+    // Create a fresh game state with only the starting partner
+    const validationState = GameState.createStartingState();
+    
+    // Add starting partner
+    const startingPartnerLocation = locations.find(loc => loc.name === "Rogueport Center: Goombella");
+    if (startingPartnerLocation && startingPartnerLocation.hasPlacedItem()) {
+        const startingPartnerItem = getItemNameById(startingPartnerLocation.placed_item);
+        validationState.addItem(startingPartnerItem, 1);
+    }
+    
+    let sphere = 1;
+    let totalProgressionFound = 0;
+    let totalLocationsProcessed = 0;
+    const maxSpheres = 15;
+    const minProgressionRequirement = {
+        1: 2,  // Must have at least 2 progression items in first 2 spheres
+        2: 5,  // Must have at least 5 progression items in first 3 spheres  
+        3: 8   // Must have at least 8 progression items in first 4 spheres
+    };
+    
+    const processedLocations = new Set();
+    
+    while (sphere <= maxSpheres) {
+        // Find accessible locations in this sphere
+        const accessibleLocations = locations.filter(loc => {
+            if (!loc.hasPlacedItem() || processedLocations.has(loc.name)) return false;
+            
+            const locationRule = allRules[loc.name];
+            if (locationRule) {
+                return evaluateAccessibilityRule(locationRule, validationState);
+            }
+            return true; // Default accessible
+        });
+        
+        if (accessibleLocations.length === 0) {
+            console.warn(`⚠️ Validation Sphere ${sphere}: No accessible locations found with ${totalLocationsProcessed}/${locations.length} processed`);
+            if (totalLocationsProcessed < locations.length * 0.8) {
+                return { 
+                    isValid: false, 
+                    reason: `Stuck at sphere ${sphere} with only ${totalLocationsProcessed}/${locations.length} locations accessible`
+                };
+            }
+            break;
+        }
+        
+        // Process accessible locations and add their items to game state
+        let progressionInSphere = 0;
+        for (const location of accessibleLocations) {
+            if (processedLocations.has(location.name)) continue;
+            
+            processedLocations.add(location.name);
+            totalLocationsProcessed++;
+            
+            const itemName = getItemNameById(location.placed_item);
+            if (itemName && !itemName.includes('Crystal Star')) { // Don't add Crystal Stars to validation state
+                validationState.addItem(itemName, 1);
+                
+                // Check if this is a progression item
+                if (isProgressionItem(itemName)) {
+                    progressionInSphere++;
+                    totalProgressionFound++;
+                }
+            }
+        }
+        
+        console.log(`Validation Sphere ${sphere}: ${accessibleLocations.length} locations, ${progressionInSphere} progression items`);
+        
+        // Check minimum progression requirements for early spheres
+        if (minProgressionRequirement[sphere] && totalProgressionFound < minProgressionRequirement[sphere]) {
+            return { 
+                isValid: false, 
+                reason: `Insufficient progression by sphere ${sphere}: ${totalProgressionFound} < ${minProgressionRequirement[sphere]} required`
+            };
+        }
+        
+        // Update accessible regions after adding items
+        performRegionSweep(validationState, regionLogic);
+        sphere++;
+    }
+    
+    console.log(`✅ Validation complete: ${totalLocationsProcessed}/${locations.length} locations processed, ${totalProgressionFound} progression items found`);
+    
+    // Final check - ensure we processed most locations
+    if (totalLocationsProcessed < locations.length * 0.95) {
+        return { 
+            isValid: false, 
+            reason: `Only ${totalLocationsProcessed}/${locations.length} locations accessible during validation`
+        };
+    }
+    
+    return { isValid: true, totalProgressionFound, spheres: sphere - 1 };
+}
+
+// Helper function to check if item is progression
+function isProgressionItem(itemName) {
+    // Check if item has progression flag in allItems
+    if (typeof allItems !== 'undefined' && allItems) {
+        const itemData = allItems.find(item => item.itemName === itemName);
+        return itemData?.progression === 'progression';
+    }
+    
+    // Fallback: hardcoded list of known progression items
+    const knownProgressionItems = [
+        'Progressive Hammer', 'Progressive Boots', 'Tube Curse', 'Paper Curse', 'Plane Curse', 'Boat Curse',
+        'Goombella', 'Koops', 'Flurrie', 'Yoshi', 'Vivian', 'Bobbery', 'Ms. Mowz',
+        'Blimp Ticket', 'Train Ticket', 'Contact Lens', 'Sun Stone', 'Moon Stone', 'Necklace',
+        'Station Key 1', 'Station Key 2', 'Elevator Key 1', 'Elevator Key 2', 'Elevator Key (Riverside)',
+        'Palace Key', 'Palace Key (Riddle Tower)', 'Star Key', 'Castle Key', 'Steeple Key',
+        'Black Key (Paper Curse)', 'Black Key (Tube Curse)', 'Black Key (Plane Curse)', 'Black Key (Boat Curse)',
+        'Red Key', 'Blue Key', 'Shop Key', 'Storage Key 1', 'Storage Key 2', 'Grotto Key',
+        'Old Letter', 'Autograph', 'Ragged Diary', 'Blanket', 'Vital Paper', 'Wedding Ring',
+        'Skull Gem', 'Goldbob Guide', 'Shell Earrings', 'Puni Orb', 'Superbombomb', 'Gate Handle',
+        'Briefcase', 'Gold Ring', 'Chuckola Cola', 'Coconut', 'Galley Pot', 'Cog'
+    ];
+    return knownProgressionItems.includes(itemName);
 }
 
 // Calculate proper spheres after all items have been placed
@@ -2400,12 +2359,6 @@ function calculateAndAssignSpheres(locations, spoilerGen, finalGameState, region
 function performRegionSweep(gameState, regionLogic) {
     const newlyAccessibleRegions = [];
     
-    // Simple approach - check if regions.json is available
-    if (!regionLogic || Object.keys(regionLogic).length === 0) {
-        // Use fallback region logic
-        return performSimpleRegionSweep(gameState);
-    }
-    
     let foundNewRegions = true;
     let sweepAttempts = 0;
     const maxSweepAttempts = 10; // Prevent infinite loops
@@ -2453,55 +2406,6 @@ function performRegionSweep(gameState, regionLogic) {
     }
     
     return newlyAccessibleRegions;
-}
-
-// Simple fallback region sweep
-function performSimpleRegionSweep(gameState) {
-    const newRegions = [];
-    const regionsToCheck = [
-        { name: 'petal_right', condition: () => gameState.has('Progressive Hammer', 1) },
-        { name: 'hooktails_castle', condition: () => gameState.has('Progressive Hammer', 1) && gameState.has('Progressive Boots', 1) },
-        { name: 'boggly_woods', condition: () => gameState.has('Paper Curse') },
-        { name: 'great_tree', condition: () => gameState.has('Flurrie') },
-        { name: 'glitzville', condition: () => gameState.has('Blimp Ticket') },
-        { name: 'twilight_trail', condition: () => gameState.has('Tube Curse') },
-        { name: 'keelhaul_key', condition: () => gameState.has('Sun Stone') && gameState.has('Moon Stone') },
-        { name: 'fahr_outpost', condition: () => gameState.has('Train Ticket') },
-        { name: 'thousand_year_door', condition: () => gameState.has('Crystal Star') },
-        { name: 'pit_of_trials', condition: () => gameState.has('Contact Lens') }
-    ];
-    
-    for (const region of regionsToCheck) {
-        if (!gameState.regions.has(region.name) && region.condition()) {
-            gameState.addRegion(region.name);
-            newRegions.push(region.name);
-        }
-    }
-    
-    return newRegions;
-}
-
-// Fallback simple region accessibility update
-function updateAccessibleRegions(gameState, regionLogic) {
-    // Simple region accessibility update based on items
-    if (gameState.has('Progressive Hammer', 1)) {
-        gameState.addRegion('petal_right');
-    }
-    if (gameState.has('Progressive Hammer', 1) && gameState.has('Progressive Boots', 1)) {
-        gameState.addRegion('hooktails_castle');
-    }
-    if (gameState.has('Paper Curse')) {
-        gameState.addRegion('boggly_woods');
-    }
-    if (gameState.has('Flurrie')) {
-        gameState.addRegion('great_tree');
-    }
-    if (gameState.has('Blimp Ticket')) {
-        gameState.addRegion('glitzville');
-    }
-    if (gameState.has('Tube Curse')) {
-        gameState.addRegion('twilight_trail');
-    }
 }
 
 /*
