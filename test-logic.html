@@ -116,18 +116,35 @@
 <body>
     <div class="header">
         <h1>🎮 TTYD Randomizer Logic Tests</h1>
-        <p>Comprehensive testing framework for location and region logical requirements</p>
+        <p>🚀 ENHANCED Comprehensive Testing Framework</p>
+        <p style="font-size: 14px; margin-top: 10px;">
+            📍 Tests ALL 278 locations | 🗺️ Tests ALL 18 regions | ⚠️ Tests edge cases & complex logic | 🧪 Systematic validation
+        </p>
     </div>
 
     <div class="test-section">
         <h3>Test Controls</h3>
-        <button id="runAllTests" onclick="runAllTests()">🚀 Run All Tests</button>
-        <button id="testEmptyBaseline" onclick="runEmptyBaseline()">📋 Test Empty Baseline</button>
-        <button id="testProgression" onclick="runProgression()">📈 Test Progression</button>
-        <button id="testSpecific" onclick="runSpecific()">🎯 Test Specific Rules</button>
-        <button id="testLocations" onclick="runLocationRules()">🗺️ Test Location Rules</button>
-        <button id="testEndgame" onclick="runEndgameRegions()">🏰 Test Endgame Regions</button>
-        <button id="clearResults" onclick="clearResults()">🗑️ Clear Results</button>
+        <div style="margin-bottom: 15px;">
+            <h4 style="margin: 10px 0; color: #666;">🚀 Comprehensive Test Suite</h4>
+            <button id="runComprehensiveTests" onclick="runComprehensiveTests()">🚀 Run ALL Comprehensive Tests</button>
+            <button id="testAllLocations" onclick="runAllLocationTests()">📍 Test ALL 278 Locations</button>
+            <button id="testAllRegions" onclick="runAllRegionTests()">🗺️ Test ALL 18 Regions</button>
+            <button id="testEdgeCases" onclick="runEdgeCaseTests()">⚠️ Test Edge Cases & Complex Logic</button>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <h4 style="margin: 10px 0; color: #666;">🧪 Individual Test Categories</h4>
+            <button id="runAllTests" onclick="runAllTests()">🔬 Run Original Test Suite</button>
+            <button id="testEmptyBaseline" onclick="runEmptyBaseline()">📋 Test Empty Baseline</button>
+            <button id="testProgression" onclick="runProgression()">📈 Test Progression</button>
+            <button id="testSpecific" onclick="runSpecific()">🎯 Test Specific Rules</button>
+            <button id="testLocations" onclick="runLocationRules()">🏷️ Test Sample Locations</button>
+            <button id="testEndgame" onclick="runEndgameRegions()">🏰 Test Endgame Regions</button>
+        </div>
+        
+        <div>
+            <button id="clearResults" onclick="clearResults()">🗑️ Clear Results</button>
+        </div>
         
         <div id="progressContainer" style="display: none;">
             <div class="progress-bar">
@@ -410,10 +427,43 @@
 
             if (result.locationTests) {
                 output += `🗺️ LOCATION TESTS:\n`;
-                result.locationTests.forEach(test => {
+                result.locationTests.slice(0, 20).forEach(test => {
                     const status = test.passed ? "✅" : "❌";
-                    output += `  ${status} ${test.locationName}: Expected ${test.expected}, Got ${test.actual}\n`;
+                    const accessibility = test.accessible !== undefined ? (test.accessible ? 'Accessible' : 'Never Accessible') : 'Unknown';
+                    output += `  ${status} ${test.locationName}: ${accessibility}\n`;
+                    if (test.logicAnalysis) {
+                        output += `    📊 ${test.logicAnalysis}\n`;
+                    }
                 });
+                if (result.locationTests.length > 20) {
+                    output += `  ... and ${result.locationTests.length - 20} more location tests\n`;
+                }
+                
+                // Add summary statistics
+                const passedCount = result.locationTests.filter(t => t.passed).length;
+                const accessibleCount = result.locationTests.filter(t => t.accessible).length;
+                output += `\n📈 LOCATION SUMMARY:\n`;
+                output += `  • ${passedCount}/${result.locationTests.length} locations passed logic validation\n`;
+                output += `  • ${accessibleCount}/${result.locationTests.length} locations accessible in at least one scenario\n`;
+                
+                output += "\n";
+            }
+
+            if (result.regionTests) {
+                output += `🗺️ REGION TESTS:\n`;
+                result.regionTests.forEach(test => {
+                    const status = test.passed ? "✅" : "❌";
+                    const accessibility = test.accessible !== undefined ? (test.accessible ? 'Accessible' : 'Never Accessible') : 'Unknown';
+                    output += `  ${status} ${test.regionName}: ${accessibility}\n`;
+                });
+                
+                // Add summary statistics
+                const passedCount = result.regionTests.filter(t => t.passed).length;
+                const accessibleCount = result.regionTests.filter(t => t.accessible).length;
+                output += `\n📈 REGION SUMMARY:\n`;
+                output += `  • ${passedCount}/${result.regionTests.length} regions passed logic validation\n`;
+                output += `  • ${accessibleCount}/${result.regionTests.length} regions accessible in at least one scenario\n`;
+                
                 output += "\n";
             }
 
@@ -496,6 +546,155 @@
                     button.disabled = disabled;
                 }
             });
+        }
+
+        async function runComprehensiveTests() {
+            if (!testFramework) {
+                const initialized = await initializeTests();
+                if (!initialized) return;
+            }
+
+            showProgress(true, "Running comprehensive test suite (ALL locations, regions, and edge cases)...");
+            disableButtons(true);
+
+            try {
+                const results = await testFramework.runComprehensiveTests();
+                displayAllResults(results);
+                updateComprehensiveStats(results);
+            } catch (error) {
+                showResults(`❌ Error running comprehensive tests: ${error.message}`, 'error');
+            } finally {
+                showProgress(false);
+                disableButtons(false);
+            }
+        }
+
+        async function runAllLocationTests() {
+            if (!testFramework) {
+                const initialized = await initializeTests();
+                if (!initialized) return;
+            }
+
+            showProgress(true, "Testing all 278 locations with multiple game state scenarios...");
+            disableButtons(true);
+
+            try {
+                const result = testFramework.testAllLocations();
+                displaySingleResult("All Locations Test", result);
+                updateSingleTestStats(result);
+            } catch (error) {
+                showResults(`❌ Error running all location tests: ${error.message}`, 'error');
+            } finally {
+                showProgress(false);
+                disableButtons(false);
+            }
+        }
+
+        async function runAllRegionTests() {
+            if (!testFramework) {
+                const initialized = await initializeTests();
+                if (!initialized) return;
+            }
+
+            showProgress(true, "Testing all 18 regions with multiple game state scenarios...");
+            disableButtons(true);
+
+            try {
+                const result = testFramework.testAllRegions();
+                displaySingleResult("All Regions Test", result);
+                updateSingleTestStats(result);
+            } catch (error) {
+                showResults(`❌ Error running all region tests: ${error.message}`, 'error');
+            } finally {
+                showProgress(false);
+                disableButtons(false);
+            }
+        }
+
+        async function runEdgeCaseTests() {
+            if (!testFramework) {
+                const initialized = await initializeTests();
+                if (!initialized) return;
+            }
+
+            showProgress(true, "Testing edge cases and complex logic combinations...");
+            disableButtons(true);
+
+            try {
+                const result = testFramework.testEdgeCases();
+                displaySingleResult("Edge Cases Test", result);
+                updateSingleTestStats(result);
+            } catch (error) {
+                showResults(`❌ Error running edge case tests: ${error.message}`, 'error');
+            } finally {
+                showProgress(false);
+                disableButtons(false);
+            }
+        }
+
+        function updateComprehensiveStats(results) {
+            let totalTests = 0;
+            let passedTests = 0; 
+            let failedTests = 0;
+            let errorsFound = 0;
+
+            for (const result of Object.values(results)) {
+                if (result.errors) {
+                    errorsFound += result.errors.length;
+                }
+
+                if (result.summary) {
+                    // For comprehensive tests with summary
+                    totalTests += result.summary.total;
+                    passedTests += result.summary.passed;
+                    failedTests += result.summary.failed;
+                } else if (result.tests) {
+                    totalTests += result.tests.length;
+                    passedTests += result.tests.filter(t => t.passed).length;
+                    failedTests += result.tests.filter(t => !t.passed).length;
+                } else if (result.locationTests) {
+                    totalTests += result.locationTests.length;
+                    passedTests += result.locationTests.filter(t => t.passed).length;
+                    failedTests += result.locationTests.filter(t => !t.passed).length;
+                } else if (result.regionTests) {
+                    totalTests += result.regionTests.length;
+                    passedTests += result.regionTests.filter(t => t.passed).length;
+                    failedTests += result.regionTests.filter(t => !t.passed).length;
+                } else if (result.progressionTests) {
+                    totalTests += result.progressionTests.length;
+                    passedTests += result.progressionTests.filter(step => 
+                        step.missing.length === 0 && step.unexpectedAccessible.length === 0).length;
+                    failedTests += result.progressionTests.filter(step => 
+                        step.missing.length > 0 || step.unexpectedAccessible.length > 0).length;
+                }
+            }
+
+            document.getElementById('totalTests').textContent = totalTests;
+            document.getElementById('passedTests').textContent = passedTests;
+            document.getElementById('failedTests').textContent = failedTests;
+            document.getElementById('errorsFound').textContent = errorsFound;
+        }
+
+        function updateSingleTestStats(result) {
+            let totalTests = 0;
+            let passedTests = 0;
+            let failedTests = 0;
+            let errorsFound = result.errors ? result.errors.length : 0;
+
+            if (result.summary) {
+                totalTests = result.summary.total;
+                passedTests = result.summary.passed;
+                failedTests = result.summary.failed;
+            } else if (result.tests) {
+                totalTests = result.tests.length;
+                passedTests = result.tests.filter(t => t.passed).length;
+                failedTests = result.tests.filter(t => !t.passed).length;
+            }
+
+            document.getElementById('totalTests').textContent = totalTests;
+            document.getElementById('passedTests').textContent = passedTests;
+            document.getElementById('failedTests').textContent = failedTests;
+            document.getElementById('errorsFound').textContent = errorsFound;
         }
 
         function clearResults() {

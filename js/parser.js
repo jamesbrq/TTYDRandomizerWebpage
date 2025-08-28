@@ -33,7 +33,7 @@ async function loadLogicFromJson(url) {
 }
 
 const StateLogic = {
-    rogueport_westside(state) {
+    westside(state) {
         return state.has("Contact Lens") || state.has("Bobbery") || 
                StateLogic.tube_curse(state) || StateLogic.ultra_hammer(state);
     },
@@ -93,7 +93,7 @@ const StateLogic = {
         return StateLogic.twilight_town(state) && StateLogic.tube_curse(state);
     },
 
-    creepy_steeple(state) {
+    steeple(state) {
         return state.has("Paper Curse") && state.has("Flurrie") && StateLogic.super_boots(state);
     },
 
@@ -124,8 +124,8 @@ const StateLogic = {
 
     fahr_outpost(state) {
         return StateLogic.ultra_hammer(state) && 
-               ((state.canReach("sewers_westside_ground", "Region") && StateLogic.ultra_boots(state)) || 
-                (state.canReach("sewers_westside", "Region") && state.has("Yoshi")));
+               ((StateLogic.sewer_westside_ground(state) && StateLogic.ultra_boots(state)) ||
+                (StateLogic.sewer_westside(state) && state.has("Yoshi")));
     },
 
     moon(state) {

@@ -782,7 +782,7 @@
     ],
     "vanilla_item": 77772072,
     "tags": [
-      "sewers"
+      "sewers_westside"
     ]
   },
   {
@@ -794,7 +794,7 @@
     ],
     "vanilla_item": 0,
     "tags": [
-      "sewers"
+      "sewers_westside"
     ]
   },
   {
@@ -806,7 +806,7 @@
     ],
     "vanilla_item": 77772079,
     "tags": [
-      "sewers"
+      "sewers_westside"
     ]
   },
   {
@@ -818,7 +818,7 @@
     ],
     "vanilla_item": 77772101,
     "tags": [
-      "sewers"
+      "sewers_westside"
     ]
   },
   {
@@ -830,7 +830,7 @@
     ],
     "vanilla_item": 77772162,
     "tags": [
-      "sewers"
+      "sewers_westside"
     ]
   },
   {
@@ -842,7 +842,7 @@
     ],
     "vanilla_item": 77772171,
     "tags": [
-      "sewers"
+      "sewers_westside"
     ]
   },
   {
@@ -854,7 +854,7 @@
     ],
     "vanilla_item": 77772172,
     "tags": [
-      "sewers"
+      "sewers_westside"
     ]
   },
   {
@@ -866,7 +866,7 @@
     ],
     "vanilla_item": 77772177,
     "tags": [
-      "sewers"
+      "sewers_westside"
     ]
   },
   {
@@ -878,7 +878,7 @@
     ],
     "vanilla_item": 77772177,
     "tags": [
-      "sewers"
+      "sewers_westside"
     ]
   },
   {
@@ -890,7 +890,7 @@
     ],
     "vanilla_item": 77772177,
     "tags": [
-      "sewers"
+      "sewers_westside"
     ]
   },
   {
@@ -902,7 +902,7 @@
     ],
     "vanilla_item": 0,
     "tags": [
-      "sewers"
+      "sewers_westside"
     ]
   },
   {
@@ -938,7 +938,7 @@
     ],
     "vanilla_item": 77772079,
     "tags": [
-      "sewers_westside"
+      "sewers_westside_ground"
     ]
   },
   {
@@ -950,7 +950,7 @@
     ],
     "vanilla_item": 77772171,
     "tags": [
-      "sewers_westside"
+      "sewers_westside_ground"
     ]
   },
   {
@@ -962,7 +962,7 @@
     ],
     "vanilla_item": 77772042,
     "tags": [
-      "sewers"
+      "sewers_westside_ground"
     ]
   },
   {
@@ -974,7 +974,7 @@
     ],
     "vanilla_item": 77772162,
     "tags": [
-      "sewers"
+      "sewers_westside_ground"
     ]
   },
   {
@@ -986,7 +986,7 @@
     ],
     "vanilla_item": 77772162,
     "tags": [
-      "sewers"
+      "sewers_westside_ground"
     ]
   },
   {
@@ -998,7 +998,7 @@
     ],
     "vanilla_item": 77772162,
     "tags": [
-      "sewers"
+      "sewers_westside_ground"
     ]
   },
   {
@@ -1010,7 +1010,7 @@
     ],
     "vanilla_item": 77772063,
     "tags": [
-      "sewers_westside"
+      "sewers_westside_ground"
     ]
   },
   {
@@ -1022,7 +1022,7 @@
     ],
     "vanilla_item": 77772177,
     "tags": [
-      "sewers_westside"
+      "sewers_westside_ground"
     ]
   },
   {

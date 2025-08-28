@@ -6,13 +6,17 @@
     <meta name="description" content="A randomizer for the game TTYD, enhancing replayability with randomized items, enemies, and more.">
     <meta name="keywords" content="TTYD, randomizer, game, mod, Mario, Paper Mario, Thousand-Year Door, randomization">
     <link rel="stylesheet" href="css/styles.css">
-    <script src="js/generate.js"></script>
-    <script src="js/location.js"></script>
+    <!-- Core dependencies -->
     <script src="js/parser.js"></script>
-    <script src="js/itemPool.js"></script>
     <script src="js/gameState.js"></script>
+    <script src="js/itemPool.js"></script>
+    <script src="js/optimizedLogicEngine.js"></script>
+    
+    <!-- New minimalistic generation system -->
+    <script src="js/generate-new.js"></script>
+    
+    <!-- Optional utilities -->
     <script src="js/spoilerGenerator.js"></script>
-    <script src="js/logicalPlacement.js"></script>
     <script type="module" src="js/gciso.js"></script>
 </head>
 <body>
@@ -264,5 +268,212 @@
         <div class="modal-buttons" id="modalButtons"></div>
     </div>
 </div>
+
+<script>
+/**
+ * Main generation function called by the Generate button
+ * Collects settings from UI and calls the new minimalistic generation system
+ */
+async function generateRandomizedROM() {
+    const generateBtn = document.getElementById('generateBtn');
+    const originalText = generateBtn.textContent;
+    
+    try {
+        // Disable button and show progress
+        generateBtn.disabled = true;
+        generateBtn.textContent = 'Generating...';
+        
+        console.log('🎯 Starting ROM generation...');
+        
+        // Collect settings from UI
+        const settings = collectSettingsFromUI();
+        console.log('Collected settings:', settings);
+        
+        // Generate the randomized seed using new system
+        const result = await generateRandomizedSeed(settings);
+        console.log('Generation result:', result);
+        
+        // Check if ROM file is selected
+        const romFile = document.getElementById('romFileInput').files[0];
+        if (!romFile) {
+            showModal('Error', 'Please select a ROM file first.');
+            return;
+        }
+        
+        // Apply randomization to ROM (if gciso.js is available)
+        if (typeof applyRandomizationToROM === 'function') {
+            generateBtn.textContent = 'Applying to ROM...';
+            await applyRandomizationToROM(romFile, result);
+        } else {
+            // Fallback: show generation results
+            showGenerationResults(result);
+        }
+        
+        showModal('Success', `Randomized seed generated successfully! Seed: ${result.seed}`);
+        
+    } catch (error) {
+        console.error('Generation failed:', error);
+        showModal('Error', `Generation failed: ${error.message}`);
+    } finally {
+        // Re-enable button
+        generateBtn.disabled = false;
+        generateBtn.textContent = originalText;
+    }
+}
+
+/**
+ * Collect all settings from the UI elements
+ */
+function collectSettingsFromUI() {
+    const settings = {};
+    
+    // Collect toggle switches
+    const toggles = document.querySelectorAll('.toggle-switch');
+    toggles.forEach(toggle => {
+        const label = toggle.parentElement.querySelector('.toggle-label').textContent.trim();
+        const isActive = toggle.classList.contains('active');
+        settings[label] = isActive;
+    });
+    
+    // Collect dropdowns
+    const dropdowns = document.querySelectorAll('.dropdown-select');
+    dropdowns.forEach(dropdown => {
+        const label = dropdown.parentElement.querySelector('.dropdown-label').textContent.trim();
+        settings[label] = dropdown.value;
+    });
+    
+    // Collect text inputs
+    const textInputs = document.querySelectorAll('.text-input');
+    textInputs.forEach(input => {
+        const label = input.parentElement.querySelector('.text-label').textContent.trim();
+        settings[label] = input.value;
+    });
+    
+    // Collect numeric inputs
+    const numericInputs = document.querySelectorAll('.numeric-input');
+    numericInputs.forEach(input => {
+        const label = input.parentElement.querySelector('.numeric-label').textContent.trim();
+        settings[label] = parseInt(input.value) || 0;
+    });
+    
+    // Add default settings if not specified
+    settings.seed = settings.seed || Math.floor(Math.random() * 1000000);
+    settings.startingPartner = settings.startingPartner || 'Goombella';
+    
+    return settings;
+}
+
+/**
+ * Show generation results (fallback if ROM processing isn't available)
+ */
+function showGenerationResults(result) {
+    console.log('📊 Generation Results:');
+    console.log(`Seed: ${result.seed}`);
+    console.log(`Items placed: ${result.statistics.totalItems}`);
+    console.log(`Locations used: ${result.statistics.totalLocations}`);
+    console.log('Placements:', result.placements);
+    
+    // Could show a detailed results modal here
+    const summary = `
+        Seed: ${result.seed}
+        Items placed: ${result.statistics.totalItems}
+        Locations: ${result.statistics.totalLocations}
+        Algorithm: ${result.metadata.algorithm}
+        Accessibility: ${result.metadata.accessibility}
+    `;
+    
+    showModal('Generation Complete', summary);
+}
+
+/**
+ * Toggle switch functionality (existing function enhanced)
+ */
+function toggleSwitch(element) {
+    element.classList.toggle('active');
+}
+
+/**
+ * Modal system functions
+ */
+function showModal(title, message, buttons = [{ text: 'OK', action: () => hideModal() }]) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalMessage').textContent = message;
+    
+    const modalButtons = document.getElementById('modalButtons');
+    modalButtons.innerHTML = '';
+    
+    buttons.forEach(button => {
+        const btn = document.createElement('button');
+        btn.textContent = button.text;
+        btn.className = 'modal-button';
+        btn.onclick = button.action;
+        modalButtons.appendChild(btn);
+    });
+    
+    document.getElementById('modalOverlay').style.display = 'flex';
+}
+
+function hideModal() {
+    document.getElementById('modalOverlay').style.display = 'none';
+}
+
+// Close modal when clicking overlay
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) {
+        hideModal();
+    }
+});
+
+/**
+ * Preset management functions (simplified versions)
+ */
+function loadPreset() {
+    const dropdown = document.querySelector('.preset-dropdown');
+    const selected = dropdown.options[dropdown.selectedIndex];
+    
+    if (selected.dataset.settings) {
+        try {
+            const settings = JSON.parse(atob(selected.dataset.settings));
+            applySettingsToUI(settings);
+            console.log('Preset loaded:', settings);
+        } catch (error) {
+            showModal('Error', 'Failed to load preset: ' + error.message);
+        }
+    }
+}
+
+function savePreset() {
+    const settings = collectSettingsFromUI();
+    const encoded = btoa(JSON.stringify(settings));
+    
+    showModal('Preset Saved', 'Settings string: ' + encoded, [
+        { text: 'Copy to Clipboard', action: () => { navigator.clipboard.writeText(encoded); hideModal(); }},
+        { text: 'Close', action: () => hideModal() }
+    ]);
+}
+
+function applySettingsToUI(settings) {
+    // Apply settings back to UI elements
+    Object.entries(settings).forEach(([key, value]) => {
+        // Find corresponding UI element and set its value
+        // This is a simplified version - would need more robust mapping
+        console.log(`Setting ${key} = ${value}`);
+    });
+}
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('TTYD Randomizer Generate page loaded with new generation system');
+    
+    // Update ROM file input handler
+    document.getElementById('romFileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            document.getElementById('selectedROMName').textContent = file.name;
+            console.log('ROM file selected:', file.name);
+        }
+    });
+});
+</script>
 </body>
 </html>

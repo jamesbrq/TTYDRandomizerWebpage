@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Engine Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .game-state {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .location-result {
+            padding: 5px 10px;
+            margin: 2px 0;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .accessible {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        .inaccessible {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .stats {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .debug-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .explanation {
+            background: #f8f9fa;
+            border-left: 4px solid #6c757d;
+            padding: 10px;
+            margin: 5px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        select, input {
+            padding: 5px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TTYD Randomizer Logic Engine Test</h1>
+        
+        <div class="controls">
+            <button onclick="initializeEngine()">Initialize Engine</button>
+            <button onclick="runBasicTests()">Run Basic Tests</button>
+            <button onclick="testAllStates()">Test All Game States</button>
+            <button onclick="testAllProgressionItems()">Test All Progression Items</button>
+            <button onclick="clearResults()">Clear Results</button>
+        </div>
+
+        <div id="status" class="stats">Ready to initialize...</div>
+
+        <div class="test-section">
+            <h3>Interactive Testing</h3>
+            <div>
+                <label>Game State:</label>
+                <select id="stateSelector">
+                    <option value="starting">Starting State</option>
+                    <option value="earlyGame">Early Game</option>
+                    <option value="midGame">Mid Game</option>
+                    <option value="lateGame">Late Game</option>
+                </select>
+                
+                <label>Test Location:</label>
+                <input type="text" id="locationInput" placeholder="Enter location name" style="width: 300px;">
+                
+                <button onclick="testSpecificLocation()">Test Location</button>
+                <button onclick="showAccessibleLocations()">Show All Accessible</button>
+            </div>
+            
+            <div id="interactiveResults"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>Game State Progression Test</h3>
+            <div id="progressionResults"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>Performance Stats</h3>
+            <div id="performanceStats"></div>
+        </div>
+
+        <div class="debug-section">
+            <h3>Debug Output</h3>
+            <div id="debugOutput"></div>
+        </div>
+    </div>
+
+    <!-- Dependencies -->
+    <script src="js/parser.js"></script>
+    <script src="js/gameState.js"></script>
+    <script src="js/optimizedLogicEngine.js"></script>
+
+    <script>
+        let logicEngine = null;
+        let testStates = {};
+
+        // Create mock game states for testing
+        function createTestStates() {
+            testStates = {
+                starting: createGameState({
+                    'Progressive Boots': 0,
+                    'Progressive Hammer': 0
+                }),
+                
+                earlyGame: createGameState({
+                    'Progressive Boots': 1,
+                    'Progressive Hammer': 1,
+                    'Goombella': 1,
+                    'Koops': 1,
+                    'Plane Curse': 1,
+                    'Diamond Star': 1
+                }),
+                
+                midGame: createGameState({
+                    'Progressive Boots': 2,
+                    'Progressive Hammer': 1,
+                    'Paper Curse': 1,
+                    'Plane Curse': 1,
+                    'Tube Curse': 1,
+                    'Goombella': 1,
+                    'Koops': 1,
+                    'Flurrie': 1,
+                    'Yoshi': 1,
+                    'Diamond Star': 1,
+                    'Emerald Star': 1,
+                    'Gold Star': 1
+                }),
+                
+                lateGame: createGameState({
+                    'Progressive Boots': 2,
+                    'Progressive Hammer': 2,
+                    'Paper Curse': 1,
+                    'Plane Curse': 1,
+                    'Tube Curse': 1,
+                    'Boat Curse': 1,
+                    'Goombella': 1,
+                    'Koops': 1,
+                    'Flurrie': 1,
+                    'Yoshi': 1,
+                    'Vivian': 1,
+                    'Bobbery': 1,
+                    'Diamond Star': 1,
+                    'Emerald Star': 1,
+                    'Gold Star': 1,
+                    'Ruby Star': 1,
+                    'Sapphire Star': 1,
+                    'Garnet Star': 1,
+                    'Crystal Star': 1
+                })
+            };
+        }
+
+        function createGameState(items) {
+            const state = {
+                items: new Map(),
+                regions: new Set(),
+                has(itemName, count = 1) {
+                    return (this.items.get(itemName) || 0) >= count;
+                },
+                getStarsCount() {
+                    const stars = ['Diamond Star', 'Emerald Star', 'Gold Star', 'Ruby Star', 'Sapphire Star', 'Garnet Star', 'Crystal Star'];
+                    return stars.reduce((count, star) => count + (this.has(star) ? 1 : 0), 0);
+                },
+                canReach(target, type) {
+                    // Simple mock - assume we can reach basic regions
+                    const basicRegions = ['rogueport', 'sewers'];
+                    return basicRegions.includes(target) || this.regions.has(target);
+                }
+            };
+
+            // Add items to state
+            for (const [itemName, count] of Object.entries(items)) {
+                state.items.set(itemName, count);
+            }
+
+            return state;
+        }
+
+        async function loadJsonData() {
+            try {
+                const [rulesResponse, regionsResponse, locationsResponse, itemsResponse] = await Promise.all([
+                    fetch('json/rules.json'),
+                    fetch('json/regions.json'), 
+                    fetch('json/locations.json'),
+                    fetch('json/items.json')
+                ]);
+
+                return {
+                    rules: await rulesResponse.json(),
+                    regions: await regionsResponse.json(),
+                    locations: await locationsResponse.json(),
+                    items: await itemsResponse.json()
+                };
+            } catch (error) {
+                console.error('Failed to load JSON data:', error);
+                updateStatus('❌ Failed to load JSON data: ' + error.message);
+                return null;
+            }
+        }
+
+        async function initializeEngine() {
+            updateStatus('🔄 Loading JSON data...');
+            
+            const data = await loadJsonData();
+            if (!data) return;
+
+            updateStatus('🔄 Initializing OptimizedLogicEngine...');
+            
+            try {
+                logicEngine = new OptimizedLogicEngine(
+                    data.rules,
+                    data.regions, 
+                    data.locations,
+                    data.items
+                );
+
+                createTestStates();
+
+                const stats = logicEngine.getStats();
+                updateStatus(`✅ Engine initialized successfully!
+                    Location Rules: ${stats.locationRules}
+                    Region Rules: ${stats.regionRules}  
+                    Locations with Tags: ${stats.locationsWithTags}`);
+
+                console.log('Logic Engine Stats:', stats);
+                
+            } catch (error) {
+                updateStatus('❌ Failed to initialize engine: ' + error.message);
+                console.error('Initialization error:', error);
+            }
+        }
+
+        function runBasicTests() {
+            if (!logicEngine) {
+                updateStatus('❌ Please initialize the engine first');
+                return;
+            }
+
+            updateStatus('🧪 Running basic tests...');
+            
+            try {
+                // Test some known locations with different states
+                const testCases = [
+                    {
+                        location: 'Rogueport Docks: Star Piece',
+                        state: 'starting',
+                        expected: 'Should be accessible from start'
+                    },
+                    {
+                        location: 'Boggly Woods Plane Panel Room: Shine Sprite', 
+                        state: 'starting',
+                        expected: 'Should NOT be accessible (needs Koops or ultra_boots)'
+                    },
+                    {
+                        location: 'Boggly Woods Plane Panel Room: Shine Sprite',
+                        state: 'earlyGame', 
+                        expected: 'Should be accessible (has Koops)'
+                    },
+                    {
+                        location: 'Great Tree Entrance: Emerald Star',
+                        state: 'starting',
+                        expected: 'Should NOT be accessible (needs many items)'
+                    },
+                    {
+                        location: 'Great Tree Entrance: Emerald Star',
+                        state: 'lateGame',
+                        expected: 'Should be accessible (has required items)'
+                    }
+                ];
+
+                let resultsHtml = '<h4>Basic Test Results:</h4>';
+                
+                testCases.forEach((testCase, index) => {
+                    const gameState = testStates[testCase.state];
+                    const accessible = logicEngine.isLocationAccessible(testCase.location, gameState);
+                    
+                    const statusClass = accessible ? 'accessible' : 'inaccessible';
+                    const statusText = accessible ? 'ACCESSIBLE' : 'NOT ACCESSIBLE';
+                    
+                    resultsHtml += `
+                        <div class="location-result ${statusClass}">
+                            Test ${index + 1}: ${testCase.location}
+                            <br>State: ${testCase.state} → <strong>${statusText}</strong>
+                            <br>Expected: ${testCase.expected}
+                        </div>
+                    `;
+                });
+
+                document.getElementById('progressionResults').innerHTML = resultsHtml;
+                updateStatus('✅ Basic tests completed');
+                
+            } catch (error) {
+                updateStatus('❌ Test error: ' + error.message);
+                console.error('Test error:', error);
+            }
+        }
+
+        function testAllStates() {
+            if (!logicEngine) {
+                updateStatus('❌ Please initialize the engine first');
+                return;
+            }
+
+            updateStatus('🔄 Testing all game states...');
+
+            try {
+                const startTime = performance.now();
+                let resultsHtml = '<h4>Accessibility by Game State:</h4>';
+
+                Object.entries(testStates).forEach(([stateName, gameState]) => {
+                    const stateStartTime = performance.now();
+                    const accessibleLocations = logicEngine.getAccessibleLocations(gameState);
+                    const stateTime = performance.now() - stateStartTime;
+
+                    resultsHtml += `
+                        <div class="game-state">
+                            <strong>${stateName}</strong> (${stateTime.toFixed(2)}ms)
+                            <br>Stars: ${gameState.getStarsCount()}
+                            <br>Accessible Locations: ${accessibleLocations.length}
+                            <br>Items: ${Array.from(gameState.items.keys()).slice(0, 5).join(', ')}${gameState.items.size > 5 ? '...' : ''}
+                        </div>
+                    `;
+                });
+
+                const totalTime = performance.now() - startTime;
+                resultsHtml += `<div class="stats">Total test time: ${totalTime.toFixed(2)}ms</div>`;
+
+                document.getElementById('progressionResults').innerHTML = resultsHtml;
+                updateStatus(`✅ All states tested in ${totalTime.toFixed(2)}ms`);
+
+                // Update performance stats
+                updatePerformanceStats();
+                
+            } catch (error) {
+                updateStatus('❌ Test error: ' + error.message);
+                console.error('Test error:', error);
+            }
+        }
+
+        function testSpecificLocation() {
+            if (!logicEngine) {
+                updateStatus('❌ Please initialize the engine first');
+                return;
+            }
+
+            const locationName = document.getElementById('locationInput').value.trim();
+            const stateName = document.getElementById('stateSelector').value;
+
+            if (!locationName) {
+                updateStatus('❌ Please enter a location name');
+                return;
+            }
+
+            const gameState = testStates[stateName];
+            if (!gameState) {
+                updateStatus('❌ Invalid game state selected');
+                return;
+            }
+
+            try {
+                const accessible = logicEngine.isLocationAccessible(locationName, gameState);
+                const explanation = logicEngine.explainAccessibility(locationName, gameState);
+
+                let resultHtml = `
+                    <h4>Location Test Result:</h4>
+                    <div class="location-result ${accessible ? 'accessible' : 'inaccessible'}">
+                        <strong>${locationName}</strong> in <strong>${stateName}</strong> state
+                        <br>Result: <strong>${accessible ? 'ACCESSIBLE' : 'NOT ACCESSIBLE'}</strong>
+                    </div>
+                `;
+
+                if (explanation.reasons && explanation.reasons.length > 0) {
+                    resultHtml += '<h5>Detailed Explanation:</h5>';
+                    explanation.reasons.forEach(reason => {
+                        const reasonClass = reason.passed ? 'accessible' : 'inaccessible';
+                        const reasonText = reason.passed ? 'PASSED' : 'FAILED';
+                        resultHtml += `
+                            <div class="explanation ${reasonClass}">
+                                ${reason.type}: ${reasonText}
+                                ${reason.tag ? `(${reason.tag})` : ''}
+                                <br>Rule: ${JSON.stringify(reason.rule)}
+                            </div>
+                        `;
+                    });
+                }
+
+                document.getElementById('interactiveResults').innerHTML = resultHtml;
+                updateStatus(`✅ Tested ${locationName}`);
+                
+            } catch (error) {
+                updateStatus('❌ Test error: ' + error.message);
+                console.error('Test error:', error);
+            }
+        }
+
+        function showAccessibleLocations() {
+            if (!logicEngine) {
+                updateStatus('❌ Please initialize the engine first');
+                return;
+            }
+
+            const stateName = document.getElementById('stateSelector').value;
+            const gameState = testStates[stateName];
+
+            if (!gameState) {
+                updateStatus('❌ Invalid game state selected');
+                return;
+            }
+
+            try {
+                const startTime = performance.now();
+                const accessibleLocations = logicEngine.getAccessibleLocations(gameState);
+                const endTime = performance.now();
+
+                let resultHtml = `
+                    <h4>All Accessible Locations in ${stateName} (${accessibleLocations.length} total, ${(endTime - startTime).toFixed(2)}ms):</h4>
+                    <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
+                `;
+
+                accessibleLocations.forEach(location => {
+                    resultHtml += `<div class="location-result accessible">${location}</div>`;
+                });
+
+                resultHtml += '</div>';
+                document.getElementById('interactiveResults').innerHTML = resultHtml;
+                updateStatus(`✅ Found ${accessibleLocations.length} accessible locations`);
+                
+            } catch (error) {
+                updateStatus('❌ Error: ' + error.message);
+                console.error('Error:', error);
+            }
+        }
+
+        function testAllProgressionItems() {
+            if (!logicEngine) {
+                updateStatus('❌ Please initialize the engine first');
+                return;
+            }
+
+            updateStatus('🔄 Testing with all progression items...');
+
+            try {
+                // Create a state with ALL progression items
+                const allProgressionState = createGameState({
+                    // Progressive items (max quantities)
+                    'Progressive Boots': 2,
+                    'Progressive Hammer': 2,
+                    
+                    // All curses
+                    'Paper Curse': 1,
+                    'Plane Curse': 1,
+                    'Tube Curse': 1,
+                    'Boat Curse': 1,
+                    
+                    // All partners
+                    'Goombella': 1,
+                    'Koops': 1,
+                    'Flurrie': 1,
+                    'Yoshi': 1,
+                    'Vivian': 1,
+                    'Bobbery': 1,
+                    'Ms. Mowz': 1,
+                    
+                    // All Crystal Stars
+                    'Diamond Star': 1,
+                    'Emerald Star': 1,
+                    'Gold Star': 1,
+                    'Ruby Star': 1,
+                    'Sapphire Star': 1,
+                    'Garnet Star': 1,
+                    'Crystal Star': 1,
+                    
+                    // All keys (max quantities from ITEM_FREQUENCIES)
+                    'Castle Key': 4,
+                    'Palace Key': 3,
+                    'Palace Key (Riddle Tower)': 8,
+                    'Red Key': 1,
+                    'Blue Key': 1,
+                    'Shop Key': 1,
+                    'Storage Key 1': 1,
+                    'Storage Key 2': 1,
+                    'Grotto Key': 1,
+                    'Steeple Key': 1,
+                    'Station Key 1': 1,
+                    'Station Key 2': 1,
+                    'Elevator Key 1': 1,
+                    'Elevator Key 2': 1,
+                    'Elevator Key (Riverside)': 1,
+                    'Star Key': 1,
+                    
+                    // All black keys
+                    'Black Key (Paper Curse)': 1,
+                    'Black Key (Tube Curse)': 1,
+                    'Black Key (Plane Curse)': 1,
+                    'Black Key (Boat Curse)': 1,
+                    
+                    // Important quest items
+                    'Blimp Ticket': 1,
+                    'Train Ticket': 1,
+                    'Contact Lens': 1,
+                    'Sun Stone': 1,
+                    'Moon Stone': 1,
+                    'Necklace': 1,
+                    'Old Letter': 1,
+                    'Autograph': 1,
+                    'Ragged Diary': 1,
+                    'Blanket': 1,
+                    'Vital Paper': 1,
+                    'Wedding Ring': 1,
+                    'Skull Gem': 1,
+                    'Goldbob Guide': 1,
+                    'Shell Earrings': 1,
+                    'Puni Orb': 1,
+                    'Superbombomb': 1,
+                    'Gate Handle': 1,
+                    'Briefcase': 1,
+                    'Gold Ring': 1,
+                    'Chuckola Cola': 1,
+                    'Coconut': 2,
+                    'Galley Pot': 1,
+                    'Cog': 1,
+                    'The Letter "p"': 1,
+                    'Up Arrow': 1,
+                    'Dubious Paper': 1,
+                    'Champ\s Belt': 1,
+                    'Card Key 1': 1,
+                    'Card Key 2': 1,
+                    'Card Key 3': 1,
+                    'Card Key 4': 1,
+                    'Cookbook': 1,
+                    'Strange Sack': 1,
+                    'L Emblem': 1,
+                    'W Emblem': 1
+                });
+
+                const startTime = performance.now();
+                const accessibleLocations = logicEngine.getAccessibleLocations(allProgressionState);
+                const testTime = performance.now() - startTime;
+
+                // Get total number of locations for comparison
+                const totalLocations = logicEngine.locationTags.size; // All locations from locations.json
+                const inaccessibleCount = totalLocations - accessibleLocations.length;
+
+                let resultHtml = `
+                    <h4>All Progression Items Test Results:</h4>
+                    <div class="game-state">
+                        <strong>Test completed in ${testTime.toFixed(2)}ms</strong><br>
+                        Stars: ${allProgressionState.getStarsCount()}/7<br>
+                        Total Items: ${allProgressionState.items.size}<br>
+                        Accessible Locations: <span style="color: green;">${accessibleLocations.length}</span><br>
+                        Inaccessible Locations: <span style="color: red;">${inaccessibleCount}</span><br>
+                        Total Locations: ${totalLocations}
+                    </div>
+                `;
+
+                if (inaccessibleCount > 0) {
+                    resultHtml += `<h5>🔍 Investigating Inaccessible Locations:</h5>`;
+                    
+                    // Find which locations are still inaccessible
+                    const allLocationNames = new Set();
+                    
+                    // Add ALL locations from the JSON (locationTags now contains all locations)
+                    for (const locationName of logicEngine.locationTags.keys()) {
+                        allLocationNames.add(locationName);
+                    }
+                    
+                    const accessibleSet = new Set(accessibleLocations);
+                    const inaccessibleLocations = Array.from(allLocationNames).filter(loc => !accessibleSet.has(loc));
+                    
+                    // Show first 20 inaccessible locations with explanations
+                    const samplesToShow = Math.min(20, inaccessibleLocations.length);
+                    for (let i = 0; i < samplesToShow; i++) {
+                        const location = inaccessibleLocations[i];
+                        const explanation = logicEngine.explainAccessibility(location, allProgressionState);
+                        
+                        let reasonsText = '';
+                        if (explanation.reasons && explanation.reasons.length > 0) {
+                            const failedReasons = explanation.reasons.filter(r => !r.passed);
+                            if (failedReasons.length > 0) {
+                                reasonsText = failedReasons.map(r => 
+                                    `${r.type}${r.tag ? ` (${r.tag})` : ''}: ${JSON.stringify(r.rule)}`
+                                ).join('<br>        ');
+                            }
+                        }
+                        
+                        resultHtml += `
+                            <div class="explanation inaccessible">
+                                <strong>${location}</strong><br>
+                                ${reasonsText || 'No specific reason found (may be a logic error)'}
+                            </div>
+                        `;
+                    }
+                    
+                    if (inaccessibleLocations.length > samplesToShow) {
+                        resultHtml += `<div class="stats">... and ${inaccessibleLocations.length - samplesToShow} more inaccessible locations</div>`;
+                    }
+                } else {
+                    resultHtml += `<div class="stats">✅ All locations are accessible with all progression items!</div>`;
+                }
+
+                document.getElementById('progressionResults').innerHTML = resultHtml;
+                updateStatus(`✅ All progression items test completed - ${accessibleLocations.length}/${totalLocations} accessible`);
+                
+            } catch (error) {
+                updateStatus('❌ Test error: ' + error.message);
+                console.error('All progression items test error:', error);
+            }
+        }
+
+        function updatePerformanceStats() {
+            if (!logicEngine) return;
+
+            const stats = logicEngine.getStats();
+            const statsHtml = `
+                <div class="stats">
+                    <strong>Performance Statistics:</strong><br>
+                    Location Rules: ${stats.locationRules}<br>
+                    Region Rules: ${stats.regionRules}<br>
+                    Locations with Tags: ${stats.locationsWithTags}<br>
+                    Cached Results: ${stats.cachedResults}<br>
+                    Cache Hit: ${stats.cacheHit ? 'Yes' : 'No'}
+                </div>
+            `;
+            document.getElementById('performanceStats').innerHTML = statsHtml;
+        }
+
+        function clearResults() {
+            document.getElementById('interactiveResults').innerHTML = '';
+            document.getElementById('progressionResults').innerHTML = '';
+            document.getElementById('debugOutput').innerHTML = '';
+            updateStatus('Results cleared');
+        }
+
+        function updateStatus(message) {
+            document.getElementById('status').innerHTML = message;
+            
+            // Also log to debug output
+            const debugOutput = document.getElementById('debugOutput');
+            debugOutput.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ${message}</div>`;
+            debugOutput.scrollTop = debugOutput.scrollHeight;
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateStatus('Page loaded. Click "Initialize Engine" to begin testing.');
+        });
+    </script>
+</body>
+</html>
