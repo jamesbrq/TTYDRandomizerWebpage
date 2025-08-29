@@ -8,16 +8,18 @@ class Location {
      * @param {Array<string>} offsets - Array of hex offset strings for this location
      * @param {number} vanillaItem - The vanilla item ID at this location
      * @param {Array<string>} tags - Array of tags describing this location (e.g., ["tattle"])
+     * @param {Array<string>} rules - Array of rules that will be parsed from the parser.js file
      * @param {number|null} placedItem - The item ID that has been placed at this location (null if empty)
      * @param {boolean} locked - Whether this location is locked from randomization
      */
-    constructor(name, id, rel, offsets = [], vanillaItem = 0, tags = [], placedItem = null, locked = false) {
+    constructor(name, id, rel, offsets = [], vanillaItem = 0, tags = [], rules = [], placedItem = null, locked = false) {
         this.name = name;
         this.id = id;
         this.rel = rel;
         this.offsets = offsets;
         this.vanillaItem = vanillaItem;
         this.tags = tags;
+        this.rules = rules;
         this.placed_item = placedItem;
         this.locked = locked;
     }
@@ -34,7 +36,8 @@ class Location {
             json.rel,
             json.offsets || [],
             json.vanilla_item || 0,
-            json.tags || []
+            json.tags || [],
+            json.rules || []
         );
     }
 
@@ -49,7 +52,8 @@ class Location {
             rel: this.rel,
             offsets: this.offsets,
             vanilla_item: this.vanillaItem,
-            tags: this.tags
+            tags: this.tags,
+            rules: this.rules
         };
     }
 
@@ -125,6 +129,7 @@ class Location {
             changes.offsets !== undefined ? changes.offsets : [...this.offsets],
             changes.vanillaItem !== undefined ? changes.vanillaItem : this.vanillaItem,
             changes.tags !== undefined ? changes.tags : [...this.tags],
+            changes.rules !== undefined ? changes.rules : [...this.rules],
             changes.placed_item !== undefined ? changes.placed_item : this.placed_item,
             changes.locked !== undefined ? changes.locked : this.locked
         );
@@ -223,6 +228,30 @@ class Location {
      * @returns {boolean} True if the location is accessible
      */
     isAccessible(gameState, regionLogic = null) {
+        // Check all rules in the rules array first
+        if (this.rules && this.rules.length > 0) {
+            try {
+                for (const rule of this.rules) {
+                    // Parse each rule using the parser and evaluate it
+                    if (typeof jsonToLambda !== 'undefined') {
+                        const ruleFunction = jsonToLambda(rule);
+                        if (!ruleFunction(gameState)) {
+                            return false; // If any rule fails, location is not accessible
+                        }
+                    } else {
+                        // Fallback to the _evaluateLogic method if jsonToLambda is not available
+                        if (!this._evaluateLogic(rule, gameState)) {
+                            return false;
+                        }
+                    }
+                }
+                return true; // All rules passed
+            } catch (error) {
+                console.warn(`Error evaluating rules for ${this.name}:`, error);
+                return false;
+            }
+        }
+        
         // Use combined accessibility logic if available (preferred method)
         if (this.accessibilityLogic) {
             try {
@@ -294,6 +323,7 @@ class Location {
             Array.isArray(this.offsets) &&
             typeof this.vanillaItem === 'number' &&
             Array.isArray(this.tags) &&
+            Array.isArray(this.rules) &&
             (this.placed_item === null || typeof this.placed_item === 'number') &&
             typeof this.locked === 'boolean'
         );
@@ -363,6 +393,14 @@ class LocationCollection {
         
         this.locations.push(location);
         this.locationMap.set(location.id, location);
+    }
+
+    shuffle() {
+        for (let i = this.locations.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.locations[i], this.locations[j]] = [this.locations[j], this.locations[i]];
+        }
+        return this;
     }
 
     /**

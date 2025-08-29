@@ -113,7 +113,19 @@ class ItemPool {
      * @returns {number} The frequency of the item
      */
     getItemFrequency(itemName) {
-        return ITEM_FREQUENCIES[itemName] || 1;
+        // Check if ITEM_FREQUENCIES is defined
+        if (typeof ITEM_FREQUENCIES === 'undefined') {
+            console.warn('ITEM_FREQUENCIES is not defined! Using default frequency of 1 for all items.');
+            return 1;
+        }
+        
+        const frequency = ITEM_FREQUENCIES[itemName];
+        if (frequency === undefined) {
+            // Item not in ITEM_FREQUENCIES, default to 1
+            return 1;
+        }
+        
+        return frequency;
     }
 
     /**
@@ -124,13 +136,32 @@ class ItemPool {
         this.items.clear();
         this.totalItems = 0;
 
+        let itemsWithFrequency = 0;
+        let itemsWithoutFrequency = 0;
+        let progressionItems = 0;
+
         for (const itemName of itemNames) {
             const frequency = this.getItemFrequency(itemName);
             if (frequency > 0) {
                 this.items.set(itemName, frequency);
                 this.totalItems += frequency;
+                
+                // Check if this item has a specific frequency defined
+                if (typeof ITEM_FREQUENCIES !== 'undefined' && ITEM_FREQUENCIES.hasOwnProperty(itemName)) {
+                    itemsWithFrequency++;
+                } else {
+                    itemsWithoutFrequency++;
+                }
+                
+                // Count potential progression items (frequency of 1 might be progression)
+                if (frequency === 1) {
+                    progressionItems++;
+                }
             }
         }
+        
+        console.log(`Pool populated: ${itemsWithFrequency} items with defined frequency, ${itemsWithoutFrequency} items with default frequency (1)`);
+        console.log(`Items with frequency 1 (potential progression): ${progressionItems}`);
     }
 
     /**
@@ -178,6 +209,44 @@ class ItemPool {
         const currentCount = this.items.get(itemName) || 0;
         this.items.set(itemName, currentCount + 1);
         this.totalItems++;
+    }
+
+    /**
+     * Removes all instances of a specific item from the pool
+     * @param {string} itemName - The item to remove completely
+     * @returns {number} Number of items removed
+     */
+    removeItem(itemName) {
+        const currentCount = this.items.get(itemName) || 0;
+        if (currentCount > 0) {
+            this.items.delete(itemName);
+            this.totalItems -= currentCount;
+            return currentCount;
+        }
+        return 0;
+    }
+
+    /**
+     * Removes a specific number of instances of an item from the pool
+     * @param {string} itemName - The item to remove
+     * @param {number} count - Number of instances to remove
+     * @returns {number} Number of items actually removed
+     */
+    removeItemCount(itemName, count) {
+        const currentCount = this.items.get(itemName) || 0;
+        const actualRemoveCount = Math.min(count, currentCount);
+        
+        if (actualRemoveCount > 0) {
+            const newCount = currentCount - actualRemoveCount;
+            if (newCount === 0) {
+                this.items.delete(itemName);
+            } else {
+                this.items.set(itemName, newCount);
+            }
+            this.totalItems -= actualRemoveCount;
+        }
+        
+        return actualRemoveCount;
     }
 
     /**

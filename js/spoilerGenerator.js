@@ -41,7 +41,6 @@ class SpoilerGenerator {
         this.spoilerData.locationItemPairs.push({
             locationName: location.name,
             locationId: location.id,
-            region: location.getRegionTag() || 'unknown',
             relFile: location.rel,
             itemName: itemName,
             itemId: itemId,
@@ -63,12 +62,10 @@ class SpoilerGenerator {
             itemCount: items.length,
             items: items.map(item => ({
                 itemName: item.itemName,
-                locationName: item.location.name,
-                region: item.location.getRegionTag() || 'unknown'
+                locationName: item.location.name
             })),
             gameStateSnapshot: {
                 totalItems: gameState.getAllItems().size,
-                accessibleRegions: gameState.getAllRegions().size,
                 keyItems: this._getKeyItemsFromState(gameState)
             }
         });
@@ -91,8 +88,7 @@ class SpoilerGenerator {
 
         if (gameState) {
             entry.gameState = {
-                itemCount: gameState.getAllItems().size,
-                regionCount: gameState.getAllRegions().size
+                itemCount: gameState.getAllItems().size
             };
         }
 
@@ -205,9 +201,9 @@ class SpoilerGenerator {
             this.spoilerData.itemSpheres.forEach(sphere => {
                 lines.push(`\nSphere ${sphere.sphere} (${sphere.itemCount} items):`);
                 sphere.items.forEach(item => {
-                    lines.push(`  ${item.itemName} @ ${item.locationName} (${item.region})`);
+                    lines.push(`  ${item.itemName} @ ${item.locationName}`);
                 });
-                lines.push(`  Game State: ${sphere.gameStateSnapshot.totalItems} items, ${sphere.gameStateSnapshot.accessibleRegions} regions`);
+                lines.push(`  Game State: ${sphere.gameStateSnapshot.totalItems} items`);
             });
             lines.push('');
         }
@@ -216,21 +212,12 @@ class SpoilerGenerator {
         lines.push('LOCATION-ITEM PAIRS:');
         lines.push('--------------------');
         
-        // Group by region
-        const byRegion = {};
-        this.spoilerData.locationItemPairs.forEach(pair => {
-            if (!byRegion[pair.region]) {
-                byRegion[pair.region] = [];
-            }
-            byRegion[pair.region].push(pair);
-        });
+        // Sort by location name
+        const sortedPairs = this.spoilerData.locationItemPairs.sort((a, b) => a.locationName.localeCompare(b.locationName));
         
-        Object.keys(byRegion).sort().forEach(region => {
-            lines.push(`\n${region.toUpperCase()}:`);
-            byRegion[region].forEach(pair => {
-                const sphereInfo = pair.sphere !== 'unknown' ? ` [Sphere ${pair.sphere}]` : '';
-                lines.push(`  ${pair.locationName}: ${pair.itemName}${sphereInfo}`);
-            });
+        sortedPairs.forEach(pair => {
+            const sphereInfo = pair.sphere !== 'unknown' ? ` [Sphere ${pair.sphere}]` : '';
+            lines.push(`  ${pair.locationName}: ${pair.itemName}${sphereInfo}`);
         });
         
         // Progression Log
@@ -330,26 +317,23 @@ class SpoilerGenerator {
                 <h3>Sphere ${sphere.sphere} (${sphere.itemCount} items)</h3>
                 ${sphere.items.map(item => `
                     <div class="location-item">
-                        <strong>${item.itemName}</strong> @ ${item.locationName} <em>(${item.region})</em>
+                        <strong>${item.itemName}</strong> @ ${item.locationName}
                     </div>
                 `).join('')}
-                <p><small>Game State: ${sphere.gameStateSnapshot.totalItems} items, ${sphere.gameStateSnapshot.accessibleRegions} regions accessible</small></p>
+                <p><small>Game State: ${sphere.gameStateSnapshot.totalItems} items</small></p>
             </div>
         `).join('')}
         ` : ''}
 
         <h2>Location-Item Pairs</h2>
-        ${Object.entries(this._groupByRegion()).map(([region, pairs]) => `
-            <div class="region-group">
-                <div class="region-title">${region.toUpperCase()}</div>
-                ${pairs.map(pair => `
-                    <div class="location-item">
-                        <strong>${pair.locationName}:</strong> ${pair.itemName}
-                        ${pair.sphere !== 'unknown' ? `<em>[Sphere ${pair.sphere}]</em>` : ''}
-                    </div>
-                `).join('')}
-            </div>
-        `).join('')}
+        <div class="region-group">
+            ${this.spoilerData.locationItemPairs.sort((a, b) => a.locationName.localeCompare(b.locationName)).map(pair => `
+                <div class="location-item">
+                    <strong>${pair.locationName}:</strong> ${pair.itemName}
+                    ${pair.sphere !== 'unknown' ? `<em>[Sphere ${pair.sphere}]</em>` : ''}
+                </div>
+            `).join('')}
+        </div>
 
         ${this.spoilerData.progressionLog.length > 0 ? `
         <h2>Progression Log</h2>
@@ -366,21 +350,6 @@ class SpoilerGenerator {
         return html;
     }
 
-    /**
-     * Groups location-item pairs by region
-     * @returns {Object} Grouped pairs
-     * @private
-     */
-    _groupByRegion() {
-        const byRegion = {};
-        this.spoilerData.locationItemPairs.forEach(pair => {
-            if (!byRegion[pair.region]) {
-                byRegion[pair.region] = [];
-            }
-            byRegion[pair.region].push(pair);
-        });
-        return byRegion;
-    }
 
     /**
      * Extracts key items from game state
@@ -468,34 +437,6 @@ class SpoilerGenerator {
             return item ? item.name : `Unknown Item (${itemId})`;
         }
         return `Item ${itemId}`;
-    }
-
-    /**
-     * Updates accessible regions based on game state
-     * @param {GameState} gameState - Current game state
-     * @param {Object} regionLogic - Region logic map
-     * @private
-     */
-    static _updateAccessibleRegions(gameState, regionLogic) {
-        // Simple region accessibility update based on items
-        if (gameState.has('Progressive Hammer', 1)) {
-            gameState.addRegion('petal_right');
-        }
-        if (gameState.has('Progressive Hammer', 1) && gameState.has('Progressive Boots', 1)) {
-            gameState.addRegion('hooktails_castle');
-        }
-        if (gameState.has('Paper Curse')) {
-            gameState.addRegion('boggly_woods');
-        }
-        if (gameState.has('Flurrie')) {
-            gameState.addRegion('great_tree');
-        }
-        if (gameState.has('Blimp Ticket')) {
-            gameState.addRegion('glitzville');
-        }
-        if (gameState.has('Tube Curse')) {
-            gameState.addRegion('twilight_trail');
-        }
     }
 }
 
