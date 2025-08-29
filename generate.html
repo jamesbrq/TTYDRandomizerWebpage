@@ -10,6 +10,8 @@
     <script src="js/parser.js"></script>
     <script src="js/gameState.js"></script>
     <script src="js/itemPool.js"></script>
+    <script src="js/location.js"></script>
+    <script src="js/generate.js"></script>
     
     <!-- Optional utilities -->
     <script src="js/spoilerGenerator.js"></script>
@@ -286,7 +288,7 @@ async function generateRandomizedROM() {
         console.log('Collected settings:', settings);
         
         // Generate the randomized seed using new system
-        const result = await generateRandomizedSeed(settings);
+        const result = await generate(settings);
         console.log('Generation result:', result);
         
         // Check if ROM file is selected

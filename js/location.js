@@ -219,17 +219,32 @@ class Location {
     /**
      * Checks if this location is accessible given the current game state
      * @param {Object} gameState - Current game state object with items and abilities
-     * @param {Object} regionLogic - Region logic map loaded from regions.json
+     * @param {Object} regionLogic - Region logic map loaded from regions.json (optional, for backward compatibility)
      * @returns {boolean} True if the location is accessible
      */
-    isAccessible(gameState, regionLogic) {
+    isAccessible(gameState, regionLogic = null) {
+        // Use combined accessibility logic if available (preferred method)
+        if (this.accessibilityLogic) {
+            try {
+                return this.accessibilityLogic(gameState);
+            } catch (error) {
+                console.warn(`Error evaluating accessibility logic for ${this.name}:`, error);
+                return false;
+            }
+        }
+        
+        // Fallback to old region-based logic for backward compatibility
         const regionTag = this.getRegionTag();
-        if (!regionTag || !regionLogic[regionTag]) {
-            return true; // Default to accessible if no region logic found
+        if (!regionTag || !regionLogic || !regionLogic[regionTag]) {
+            return true; // Default to accessible if no logic found
         }
 
-        const logic = regionLogic[regionTag];
-        return this._evaluateLogic(logic, gameState);
+        try {
+            return regionLogic[regionTag](gameState);
+        } catch (error) {
+            console.warn(`Error evaluating region logic for ${this.name}:`, error);
+            return false;
+        }
     }
 
     /**

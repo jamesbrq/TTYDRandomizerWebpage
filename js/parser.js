@@ -1,8 +1,28 @@
 function buildExpr(expr) {
     if (expr.has) {
-        // Handle count parameter for items
-        const count = expr.count || 1;
-        return `state.has("${expr.has}", ${count})`;
+        // Handle both string and object forms of has expressions
+        let itemName, count;
+        
+        if (typeof expr.has === 'string') {
+            // Simple form: { "has": "item_name" }
+            itemName = expr.has;
+            count = expr.count || 1;
+        } else if (typeof expr.has === 'object') {
+            // Complex form: { "has": { "item": "item_name", "count": 2 } }
+            itemName = expr.has.item || expr.has.name || '';
+            count = expr.has.count || 1;
+        } else {
+            throw new Error("Invalid has expression: " + JSON.stringify(expr.has));
+        }
+        
+        // Special case: "stars" item should use Crystal Stars count
+        if (itemName === "stars") {
+            return `(state.getStarsCount ? state.getStarsCount() : 0) >= ${count}`;
+        }
+        
+        // Escape quotes in item names to prevent JavaScript syntax errors
+        const escapedItemName = itemName.replace(/"/g, '\\"');
+        return `state.has("${escapedItemName}", ${count})`;
     }
     if (expr.function) {
         return `StateLogic.${expr.function}(state)`;
@@ -12,13 +32,16 @@ function buildExpr(expr) {
         return `(state.getStarsCount ? state.getStarsCount() : 0) >= ${expr.stars}`;
     }
     if (expr.can_reach) {
-        return `state.canReach("${expr.can_reach.target}", "${expr.can_reach.type}")`;
+        // Escape quotes in target names to prevent JavaScript syntax errors
+        const escapedTarget = expr.can_reach.target.replace(/"/g, '\\"');
+        const escapedType = expr.can_reach.type.replace(/"/g, '\\"');
+        return `state.canReach("${escapedTarget}", "${escapedType}")`;
     }
     if (expr.and) {
-        return expr.and.map(buildExpr).join(" && ");
+        return "(" + expr.and.map(buildExpr).join(" && ") + ")";
     }
     if (expr.or) {
-        return expr.or.map(buildExpr).join(" || ");
+        return "(" + expr.or.map(buildExpr).join(" || ") + ")";
     }
     throw new Error("Unknown expression: " + JSON.stringify(expr));
 }

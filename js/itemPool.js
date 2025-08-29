@@ -244,6 +244,69 @@ class ItemPool {
             items: Object.fromEntries(this.items)
         };
     }
+
+    /**
+     * Creates the initial item pool for randomization
+     * @param {Array<Object>} itemsData - Array of item objects from items.json
+     * @param {number} targetLocationCount - Number of unlocked locations to fill
+     * @returns {ItemPool} New ItemPool instance sized to match target locations
+     */
+    static createInitialPool(itemsData, targetLocationCount) {
+        const pool = new ItemPool();
+        
+        // Get all item names with their frequencies
+        const itemNames = itemsData.map(item => item.itemName).filter(name => name);
+        pool.populatePool(itemNames);
+        
+        const initialTotal = pool.getTotalItems();
+        console.log(`Initial pool has ${initialTotal} items for ${targetLocationCount} locations`);
+        
+        // If we have too many items, remove filler items randomly
+        if (initialTotal > targetLocationCount) {
+            const itemsToRemove = initialTotal - targetLocationCount;
+            console.log(`Need to remove ${itemsToRemove} filler items`);
+            
+            // Create shuffled array of all items in pool
+            const poolArray = pool.getPoolAsArray();
+            
+            // Shuffle the array using Fisher-Yates algorithm
+            for (let i = poolArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [poolArray[i], poolArray[j]] = [poolArray[j], poolArray[i]];
+            }
+            
+            // Identify filler items (items that aren't progression/key items)
+            const fillerItems = itemsData
+                .filter(item => item.progression === 'filler' && item.itemName)
+                .map(item => item.itemName);
+            
+            // Remove filler items randomly until we reach target count
+            let removed = 0;
+            const shuffledPool = [...poolArray]; // Copy shuffled array
+            
+            for (const itemName of shuffledPool) {
+                if (removed >= itemsToRemove) break;
+                
+                // Only remove filler items
+                if (fillerItems.includes(itemName)) {
+                    const currentCount = pool.getItemCount(itemName);
+                    if (currentCount > 0) {
+                        // Reduce count by 1
+                        pool.items.set(itemName, currentCount - 1);
+                        if (currentCount - 1 === 0) {
+                            pool.items.delete(itemName);
+                        }
+                        pool.totalItems--;
+                        removed++;
+                    }
+                }
+            }
+            
+            console.log(`Removed ${removed} filler items, final pool has ${pool.getTotalItems()} items`);
+        }
+        
+        return pool;
+    }
 }
 
 // Export for use in other files

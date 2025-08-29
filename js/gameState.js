@@ -229,6 +229,67 @@ class GameState {
         state.addRegion("Rogueport");
         return state;
     }
+
+    /**
+     * Creates a game state with all items for testing purposes
+     * Loads all items from items.json and uses ITEM_FREQUENCIES to determine counts
+     * @returns {Promise<GameState>} GameState with all items added
+     */
+    static async createAllItemsState() {
+        const state = new GameState();
+        
+        try {
+            // Load all items from items.json
+            const itemsResponse = await fetch('json/items.json');
+            const itemsData = await itemsResponse.json();
+            
+            // Add each item with its frequency (default 1, or from ITEM_FREQUENCIES)
+            for (const item of itemsData) {
+                const itemName = item.itemName;
+                
+                // Skip items without a name
+                if (!itemName) {
+                    console.warn('Skipping item without name:', item);
+                    continue;
+                }
+                
+                let frequency = 1; // Default frequency
+                
+                // Override with ITEM_FREQUENCIES if available and item is listed
+                if (typeof ITEM_FREQUENCIES !== 'undefined' && ITEM_FREQUENCIES.hasOwnProperty(itemName)) {
+                    frequency = ITEM_FREQUENCIES[itemName];
+                }
+                
+                // Only add items with frequency > 0
+                if (frequency > 0) {
+                    state.addItem(itemName, frequency);
+                }
+            }
+            
+            // Initialize with 7 Crystal Stars for testing
+            state.stars = 7;
+            
+            // Add Crystal Star items for testing (even though they have frequency 0)
+            const crystalStars = [
+                "Diamond Star", "Emerald Star", "Gold Star", "Ruby Star", 
+                "Sapphire Star", "Garnet Star", "Crystal Star"
+            ];
+            for (const starName of crystalStars) {
+                state.addItem(starName, 1);
+            }
+            
+            // Note: "stars" logic is handled directly by the parser using getStarsCount()
+            
+            console.log('Created all items state with', state.getStats().totalItems, 'total items');
+            console.log('Crystal Stars initialized to:', state.getStarsCount());
+            return state;
+            
+        } catch (error) {
+            console.error('Failed to load items for all items state:', error);
+            // Return empty state on error
+            return state;
+        }
+    }
 }
 
 // Export for use in other files
