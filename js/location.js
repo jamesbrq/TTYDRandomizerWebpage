@@ -517,6 +517,17 @@ class LocationCollection {
         this.locations.forEach(location => location.clearPlacedItem());
     }
 
+    /**
+     * Clears placed items from only unlocked locations (preserves locked items like Crystal Stars)
+     */
+    clearUnlockedPlacedItems() {
+        this.locations.forEach(location => {
+            if (!location.isLocked()) {
+                location.clearPlacedItem();
+            }
+        });
+    }
+
 
     /**
      * Gets all locked locations

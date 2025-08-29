@@ -8,9 +8,9 @@
  * @returns {boolean} True if game is beatable (final location is reachable)
  */
 function validateGameBeatable(gameState, itemIdToName) {
-    // 1. Make a copy of the current state so we don't affect the current one
-    const testState = gameState.clone();
-    const locations = testState.getLocations();
+    // 1. Start with a fresh state that has proper starting inventory  
+    const testState = GameState.createStartingState();
+    const locations = gameState.getLocations();
     
     if (!locations) {
         console.warn('No locations in game state for validation');
@@ -140,12 +140,36 @@ function validateGameBeatable(gameState, itemIdToName) {
  */
 function validate100PercentAccessibility(gameState, itemIdToName) {
     // Use the same sweep logic as validateGameBeatable to find all accessible locations
-    const testState = gameState.clone();
-    const locations = testState.getLocations();
+    // Start with a fresh state that has proper starting inventory
+    const testState = GameState.createStartingState();
+    const locations = gameState.getLocations();
     
     if (!locations) {
         return { success: false, inaccessibleCount: 0, inaccessibleLocations: [] };
     }
+    
+    console.warn(`🔍 VALIDATION DEBUG:`);
+    console.warn(`  Total locations in gameState: ${locations.size()}`);
+    
+    const locationsWithItems = locations.filter(loc => loc.hasItem());
+    const locationsWithoutItems = locations.filter(loc => !loc.hasItem());
+    
+    console.warn(`  Locations WITH items: ${locationsWithItems.length}`);
+    console.warn(`  Locations WITHOUT items: ${locationsWithoutItems.length}`);
+    
+    // Sample some locations with items to verify they have items
+    console.warn(`  Sample locations WITH items:`);
+    locationsWithItems.slice(0, 5).forEach(loc => {
+        const itemId = loc.getItemId();
+        const itemName = itemIdToName.get(itemId) || `ID:${itemId}`;
+        console.warn(`    ${loc.name}: ${itemName}`);
+    });
+    
+    // Check if locations are locked or unlocked
+    const lockedCount = locations.filter(loc => loc.isLocked()).length;
+    const unlockedCount = locations.filter(loc => !loc.isLocked()).length;
+    console.warn(`  Locked locations: ${lockedCount}`);
+    console.warn(`  Unlocked locations: ${unlockedCount}`);
     
     // Reset all location collected status
     locations.forEach(location => {
@@ -165,6 +189,84 @@ function validate100PercentAccessibility(gameState, itemIdToName) {
             location.isAccessible(testState)
         );
         
+        // Debug first few iterations
+        if (iterations <= 3) {
+            console.warn(`  Validation Iteration ${iterations}:`);
+            console.warn(`    Accessible locations found: ${accessibleLocations.length}`);
+            console.warn(`    Current state items: ${testState.getStats().totalItems}`);
+            if (accessibleLocations.length > 0 && accessibleLocations.length <= 5) {
+                console.warn(`    First few accessible locations:`);
+                accessibleLocations.slice(0, 3).forEach(loc => {
+                    console.warn(`      ${loc.name} (rules: ${loc.rules?.length || 0})`);
+                });
+            }
+            if (iterations === 1) {
+                console.warn(`    First iteration - analyzing all locations...`);
+                const allLocationsWithItems = locations.filter(loc => loc.hasItem());
+                console.warn(`    Total locations with items: ${allLocationsWithItems.length}`);
+                
+                // Debug: Check ALL locations (not just those with items) for rule count
+                console.warn(`    Checking rule distribution across ALL locations...`);
+                const allLocationsRuleCount = new Map();
+                locations.forEach(loc => {
+                    const ruleCount = loc.rules?.length || 0;
+                    if (!allLocationsRuleCount.has(ruleCount)) {
+                        allLocationsRuleCount.set(ruleCount, []);
+                    }
+                    allLocationsRuleCount.get(ruleCount).push(loc.name);
+                });
+                console.warn(`    ALL locations by rule count:`);
+                for (const [ruleCount, locationNames] of allLocationsRuleCount.entries()) {
+                    console.warn(`      ${ruleCount} rules: ${locationNames.length} locations`);
+                    if (ruleCount === 0) {
+                        console.warn(`        All 0-rule locations in total: ${locationNames.slice(0, 10).join(', ')}${locationNames.length > 10 ? `... (${locationNames.length} total)` : ''}`);
+                    }
+                }
+                
+                const locationsByRules = new Map();
+                allLocationsWithItems.forEach(loc => {
+                    const ruleCount = loc.rules?.length || 0;
+                    if (!locationsByRules.has(ruleCount)) {
+                        locationsByRules.set(ruleCount, []);
+                    }
+                    locationsByRules.get(ruleCount).push(loc.name);
+                });
+                console.warn(`    Locations WITH items by rule count:`);
+                for (const [ruleCount, locationNames] of locationsByRules.entries()) {
+                    console.warn(`      ${ruleCount} rules: ${locationNames.length} locations`);
+                    if (ruleCount === 0) {
+                        console.warn(`        0-rule locations with items: ${locationNames.join(', ')}`);
+                    }
+                    if (ruleCount === 1) {
+                        console.warn(`        Sample 1-rule locations: ${locationNames.slice(0, 5).join(', ')}`);
+                    }
+                }
+                
+                // Test if any 1-rule locations should actually be accessible from start
+                const oneRuleLocations = allLocationsWithItems.filter(loc => loc.rules?.length === 1);
+                console.warn(`    Testing 1-rule locations for accessibility with empty state:`);
+                let oneRuleAccessibleCount = 0;
+                oneRuleLocations.slice(0, 10).forEach(loc => {
+                    const accessible = loc.isAccessible(testState);
+                    if (accessible) {
+                        oneRuleAccessibleCount++;
+                        console.warn(`      ✅ ${loc.name} is accessible with empty state`);
+                    }
+                });
+                console.warn(`    1-rule locations accessible from start: ${oneRuleAccessibleCount}/${oneRuleLocations.length}`);
+            }
+            if (accessibleLocations.length === 0 && iterations > 1) {
+                console.warn(`    No accessible locations found - checking why...`);
+                const sampleLocations = locations.filter(loc => loc.hasItem()).slice(0, 5);
+                console.warn(`    Sample locations with items:`);
+                sampleLocations.forEach(loc => {
+                    const accessible = loc.isAccessible(testState);
+                    const collected = loc.isCollected();
+                    console.warn(`      ${loc.name}: accessible=${accessible}, collected=${collected}, rules=${loc.rules?.length || 0}`);
+                });
+            }
+        }
+        
         if (accessibleLocations.length === 0) {
             break;
         }
@@ -178,6 +280,7 @@ function validate100PercentAccessibility(gameState, itemIdToName) {
                 const itemName = itemIdToName.get(itemId);
                 if (itemName) {
                     testState.addItem(itemName, 1);
+                    // Crystal Stars automatically update the parser's stars logic when added as items
                 }
             }
         });
@@ -192,7 +295,35 @@ function validate100PercentAccessibility(gameState, itemIdToName) {
     
     if (!success) {
         console.warn(`📍 Inaccessible locations (${inaccessibleLocations.length}):`);
-        inaccessibleLocations.forEach(location => {
+        
+        // Sample a few locations to debug their requirements
+        const sampleLocations = inaccessibleLocations.slice(0, 5);
+        sampleLocations.forEach(location => {
+            const itemId = location.getItemId();
+            const itemName = itemIdToName.get(itemId) || 'Unknown';
+            console.warn(`  ❌ ${location.name}: ${itemName}`);
+            
+            // Try to understand why this location isn't accessible
+            if (location.rules && location.rules.length > 0) {
+                console.warn(`    Rules: ${location.rules.slice(0, 3).join(', ')}`);
+            }
+        });
+        
+        // Show final state for debugging
+        console.warn(`  Final state items: ${testState.getStats().totalItems} total, ${testState.getStarsCount()} stars`);
+        
+        // Check specific items that locations commonly need
+        const keyItems = ["Progressive Boots", "Progressive Hammer", "Palace Key (Riddle Tower)", "Paper Curse", "Tube Curse"];
+        keyItems.forEach(itemName => {
+            const count = testState.getItemCount(itemName);
+            if (count > 0) {
+                console.warn(`    ${itemName}: ${count}`);
+            }
+        });
+        
+        // Only show first few inaccessible locations to avoid spam
+        console.warn(`  First 10 inaccessible locations:`);
+        inaccessibleLocations.slice(0, 10).forEach(location => {
             const itemId = location.getItemId();
             const itemName = itemIdToName.get(itemId) || 'Unknown';
             console.warn(`  ❌ ${location.name}: ${itemName}`);
@@ -270,9 +401,28 @@ function splitItemPools(itemPool, itemsData) {
         }
     }
     
-    // Log summary of unique progression items
-    const uniqueProgression = new Set(progression.map(item => item.name));
-    console.log(`  Unique progression items (${uniqueProgression.size}):`, Array.from(uniqueProgression).sort());
+    // Log summary of unique progression items with counts
+    const progressionCounts = new Map();
+    progression.forEach(item => {
+        const current = progressionCounts.get(item.name) || 0;
+        progressionCounts.set(item.name, current + 1);
+    });
+    
+    console.log(`  Unique progression items (${progressionCounts.size}):`);
+    const sortedProgression = Array.from(progressionCounts.entries()).sort();
+    sortedProgression.forEach(([name, count]) => {
+        if (count > 1) {
+            console.log(`    ${name} x${count}`);
+        }
+    });
+    
+    // Check specific important items
+    const importantItems = ["Progressive Boots", "Progressive Hammer", "Palace Key (Riddle Tower)", "Paper Curse", "Tube Curse"];
+    console.log(`  Key item counts:`);
+    importantItems.forEach(itemName => {
+        const count = progressionCounts.get(itemName) || 0;
+        console.log(`    ${itemName}: ${count}`);
+    });
     
     return { progression, filler };
 }
@@ -324,77 +474,80 @@ function runProgressionAssumedFill(gameState, progressionItems, fillerItems, ite
         // 1. Pick a random item from the remaining items
         const item = shuffled.pop();
         
-        // 2. Create assumed inventory = (all progression items) - {item we're placing}
-        // This means: ALL progression items EXCEPT the one we're trying to place
+        // 2. Create "all state" = player has ALL progression items except the one we're placing
         const assumedInventory = gameState.clone();
         
-        // Add ALL original progression items to assumed inventory
+        // Count how many of each progression item we should have in the "all state"
+        const itemCounts = new Map();
         for (const progItem of progressionItems) {
-            assumedInventory.addItem(progItem.name, 1);
-        }
-        
-        // Add locked items that player will collect (Crystal Stars + actual starting partner)
-        const crystalStars = ['Diamond Star', 'Emerald Star', 'Gold Star', 'Ruby Star', 
-                            'Sapphire Star', 'Garnet Star', 'Crystal Star'];
-        for (const star of crystalStars) {
-            assumedInventory.addItem(star, 1);
-        }
-        
-        // Add the actual starting partner (determined during special location locking)
-        // Find which partner was locked at the starting partner location
-        const locations = gameState.getLocations();
-        const startingPartnerLocation = locations.filter(loc => 
-            loc.name && loc.name.includes('starting partner')
-        )[0];
-        if (startingPartnerLocation && startingPartnerLocation.hasItem()) {
-            const startingPartnerId = startingPartnerLocation.getItemId();
-            const startingPartnerName = itemIdToName.get(startingPartnerId);
-            if (startingPartnerName) {
-                assumedInventory.addItem(startingPartnerName, 1);
+            if (progItem.name !== item.name) {
+                const currentCount = itemCounts.get(progItem.name) || 0;
+                itemCounts.set(progItem.name, currentCount + 1);
             }
         }
         
-        // Remove the specific item we're trying to place
-        assumedInventory.removeItem(item.name, 1);
+        // Add progression items with their proper counts to the assumed inventory
+        for (const [itemName, count] of itemCounts.entries()) {
+            assumedInventory.addItem(itemName, count);
+        }
         
         // 3. Get all locations reachable with this assumed inventory
         const candidateLocations = unfilled.filter(location => 
             location.isEmpty() && location.isAccessible(assumedInventory)
         );
         
-        // 4. If no valid locations, this indicates a logic error or stuck state
+        // 4. If no valid locations, this is a CRITICAL ERROR in assumed fill
         if (candidateLocations.length === 0) {
-            if (attempts % 100 === 0) {
-                console.log(`    ⚠️ No valid locations for ${item.name} with current assumed inventory`);
-                
-                // Debug: Check total unfilled locations vs accessible ones
-                const totalUnfilled = unfilled.length;
-                const accessibleUnfilled = unfilled.filter(loc => loc.isAccessible(assumedInventory)).length;
-                console.log(`      Total unfilled: ${totalUnfilled}, Accessible: ${accessibleUnfilled}`);
-                
-                // Debug: Show what's in assumed inventory
-                const inventoryStats = assumedInventory.getStats();
-                console.log(`      Assumed inventory has ${inventoryStats.totalItems} items, ${inventoryStats.uniqueItems} unique`);
-                
-                // Debug: Test a few random unfilled locations
-                if (totalUnfilled > 0) {
-                    const testLocation = unfilled[0];
-                    console.log(`      Testing location: ${testLocation.name}`);
-                    console.log(`      Location accessible: ${testLocation.isAccessible(assumedInventory)}`);
-                    console.log(`      Location rules: ${testLocation.rules ? testLocation.rules.length : 0} rules`);
+            console.error(`💥 ASSUMED FILL FAILURE: No valid locations for ${item.name}`);
+            console.error(`🔍 DEBUGGING INFO:`);
+            console.error(`  Item being placed: ${item.name} (ID: ${item.id})`);
+            console.error(`  Items remaining to place: ${shuffled.length + 1}`);
+            console.error(`  Items already placed: ${placedItems.length}`);
+            
+            // Debug unfilled locations
+            const totalUnfilled = unfilled.length;
+            const accessibleUnfilled = unfilled.filter(loc => loc.isAccessible(assumedInventory)).length;
+            console.error(`  Total unfilled locations: ${totalUnfilled}`);
+            console.error(`  Accessible unfilled locations: ${accessibleUnfilled}`);
+            
+            // Debug assumed inventory
+            const inventoryStats = assumedInventory.getStats();
+            console.error(`  Assumed inventory: ${inventoryStats.totalItems} items, ${inventoryStats.uniqueItems} unique`);
+            
+            // Show first few items in assumed inventory
+            const allItems = assumedInventory.getAllItems();
+            const itemsList = [];
+            let count = 0;
+            for (const [itemName, quantity] of allItems.entries()) {
+                if (quantity > 0 && count < 10) {
+                    itemsList.push(`${itemName}(${quantity})`);
+                    count++;
                 }
             }
+            console.error(`  Sample inventory items: ${itemsList.join(', ')}${allItems.size > 10 ? '...' : ''}`);
             
-            // If we're near the end and getting stuck repeatedly, restart the entire algorithm
-            if (shuffled.length <= 10 && attempts > 1000) {
-                console.warn(`🔄 Restarting placement - stuck with ${shuffled.length} remaining items after ${attempts} attempts`);
-                return runProgressionAssumedFill(gameState, progressionItems, fillerItems, itemIdToName);
-            }
+            // Test accessibility of a few sample locations
+            console.error(`  Testing sample locations:`);
+            const sampleLocations = unfilled.slice(0, 5);
+            sampleLocations.forEach(loc => {
+                const accessible = loc.isAccessible(assumedInventory);
+                console.error(`    ${loc.name}: ${accessible ? 'ACCESSIBLE' : 'NOT ACCESSIBLE'} (${loc.rules?.length || 0} rules)`);
+                
+                // If location has rules, show them
+                if (!accessible && loc.rules && loc.rules.length > 0) {
+                    console.error(`      Rules: ${loc.rules.slice(0, 2).join(', ')}${loc.rules.length > 2 ? '...' : ''}`);
+                }
+            });
             
-            // Re-randomize position and try again
-            const randomPosition = getRandomIndex(shuffled.length + 1);
-            shuffled.splice(randomPosition, 0, item);
-            continue;
+            // This is a critical error - assumed fill should NEVER fail to find locations
+            return { 
+                success: false, 
+                placedItems, 
+                attempts,
+                error: `No valid locations found for ${item.name} in assumed fill - this indicates a fundamental logic error`,
+                failedItem: item.name,
+                inventoryState: Array.from(allItems.entries()).filter(([name, qty]) => qty > 0)
+            };
         }
         
         // 5. Pick a random valid location and place the item
@@ -429,6 +582,69 @@ function runProgressionAssumedFill(gameState, progressionItems, fillerItems, ite
     if (success) {
         // All items placed successfully - now validate the final game state
         console.log(`✅ All ${placedItems.length} progression items placed successfully`);
+        
+        // Test the theoretical "all items" state that assumed fill is based on
+        console.log(`🧪 Testing theoretical 'all items' state before validation...`);
+        const theoreticalAllState = gameState.clone();
+        
+        // Add ALL progression items to test the assumed fill theory
+        const itemCounts = new Map();
+        for (const progItem of progressionItems) {
+            const currentCount = itemCounts.get(progItem.name) || 0;
+            itemCounts.set(progItem.name, currentCount + 1);
+        }
+        
+        // Add all progression items to theoretical state
+        for (const [itemName, count] of itemCounts.entries()) {
+            theoreticalAllState.addItem(itemName, count);
+        }
+        
+        // Add all 7 Crystal Stars to theoretical state (needed for Pit and late-game areas)
+        theoreticalAllState.addItem("Diamond Star", 1);
+        theoreticalAllState.addItem("Emerald Star", 1);
+        theoreticalAllState.addItem("Gold Star", 1);
+        theoreticalAllState.addItem("Ruby Star", 1);
+        theoreticalAllState.addItem("Sapphire Star", 1);
+        theoreticalAllState.addItem("Garnet Star", 1);
+        theoreticalAllState.addItem("Crystal Star", 1);
+        
+        console.log(`  Theoretical state has ${theoreticalAllState.getStats().totalItems} items`);
+        
+        // Check how many locations are accessible with ALL progression items
+        const allAccessibleCount = locations.filter(loc => loc.isAccessible(theoreticalAllState)).length;
+        const totalLocations = locations.size();
+        console.log(`  Locations accessible with ALL progression items: ${allAccessibleCount}/${totalLocations}`);
+        
+        if (allAccessibleCount < totalLocations) {
+            console.warn(`⚠️ THEORETICAL PROBLEM: Even with ALL progression items, ${totalLocations - allAccessibleCount} locations remain inaccessible!`);
+            console.warn(`  This suggests the assumed fill theory may be flawed.`);
+            
+            // Debug: Show what locations are still inaccessible and why
+            const inaccessibleWithAllItems = locations.filter(loc => !loc.isAccessible(theoreticalAllState));
+            console.warn(`  🔍 DEBUGGING - First 10 locations inaccessible with ALL items:`);
+            inaccessibleWithAllItems.slice(0, 10).forEach(loc => {
+                console.warn(`    ❌ ${loc.name} (${loc.rules?.length || 0} rules)`);
+                if (loc.rules && loc.rules.length > 0) {
+                    console.warn(`       Rules: ${loc.rules.slice(0, 2).map(rule => JSON.stringify(rule)).join(', ')}${loc.rules.length > 2 ? '...' : ''}`);
+                }
+            });
+            
+            // Show what items we have in theoretical state
+            console.warn(`  🎒 Theoretical state inventory (${theoreticalAllState.getStats().totalItems} items):`);
+            const allItems = theoreticalAllState.getAllItems();
+            const itemsList = [];
+            for (const [itemName, count] of allItems.entries()) {
+                if (count > 0) {
+                    itemsList.push(`${itemName}: ${count}`);
+                }
+            }
+            console.warn(`    ${itemsList.slice(0, 10).join(', ')}${itemsList.length > 10 ? `... (${itemsList.length} total)` : ''}`);
+            console.warn(`    Crystal Stars: ${theoreticalAllState.getStarsCount()}`);
+            
+        } else {
+            console.log(`✅ Theoretical validation passed: ALL locations accessible with all progression items`);
+        }
+        
         console.log(`🔍 Performing final validation to ensure game is beatable...`);
         
         // Validate 100% location accessibility
@@ -436,6 +652,8 @@ function runProgressionAssumedFill(gameState, progressionItems, fillerItems, ite
         if (!accessibilityCheck.success) {
             console.warn(`❌ Accessibility validation failed: ${accessibilityCheck.inaccessibleCount} locations unreachable`);
             console.warn(`🔄 Restarting due to accessibility issues`);
+            console.log('Clearing items from unlocked locations before restart...');
+            gameState.getLocations().clearUnlockedPlacedItems();
             return runProgressionAssumedFill(gameState, progressionItems, fillerItems, itemIdToName);
         }
         
@@ -446,6 +664,8 @@ function runProgressionAssumedFill(gameState, progressionItems, fillerItems, ite
         } else {
             console.warn(`❌ Final validation failed - game may not be beatable with current placement`);
             console.warn(`🔄 Restarting due to validation failure`);
+            console.log('Clearing items from unlocked locations before restart...');
+            gameState.getLocations().clearUnlockedPlacedItems();
             return runProgressionAssumedFill(gameState, progressionItems, fillerItems, itemIdToName);
         }
         
@@ -476,7 +696,7 @@ function runProgressionAssumedFill(gameState, progressionItems, fillerItems, ite
  * @param {Map} itemIdToName - Map from item ID to item name
  * @returns {Object} Result object with success status and placement info
  */
-function performImprovedFill(gameState, itemsData, itemIdToName) {
+async function performImprovedFill(gameState, itemsData, itemIdToName) {
     const locations = gameState.getLocations();
     const itemPool = gameState.getItemPool();
     

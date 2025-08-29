@@ -6,7 +6,10 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:localhost)",
       "Bash(node:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(start test-accessibility.html)",
+      "Bash(powershell:*)"
     ],
     "deny": [],
     "ask": []
