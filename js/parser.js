@@ -1,9 +1,15 @@
 function buildExpr(expr) {
     if (expr.has) {
-        return `state.has("${expr.has}")`;
+        // Handle count parameter for items
+        const count = expr.count || 1;
+        return `state.has("${expr.has}", ${count})`;
     }
     if (expr.function) {
         return `StateLogic.${expr.function}(state)`;
+    }
+    if (expr.stars) {
+        // Handle crystal star count requirement
+        return `(state.getStarsCount ? state.getStarsCount() : 0) >= ${expr.stars}`;
     }
     if (expr.can_reach) {
         return `state.canReach("${expr.can_reach.target}", "${expr.can_reach.type}")`;
@@ -188,31 +194,3 @@ const StateLogic = {
         return StateLogic.moon(state) && StateLogic.fahr_outpost(state);
     },
 };
-
-// Example usage
-(async () => {
-    const logic = {
-        "Boggly Woods Flurrie's House: Flurrie": {
-            "and": [
-                { "has": "Plane Curse" },
-                { "has": "Paper Curse" },
-                { "has": "Necklace" }
-            ]
-        },
-        "Creepy Steeple Main Hall: Lucky Start": {
-            "function": "super_hammer"
-        }
-    };
-
-    // Simulate local JSON (instead of fetch)
-    const logicMap = {};
-    for (const [location, expr] of Object.entries(logic)) {
-        logicMap[location] = jsonToLambda(expr);
-    }
-
-    console.log(logicMap);
-    // {
-    //   "Boggly Woods Flurrie's House: Flurrie": [Function],
-    //   "Creepy Steeple Main Hall: Lucky Start": [Function]
-    // }
-})();
