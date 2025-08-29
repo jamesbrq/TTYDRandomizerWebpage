@@ -19,5 +19,50 @@
         <a href="test.html" class="pages-link">Test</a>
     </div>
 </div>
+
+<div class="main-content">
+    <h1>Test Randomizer Implementation</h1>
+    <button id="testButton">Run Test</button>
+    <div id="testResults"></div>
+</div>
+
+<script src="js/gameState.js"></script>
+<script src="js/location.js"></script>
+<script src="js/itemPool.js"></script>
+<script src="js/parser.js"></script>
+<script src="js/generate.js"></script>
+<script>
+document.getElementById('testButton').addEventListener('click', async function() {
+    const resultsDiv = document.getElementById('testResults');
+    resultsDiv.innerHTML = '<p>Running test...</p>';
+    
+    try {
+        console.log('Starting randomizer test...');
+        const result = await generate();
+        
+        resultsDiv.innerHTML = `
+            <h3>Test Results:</h3>
+            <p><strong>Success:</strong> ${result.success}</p>
+            <p><strong>Seed:</strong> ${result.seed}</p>
+            <p><strong>Total locations:</strong> ${result.stats.totalLocations}</p>
+            <p><strong>Items placed:</strong> ${result.stats.itemsPlaced}</p>
+            <p><strong>Spoiler spheres:</strong> ${result.spoiler?.itemSpheres?.length || 0}</p>
+            ${result.spoiler ? '<h4>✅ Spoiler file downloaded successfully!</h4>' : '<p>No spoiler data generated</p>'}
+        `;
+        
+        if (result.spoiler?.itemSpheres?.length > 0) {
+            resultsDiv.innerHTML += `<p><strong>First sphere items:</strong> ${result.spoiler.itemSpheres[0]?.items?.length || 0}</p>`;
+        }
+        
+        if (result.error) {
+            resultsDiv.innerHTML += `<p style="color: red;"><strong>Error:</strong> ${result.error}</p>`;
+        }
+        
+    } catch (error) {
+        resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+        console.error('Test failed:', error);
+    }
+});
+</script>
 </body>
 </html>

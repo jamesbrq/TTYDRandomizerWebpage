@@ -266,17 +266,8 @@ class GameState {
                 }
             }
             
-            // Initialize with 7 Crystal Stars for testing
-            state.stars = 7;
-            
-            // Add Crystal Star items for testing (even though they have frequency 0)
-            const crystalStars = [
-                "Diamond Star", "Emerald Star", "Gold Star", "Ruby Star", 
-                "Sapphire Star", "Garnet Star", "Crystal Star"
-            ];
-            for (const starName of crystalStars) {
-                state.addItem(starName, 1);
-            }
+            // Crystal Stars and starting partner are NOT added here since they are
+            // locked at specific locations and will be collected during validation sweep
             
             // Note: "stars" logic is handled directly by the parser using getStarsCount()
             

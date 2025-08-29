@@ -217,3 +217,13 @@ const StateLogic = {
         return StateLogic.moon(state) && StateLogic.fahr_outpost(state);
     },
 };
+
+// Export for use in other files
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { buildExpr, jsonToLambda, loadLogicFromJson, StateLogic };
+} else if (typeof window !== 'undefined') {
+    window.buildExpr = buildExpr;
+    window.jsonToLambda = jsonToLambda;
+    window.loadLogicFromJson = loadLogicFromJson;
+    window.StateLogic = StateLogic;
+}

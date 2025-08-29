@@ -298,6 +298,49 @@ class Location {
             typeof this.locked === 'boolean'
         );
     }
+
+    /**
+     * Checks if this location has an item placed
+     * @returns {boolean} True if an item is placed at this location
+     */
+    hasItem() {
+        return this.placed_item !== null;
+    }
+
+    /**
+     * Gets the ID of the item placed at this location
+     * @returns {number|null} The item ID, or null if no item is placed
+     */
+    getItemId() {
+        return this.placed_item;
+    }
+
+    /**
+     * Removes the placed item from this location (alias for clearPlacedItem)
+     */
+    removeItem() {
+        this.clearPlacedItem();
+    }
+
+    /**
+     * Sets or gets the collected status of this location
+     * @param {boolean} collected - If provided, sets the collected status
+     * @returns {boolean} The collected status
+     */
+    setCollected(collected) {
+        if (collected !== undefined) {
+            this.collected = collected;
+        }
+        return this.collected || false;
+    }
+
+    /**
+     * Checks if this location has been collected
+     * @returns {boolean} True if this location has been collected
+     */
+    isCollected() {
+        return this.collected || false;
+    }
 }
 
 /**
@@ -451,6 +494,14 @@ class LocationCollection {
      */
     getAvailableLocations() {
         return this.locations.filter(location => location.isAvailable());
+    }
+
+    /**
+     * Gets all locations that have items placed
+     * @returns {Array<Location>} Array of locations with items
+     */
+    getPlacedLocations() {
+        return this.locations.filter(location => location.hasItem());
     }
 
     /**
