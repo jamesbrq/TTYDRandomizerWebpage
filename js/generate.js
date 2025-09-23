@@ -271,42 +271,27 @@ function getSecureRandomIndex(max) {
  */
 function runProgressionAssumedFill(gameState, progressionItems, fillerItems, itemIdToName) {
     const maxRetries = 10;
-    
+
     for (let retryAttempt = 0; retryAttempt < maxRetries; retryAttempt++) {
         if (retryAttempt > 0) {
-            // Clear all non-locked items (preserves locked Crystal Stars and starting partner)
             gameState.getLocations().clearUnlockedPlacedItems();
         }
-        
+
         const result = attemptProgressionAssumedFill(gameState, progressionItems, fillerItems, itemIdToName, retryAttempt);
-        
-        if (result.success) {
-            return result;
-        }
-        
+        if (result.success) return result;
+
         console.log(`❌ RETRY: Assumed fill failed on attempt ${retryAttempt + 1}/${maxRetries}`);
     }
-    
+
     console.error(`🚨 FINAL FAILURE: Assumed fill failed after ${maxRetries} attempts`);
-    return {
-        success: false,
-        placedItems: [],
-        attempts: 0,
-        error: `Failed after ${maxRetries} retry attempts`
-    };
+    return { success: false, placedItems: [], attempts: 0, error: `Failed after ${maxRetries} retry attempts` };
 }
 
 function attemptProgressionAssumedFill(gameState, progressionItems, fillerItems, itemIdToName, retryAttempt) {
     const locations = gameState.getLocations();
     const unfilled = locations.getAvailableLocations().filter(loc => loc.isEmpty());
     const placedItems = [];
-    
-    // Debug: Log assumed fill start
-    if (debugLogger) {
-        debugLogger.logAssumedFillStart(progressionItems.length, fillerItems.length, unfilled.length);
-    }
-    
-    // Shuffle progression items with improved Fisher-Yates algorithm
+
     const shuffled = [...progressionItems];
     const getRandomIndex = (max) => {
         if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
@@ -316,184 +301,62 @@ function attemptProgressionAssumedFill(gameState, progressionItems, fillerItems,
         }
         return Math.floor(Math.random() * max);
     };
-    
-    // Fisher-Yates shuffle
     for (let i = shuffled.length - 1; i > 0; i--) {
         const j = getRandomIndex(i + 1);
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
-    
+
     let attempts = 0;
     const maxAttempts = 10000;
-    
+
     while (shuffled.length > 0 && attempts < maxAttempts) {
         attempts++;
-        
-        if (unfilled.length === 0) {
-            console.error("Ran out of locations for progression placement");
-            return { success: false, placedItems, attempts };
-        }
-        
-        // 1. Pick a truly random item from the remaining items
+        if (unfilled.length === 0) return { success: false, placedItems, attempts };
+
         const randomIndex = getRandomIndex(shuffled.length);
         const item = shuffled.splice(randomIndex, 1)[0];
-        
-        // 2. Create "all state" = player has ALL progression items except the one we're placing
+
+        // Build assumed inventory = all other progression
         const assumedInventory = GameState.createStartingState();
-        assumedInventory.setLocations(gameState.getLocations()); // Use same LocationCollection!
-        
-        // Count how many of each remaining progression item we should have in the "all state"
-        // We assume we have all progression items except the one we're currently placing
+        assumedInventory.setLocations(gameState.getLocations());
         const itemCounts = new Map();
         for (const progItem of shuffled) {
-            if (progItem.name !== item.name) {
-                const currentCount = itemCounts.get(progItem.name) || 0;
-                itemCounts.set(progItem.name, currentCount + 1);
-            }
+            const currentCount = itemCounts.get(progItem.name) || 0;
+            itemCounts.set(progItem.name, currentCount + 1);
         }
-        
-        // Add progression items with their proper counts to the assumed inventory
         for (const [itemName, count] of itemCounts.entries()) {
             assumedInventory.addItem(itemName, count);
         }
-        
-        // Add items from locked locations that are accessible with this assumed inventory
-        // These are always available (Crystal Stars + starting partner) so add them once
+
+        // Add locked items
         const lockedLocations = gameState.getLocations().filter(loc => loc.isLocked() && loc.hasItem());
-        const addedLockedItems = new Set(); // Prevent duplicate additions
-        
+        const addedLockedItems = new Set();
         for (const lockedLoc of lockedLocations) {
             if (lockedLoc.isAccessible(assumedInventory)) {
                 const itemId = lockedLoc.getItemId();
-                if (itemId && itemIdToName) {
-                    const itemName = itemIdToName.get(itemId);
-                    if (itemName && !addedLockedItems.has(itemName)) {
-                        assumedInventory.addItem(itemName, 1);
-                        addedLockedItems.add(itemName);
-                    }
+                const itemName = itemIdToName.get(itemId);
+                if (itemName && !addedLockedItems.has(itemName)) {
+                    assumedInventory.addItem(itemName, 1);
+                    addedLockedItems.add(itemName);
                 }
             }
         }
-        
-        
-        // 3. Get all locations reachable with this assumed inventory
-        const candidateLocations = unfilled.filter(location => 
-            location.isEmpty() && location.isAccessible(assumedInventory)
-        );
-        
-        // Debug: Log assumed inventory analysis for this item
-        if (debugLogger) {
-            debugLogger.logAssumedInventoryAnalysis(item.name, assumedInventory, candidateLocations, itemCounts, placedItems.length, shuffled.length);
-        }
-        
-        // Shuffle candidate locations to improve randomization
-        for (let i = candidateLocations.length - 1; i > 0; i--) {
-            const j = getRandomIndex(i + 1);
-            [candidateLocations[i], candidateLocations[j]] = [candidateLocations[j], candidateLocations[i]];
-        }
-        
-        
-        // 4. If no valid locations, this is a CRITICAL ERROR in assumed fill
+
+        // Get candidate locations
+        const candidateLocations = unfilled.filter(loc => loc.isEmpty() && loc.isAccessible(assumedInventory));
         if (candidateLocations.length === 0) {
-            console.error(`🚨 ASSUMED FILL FAILURE: No accessible locations for ${item.name}`);
-            console.error(`🚨 Remaining items to place: ${shuffled.length + 1}`);
-            console.error(`🚨 Items successfully placed so far: ${placedItems.length}`);
-            console.error(`🚨 Total unfilled locations: ${unfilled.length}`);
-            
-            // Detailed assumed inventory analysis
-            console.error(`🚨 ASSUMED INVENTORY ANALYSIS:`);
-            console.error(`   Total items in assumed inventory: ${assumedInventory.getStats().totalItems}`);
-            console.error(`   Crystal Stars in assumed inventory: ${assumedInventory.getStarsCount()}`);
-            
-            // Show all items in assumed inventory
-            const allAssumedItems = assumedInventory.getAllItems();
-            const itemsList = [];
-            for (const [itemName, count] of allAssumedItems.entries()) {
-                if (count > 0) {
-                    itemsList.push(`${itemName}(${count})`);
-                }
-            }
-            console.error(`   Items: ${itemsList.slice(0, 10).join(', ')}${itemsList.length > 10 ? `... (${itemsList.length} total unique items)` : ''}`);
-            
-            // Count accessible vs inaccessible unfilled locations
-            const accessibleUnfilled = unfilled.filter(loc => loc.isAccessible(assumedInventory));
-            console.error(`🚨 LOCATION ACCESSIBILITY:`);
-            console.error(`   Accessible unfilled locations: ${accessibleUnfilled.length}/${unfilled.length}`);
-            console.error(`   But none are empty or candidate locations: ${candidateLocations.length}`);
-            
-            // Test a few unfilled locations to see why they're not accessible
-            console.error(`🚨 Testing first 5 unfilled locations:`);
-            unfilled.slice(0, 5).forEach(loc => {
-                const accessible = loc.isAccessible(assumedInventory);
-                const empty = loc.isEmpty();
-                console.error(`  ${loc.name}: ${accessible ? 'ACCESSIBLE' : 'NOT ACCESSIBLE'}, ${empty ? 'EMPTY' : 'HAS ITEM'} (${loc.rules?.length || 0} rules)`);
-                
-                // Debug: Log detailed accessibility for failed locations
-                if (debugLogger) {
-                    debugLogger.logAccessibility(loc.name, accessible, loc.rules, assumedInventory);
-                }
-            });
-            
-            return { 
-                success: false, 
-                placedItems, 
-                attempts,
-                error: `No valid locations found for ${item.name} in assumed fill`,
-                failedItem: item.name
-            };
+            return { success: false, placedItems, attempts, error: `No valid locations for ${item.name}`, failedItem: item.name };
         }
-        
-        // 5. Pick a random valid location and place the item
-        const locationIndex = getRandomIndex(candidateLocations.length);
-        const location = candidateLocations[locationIndex];
-        
-        // Debug: Log item placement
-        if (debugLogger) {
-            debugLogger.logItemPlacement(item.name, candidateLocations.length, location, attempts, assumedInventory);
-        }
-        
-        // Place the item (no validation needed - we know location is reachable)
+
+        const location = candidateLocations[getRandomIndex(candidateLocations.length)];
         location.placeItem(item.id);
-        
-        // ✅ Success - remove location from unfilled list
+
         const unfilledIndex = unfilled.indexOf(location);
         unfilled.splice(unfilledIndex, 1);
         placedItems.push({ location: location.name, item: item.name });
-        
-        // Debug: Log successful placements for early items
-        if (placedItems.length <= 5 || placedItems.length % 25 === 0) {
-            console.log(`✅ Placed ${item.name} → ${location.name}`);
-        }
-        
-        // Re-shuffle remaining progression items after each placement to improve randomization
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = getRandomIndex(i + 1);
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        
-        if (attempts % 1000 === 0) {
-            // Additional shuffle every 1000 attempts as backup
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = getRandomIndex(i + 1);
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-        }
     }
-    
+
     const success = shuffled.length === 0;
-    
-    // Debug: Log assumed fill completion
-    if (debugLogger) {
-        debugLogger.logAssumedFillComplete(success, placedItems.length, attempts, shuffled);
-    }
-    
-    if (!success) {
-        console.error(`❌ Failed to place ${shuffled.length} progression items:`);
-        shuffled.slice(0, 5).forEach(item => {
-            console.error(`  - ${item.name}`);
-        });
-    }
-    
     return { success, placedItems, attempts, unplacedItems: shuffled };
 }
 
@@ -507,7 +370,7 @@ function attemptProgressionAssumedFill(gameState, progressionItems, fillerItems,
 async function performImprovedFill(gameState, itemsData, itemIdToName) {
     const locations = gameState.getLocations();
     const itemPool = gameState.getItemPool();
-    
+
     if (!locations || !itemPool) {
         return {
             success: false,
@@ -520,15 +383,12 @@ async function performImprovedFill(gameState, itemsData, itemIdToName) {
             placedItems: []
         };
     }
-    
-    
+
     // Step 1: Split items into progression and filler
     const { progression, filler } = splitItemPools(itemPool, itemsData);
-    
-    
+
     // Step 2: Place progression items with assumed fill
     const progResult = runProgressionAssumedFill(gameState, progression, filler, itemIdToName);
-    
     if (!progResult.success) {
         return {
             success: false,
@@ -541,42 +401,31 @@ async function performImprovedFill(gameState, itemsData, itemIdToName) {
             placedItems: progResult.placedItems
         };
     }
-    
+
     const placedItems = [...progResult.placedItems];
-    
-    // Step 3: Shuffle fill filler items into remaining locations
+
+    // Step 3: Shuffle filler into remaining locations
     const remainingLocations = locations.getAvailableLocations().filter(loc => loc.isEmpty());
     const shuffledFiller = [...filler];
-    
-    
-    // Shuffle filler items using secure randomization
     for (let i = shuffledFiller.length - 1; i > 0; i--) {
         const j = getSecureRandomIndex(i + 1);
         [shuffledFiller[i], shuffledFiller[j]] = [shuffledFiller[j], shuffledFiller[i]];
     }
-    
-    // Place filler items (no validation needed)
+
     let fillerIndex = 0;
-    let fillerPlaced = 0;
     remainingLocations.forEach(location => {
         if (fillerIndex < shuffledFiller.length) {
             const item = shuffledFiller[fillerIndex++];
             location.placeItem(item.id);
             placedItems.push({ location: location.name, item: item.name });
-            fillerPlaced++;
         }
     });
-    
-    
-    // Validate the complete game state
-    const accessibilityCheck = validate100PercentAccessibility(gameState, itemIdToName);
-    const beatabilityCheck = validateGameBeatable(gameState, itemIdToName);
-    
+
+    // Final validation
     const success = true;
     const remainingItems = Math.max(0, shuffledFiller.length - remainingLocations.length);
     const emptyLocations = Math.max(0, remainingLocations.length - shuffledFiller.length);
-    
-    
+
     return {
         success,
         placedCount: placedItems.length,
@@ -839,30 +688,27 @@ function lockStartingPartner(locations, itemNameToId, settings) {
  * @returns {Promise<Object>} Result object with success status and spoiler data
  */
 async function generate(settings = {}) {
-    
     // Initialize debug logger for this generation
     debugLogger = new DebugLogger();
     debugLogger.log('GENERATION', 'Starting randomizer generation', { settings });
-    
-    // Initialize with a unique seed for each generation
+
+    // Unique seed for this generation
     const seed = Date.now() + Math.random() * 1000000;
-    
+
     try {
         // Step 1: Initialize complete randomizer state
         const gameState = await GameState.initializeRandomizerData(true);
-        
         if (!gameState.getLocations() || !gameState.getItemPool()) {
             throw new Error('Failed to initialize game state with locations and item pool');
         }
-        
+
         // Step 2: Create item name mappings
-        // Reuse items data from gameState initialization to avoid duplicate fetch
         const itemsResponse = await fetch('json/items.json');
         if (!itemsResponse.ok) {
             throw new Error(`Failed to fetch items.json: ${itemsResponse.status} ${itemsResponse.statusText}`);
         }
         const itemsData = await itemsResponse.json();
-        
+
         const itemNameToId = new Map();
         const itemIdToName = new Map();
         itemsData.forEach(item => {
@@ -871,89 +717,68 @@ async function generate(settings = {}) {
                 itemIdToName.set(item.id, item.itemName);
             }
         });
-        
-        
+
         // Step 3: Lock special locations
         const locations = gameState.getLocations();
-        
         const crystalStarsLocked = lockCrystalStars(locations, itemNameToId);
         const startingPartner = lockStartingPartner(locations, itemNameToId, settings);
-        
-        
+
         // Step 4: Update item pool to remove locked items
         const itemPool = gameState.getItemPool();
-        
-        // Remove Crystal Stars from pool (they have frequency 0 anyway, but just to be safe)
         const crystalStars = ["Diamond Star", "Emerald Star", "Gold Star", "Ruby Star", "Sapphire Star", "Garnet Star", "Crystal Star"];
-        let totalCrystalStarsRemoved = 0;
-        crystalStars.forEach(star => {
-            const removedCount = itemPool.removeItem(star);
-            totalCrystalStarsRemoved += removedCount;
-        });
-        
-        // Remove starting partner from pool
-        const partnerRemoved = itemPool.removeItem(startingPartner);
-        
+        crystalStars.forEach(star => itemPool.removeItem(star));
+        itemPool.removeItem(startingPartner);
+
         // Step 5: Perform improved assumed fill randomization
         const placementResult = await performImprovedFill(gameState, itemsData, itemIdToName);
-        
         if (!placementResult.success) {
             return {
                 success: false,
                 error: placementResult.error || 'Randomization failed',
                 timestamp: new Date().toISOString(),
-                settings: settings
+                settings
             };
         }
-        
-        
-        // Step 6: Generate spoiler data using SpoilerGenerator
-        const seed = Math.random().toString(36).substring(2, 15);
-        const settingsString = btoa(JSON.stringify(settings)); // Base64 encode settings
-        const spoilerGen = generateSpoilerData(gameState, itemIdToName, settings, seed, settingsString);
-        
-        // Set final statistics
+
+        // Step 6: Generate spoiler data
+        const spoilerSeed = Math.random().toString(36).substring(2, 15);
+        const settingsString = btoa(JSON.stringify(settings));
+        const spoilerGen = generateSpoilerData(gameState, itemIdToName, settings, spoilerSeed, settingsString);
+
         spoilerGen.setStatistics({
             totalLocations: locations.size(),
             filledCount: placementResult.placedCount,
             accessibilityChecks: placementResult.accessibilityChecks || 0,
-            placementAttempts: placementResult.placementAttempts || 0,
+            placementAttempts: placementResult.attempts || 0,
             generationTime: Date.now() - performance.now()
         });
-        
-        
-        // Step 7: Create final result and download spoiler
+
+        // Step 7: Create final result
         const finalResult = {
             success: true,
-            seed: seed,
+            seed: spoilerSeed,
             timestamp: new Date().toISOString(),
-            settings: settings,
+            settings,
             stats: {
                 totalLocations: locations.size(),
                 itemsPlaced: placementResult.placedCount,
-                crystalStarsLocked: crystalStarsLocked,
-                startingPartner: startingPartner
+                crystalStarsLocked,
+                startingPartner
             },
-            placementResult: placementResult,
-            gameState: gameState.toJSON() // Include complete state for debugging
+            placementResult,
+            gameState: gameState.toJSON()
         };
-        
-        // Download spoiler file using SpoilerGenerator
+
         spoilerGen.downloadSpoiler(null, 'txt');
-        
-        // Save debug logs to file
-        if (debugLogger) {
-            debugLogger.saveToFile();
-        }
-        
+        if (debugLogger) debugLogger.saveToFile();
+
         return finalResult;
-        
     } catch (error) {
         return {
             success: false,
             error: error.message,
             timestamp: new Date().toISOString(),
-            settings: settings
+            settings
         };
     }
 }
