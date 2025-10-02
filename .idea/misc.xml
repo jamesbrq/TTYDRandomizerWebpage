@@ -3,4 +3,7 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.12 (TTYDRandomizerWebpage)" />
   </component>
+  <component name="PyCharmProfessionalAdvertiser">
+    <option name="shown" value="true" />
+  </component>
 </project>

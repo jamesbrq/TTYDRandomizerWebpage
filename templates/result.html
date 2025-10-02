@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTYD Randomizer - Seed Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<div class="header">
+    <div class="header-logo">
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Home" class="logo">
+        </a>
+    </div>
+    <div class="header-pages">
+        <a href="{{ url_for('generate') }}" class="pages-link">Seed Generator</a>
+        <a href="{{ url_for('test') }}" class="pages-link">Test</a>
+    </div>
+</div>
+
+<div class="generate-panel">
+    <h1 class="info-header">Seed Generated Successfully!</h1>
+
+    <!-- Seed Info Section -->
+    <div class="preset-section">
+        <h3 class="preset-header">Seed Information</h3>
+        <div id="seedInfo" style="padding: 15px; background: #f0f0f0; border-radius: 5px; margin-bottom: 20px;">
+            <p><strong>Seed Number:</strong> <span id="seedNumber">Loading...</span></p>
+            <p><strong>Total Locations:</strong> <span id="totalLocations">Loading...</span></p>
+            <p><strong>Generated:</strong> <span id="timestamp">Loading...</span></p>
+        </div>
+    </div>
+
+    <!-- ROM Patching Section -->
+    <div class="preset-section">
+        <h3 class="preset-header">Patch Your ROM</h3>
+        <div style="padding: 15px;">
+            <p>Select your TTYD (US) ISO file to apply the randomization:</p>
+
+            <input type="file" id="romFileInput" accept=".iso,.gcm" style="display: none;">
+            <button class="preset-button" onclick="document.getElementById('romFileInput').click()">
+                Select ROM File
+            </button>
+            <span id="selectedROMName" style="margin-left: 10px; font-style: italic; color: #666;"></span>
+
+            <div style="margin-top: 15px;">
+                <button class="preset-button" id="patchBtn" onclick="patchROM()" disabled>
+                    Patch ROM
+                </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div id="progressSection" style="display: none; margin-top: 20px;">
+                <div style="background: #e0e0e0; border-radius: 5px; height: 30px; position: relative;">
+                    <div id="progressBar" style="background: #4CAF50; height: 100%; border-radius: 5px; width: 0%; transition: width 0.3s;"></div>
+                    <span id="progressText" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold;">0%</span>
+                </div>
+                <p id="progressStatus" style="margin-top: 10px; text-align: center;"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Downloads Section -->
+    <div class="preset-section" id="downloadsSection" style="display: none;">
+        <h3 class="preset-header">Downloads</h3>
+        <div style="padding: 15px;">
+            <div id="downloadLinks"></div>
+        </div>
+    </div>
+
+    <!-- Spoiler Section -->
+    <div class="preset-section">
+        <h3 class="preset-header">Spoiler Log</h3>
+        <div style="padding: 15px;">
+            <button class="preset-button" onclick="downloadSpoiler()">
+                Download Spoiler Log
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Import gciso.js as module -->
+<script type="module">
+    import { parseISO, addOrReplace, rebuildISO } from '{{ url_for("static", filename="js/gciso.js") }}';
+
+    // Make functions available globally
+    window.parseISO = parseISO;
+    window.addOrReplace = addOrReplace;
+    window.rebuildISO = rebuildISO;
+</script>
+
+<script src="{{ url_for('static', filename='js/ips.js') }}"></script>
+
+<script>
+let seedData = null;
+let romFile = null;
+
+// Load seed data from sessionStorage
+document.addEventListener('DOMContentLoaded', function() {
+    const storedData = sessionStorage.getItem('ttydSeedData');
+
+    if (!storedData) {
+        alert('No seed data found. Please generate a seed first.');
+        window.location.href = '/generate';
+        return;
+    }
+
+    seedData = JSON.parse(storedData);
+    console.log('Loaded seed data:', seedData);
+
+    // Display seed information
+    displaySeedInfo();
+
+    // Set up ROM file input handler
+    document.getElementById('romFileInput').addEventListener('change', handleROMSelection);
+});
+
+function displaySeedInfo() {
+    const locationCount = Object.keys(seedData.locations).length;
+    const date = new Date(seedData.timestamp);
+
+    // Extract seed number from settings or derive from data
+    const seedNumber = seedData.settings.seed || 'Unknown';
+
+    document.getElementById('seedNumber').textContent = seedNumber;
+    document.getElementById('totalLocations').textContent = locationCount;
+    document.getElementById('timestamp').textContent = date.toLocaleString();
+}
+
+function handleROMSelection(event) {
+    const file = event.target.files[0];
+    if (file) {
+        romFile = file;
+        document.getElementById('selectedROMName').textContent = file.name;
+        document.getElementById('patchBtn').disabled = false;
+        console.log('ROM file selected:', file.name);
+    }
+}
+
+async function patchROM() {
+    if (!romFile || !seedData) {
+        alert('Please select a ROM file first.');
+        return;
+    }
+
+    const patchBtn = document.getElementById('patchBtn');
+    patchBtn.disabled = true;
+    patchBtn.textContent = 'Patching...';
+
+    const progressSection = document.getElementById('progressSection');
+    progressSection.style.display = 'block';
+
+    try {
+        updateProgress(0, 'Reading ROM file...');
+
+        // Read ROM file
+        const romBuffer = await readFileAsArrayBuffer(romFile);
+        console.log('ROM file loaded, size:', romBuffer.byteLength);
+
+        updateProgress(10, 'Parsing ISO structure...');
+
+        // Parse ISO using gciso.js
+        const iso = window.parseISO(romBuffer);
+        console.log('ISO parsed successfully');
+
+        updateProgress(20, 'Applying location patches...');
+
+        // TODO: Apply location patches using seedData.locations
+        // This will require accessing REL files and patching them
+
+        updateProgress(60, 'Applying IPS patches...');
+
+        // TODO: Apply IPS patches for mod files
+
+        updateProgress(80, 'Rebuilding ISO...');
+
+        // Rebuild ISO
+        const patchedISO = window.rebuildISO(romBuffer, iso.tree.root);
+        console.log('ISO rebuilt, size:', patchedISO.byteLength);
+
+        updateProgress(100, 'Complete!');
+
+        // Create download for patched ROM
+        const blob = new Blob([patchedISO], { type: 'application/octet-stream' });
+        const url = URL.createObjectURL(blob);
+
+        const downloadsSection = document.getElementById('downloadsSection');
+        const downloadLinks = document.getElementById('downloadLinks');
+
+        downloadLinks.innerHTML = `
+            <a href="${url}" download="TTYD_Randomized_Seed_${seedData.settings.seed || 'Unknown'}.iso" class="preset-button" style="display: inline-block; margin: 5px; text-decoration: none;">
+                Download Patched ROM
+            </a>
+        `;
+
+        downloadsSection.style.display = 'block';
+
+        patchBtn.textContent = 'Patch Another ROM';
+        patchBtn.disabled = false;
+
+    } catch (error) {
+        console.error('Patching failed:', error);
+        alert(`Patching failed: ${error.message}`);
+        patchBtn.textContent = 'Patch ROM';
+        patchBtn.disabled = false;
+        progressSection.style.display = 'none';
+    }
+}
+
+function updateProgress(percent, status) {
+    document.getElementById('progressBar').style.width = percent + '%';
+    document.getElementById('progressText').textContent = Math.round(percent) + '%';
+    document.getElementById('progressStatus').textContent = status;
+}
+
+function readFileAsArrayBuffer(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file);
+    });
+}
+
+function downloadSpoiler() {
+    if (!seedData) {
+        alert('No seed data available.');
+        return;
+    }
+
+    // Generate spoiler log text
+    let spoilerText = '='.repeat(60) + '\n';
+    spoilerText += 'TTYD RANDOMIZER SPOILER LOG\n';
+    spoilerText += '='.repeat(60) + '\n\n';
+    spoilerText += `Seed: ${seedData.settings.seed || 'Unknown'}\n`;
+    spoilerText += `Generated: ${new Date(seedData.timestamp).toLocaleString()}\n\n`;
+    spoilerText += '='.repeat(60) + '\n';
+    spoilerText += 'ITEM LOCATIONS\n';
+    spoilerText += '='.repeat(60) + '\n\n';
+
+    // Sort locations alphabetically
+    const sortedLocations = Object.entries(seedData.locations).sort((a, b) => a[0].localeCompare(b[0]));
+
+    for (const [locationName, [itemCode, playerNum]] of sortedLocations) {
+        spoilerText += `${locationName}\n`;
+        spoilerText += `  → Item Code: ${itemCode}, Player: ${playerNum}\n\n`;
+    }
+
+    // Create and download the file
+    const blob = new Blob([spoilerText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `TTYD_Spoiler_Seed_${seedData.settings.seed || 'Unknown'}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>

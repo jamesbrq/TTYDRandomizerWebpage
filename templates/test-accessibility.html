@@ -306,10 +306,10 @@
     </div>
 
     <!-- Include required JavaScript files -->
-    <script src="js/location.js"></script>
-    <script src="js/itemPool.js"></script>
-    <script src="js/parser.js"></script>
-    <script src="js/gameState.js"></script>
+    <script src="{{ url_for('static', filename='js/location.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/itemPool.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/parser.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/gameState.js') }}"></script>
 
     <script>
         let gameState = null;

@@ -5,29 +5,29 @@
     <title>TTYD Randomizer</title>
     <meta name="description" content="A randomizer for the game TTYD, enhancing replayability with randomized items, enemies, and more.">
     <meta name="keywords" content="TTYD, randomizer, game, mod, Mario, Paper Mario, Thousand-Year Door, randomization">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <!-- Core dependencies -->
-    <script src="js/parser.js"></script>
-    <script src="js/gameState.js"></script>
-    <script src="js/itemPool.js"></script>
-    <script src="js/location.js"></script>
-    <script src="js/debugLogger.js"></script>
-    <script src="js/generate.js"></script>
+    <script src="{{ url_for('static', filename='js/parser.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/gameState.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/itemPool.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/location.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/debugLogger.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/generate.js') }}"></script>
 
     <!-- Optional utilities -->
-    <script src="js/spoilerGenerator.js"></script>
-    <script type="module" src="js/gciso.js"></script>
+    <script src="{{ url_for('static', filename='js/spoilerGenerator.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/gciso.js') }}"></script>
 </head>
 <body>
 <div class="header">
     <div class="header-logo">
-        <a href="index.html">
-            <img src="images/logo.png" alt="Home" class="logo">
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Home" class="logo">
         </a>
     </div>
     <div class="header-pages">
-        <a href="generate.html" class="pages-link">Seed Generator</a>
-        <a href="test.html" class="pages-link">Test</a>
+        <a href="{{ url_for('generate') }}" class="pages-link">Seed Generator</a>
+        <a href="{{ url_for('test') }}" class="pages-link">Test</a>
     </div>
 </div>
 
@@ -244,16 +244,15 @@
         </div>
     </div>
     
-    <!-- ROM Selection Section -->
+    <!-- Generation Section -->
     <div class="iso-generation-section">
-        <h3>Select ROM File</h3>
-        <div class="iso-controls">
-            <input type="file" id="romFileInput" accept=".iso,.gcm" style="display: none;">
-            <button class="preset-button" onclick="document.getElementById('romFileInput').click()">Select ROM File</button>
-            <span id="selectedROMName" style="margin-left: 10px; font-style: italic; color: #666;"></span>
-        </div>
+        <h3>Generate Seed</h3>
         <div class="iso-controls" style="margin-top: 10px;">
-            <button class="preset-button" id="generateBtn" onclick="generateRandomizedROM()">Generate Randomized ROM</button>
+            <button class="preset-button" id="generateBtn" onclick="generateRandomizedROM()">Generate Seed</button>
+        </div>
+        <div id="downloadSection" style="margin-top: 15px; display: none;">
+            <h4>Download Generated Files:</h4>
+            <div id="downloadLinks"></div>
         </div>
     </div>
 </div>
@@ -271,45 +270,53 @@
 <script>
 /**
  * Main generation function called by the Generate button
- * Collects settings from UI and calls the new minimalistic generation system
+ * Collects settings from UI and sends to Flask backend
  */
 async function generateRandomizedROM() {
     const generateBtn = document.getElementById('generateBtn');
     const originalText = generateBtn.textContent;
-    
+
     try {
         // Disable button and show progress
         generateBtn.disabled = true;
         generateBtn.textContent = 'Generating...';
-        
+
         console.log('🎯 Starting ROM generation...');
-        
+
         // Collect settings from UI
         const settings = collectSettingsFromUI();
         console.log('Collected settings:', settings);
-        
-        // Generate the randomized seed using new system
-        const result = await generate(settings);
+
+        // Send settings to Flask backend
+        const response = await fetch('/api/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(settings)
+        });
+
+        const result = await response.json();
         console.log('Generation result:', result);
-        
-        // Check if ROM file is selected
-        const romFile = document.getElementById('romFileInput').files[0];
-        if (!romFile) {
-            showModal('Error', 'Please select a ROM file first.');
-            return;
-        }
-        
-        // Apply randomization to ROM (if gciso.js is available)
-        if (typeof applyRandomizationToROM === 'function') {
-            generateBtn.textContent = 'Applying to ROM...';
-            await applyRandomizationToROM(romFile, result);
+
+        if (response.ok && result) {
+            // Store seed data in sessionStorage
+            const seedData = {
+                locations: result,
+                settings: settings,
+                timestamp: Date.now()
+            };
+            sessionStorage.setItem('ttydSeedData', JSON.stringify(seedData));
+
+            // Redirect to result page
+            window.location.href = '/result';
         } else {
-            // Fallback: show generation results
-            showGenerationResults(result);
+            showModal('Error', `Generation failed: ${result.error}`);
+            if (result.traceback) {
+                console.error('Traceback:', result.traceback);
+            }
         }
-        
-        showModal('Success', `Randomized seed generated successfully! Seed: ${result.seed}`);
-        
+
     } catch (error) {
         console.error('Generation failed:', error);
         showModal('Error', `Generation failed: ${error.message}`);
@@ -321,44 +328,132 @@ async function generateRandomizedROM() {
 }
 
 /**
- * Collect all settings from the UI elements
+ * Collect all settings from the UI elements and format for Archipelago YAML
  */
 function collectSettingsFromUI() {
-    const settings = {};
-    
-    // Collect toggle switches
+    // Map UI labels to YAML option names
+    const labelToOption = {
+        // Logic & Progression
+        'Goal': 'goal',
+        'Goal Crystal Stars': 'goal_stars',
+        'Palace Crystal Stars': 'palace_stars',
+        'Pit Items': 'pit_items',
+        'Tattlesanity': 'tattlesanity',
+        'Limit Chapter Logic': 'limit_chapter_logic',
+        'Limit Chapter 8': 'limit_chapter_eight',
+
+        // World & Gameplay
+        'Palace Skip': 'palace_skip',
+        'Skip Cutscenes': 'cutscene_skip',
+        'Disable Intermissions': 'disable_intermissions',
+        'Open West Side': 'open_westside',
+        'Fast Travel': 'fast_travel',
+        'Always Succeed Conditions': 'succeed_conditions',
+
+        // Starting Stats
+        'Starting HP': 'starting_hp',
+        'Starting FP': 'starting_fp',
+        'Starting BP': 'starting_bp',
+        'Starting Coins': 'starting_coins',
+        'Starting Partner': 'starting_partner',
+
+        // Quality of Life
+        'Permanent Peekaboo': 'permanent_peekaboo',
+        'Full Run Bar': 'full_run_bar',
+        'Yoshi Color': 'yoshi_color',
+        'Yoshi Name': 'yoshi_name'
+    };
+
+    const settings = {
+        name: "Player1",
+        description: "TTYD Randomizer Web Configuration",
+        game: "Paper Mario: The Thousand-Year Door",
+        "Paper Mario: The Thousand-Year Door": {}
+    };
+
+    const gameSettings = settings["Paper Mario: The Thousand-Year Door"];
+
+    // Collect toggle switches (boolean values)
     const toggles = document.querySelectorAll('.toggle-switch');
     toggles.forEach(toggle => {
         const label = toggle.parentElement.querySelector('.toggle-label').textContent.trim();
-        const isActive = toggle.classList.contains('active');
-        settings[label] = isActive;
+        const optionName = labelToOption[label];
+        if (optionName) {
+            const isActive = toggle.classList.contains('active');
+            gameSettings[optionName] = isActive;
+        }
     });
-    
+
     // Collect dropdowns
     const dropdowns = document.querySelectorAll('.dropdown-select');
     dropdowns.forEach(dropdown => {
         const label = dropdown.parentElement.querySelector('.dropdown-label').textContent.trim();
-        settings[label] = dropdown.value;
+        const optionName = labelToOption[label];
+        if (optionName) {
+            // Convert select value to appropriate type
+            const value = dropdown.value;
+
+            // Special handling for specific options
+            if (optionName === 'goal') {
+                // Map 0: shadow_queen, 1: crystal_stars, 2: bonetail
+                const goalMap = ['shadow_queen', 'crystal_stars', 'bonetail'];
+                gameSettings[optionName] = goalMap[parseInt(value)] || 'shadow_queen';
+            } else if (optionName === 'pit_items') {
+                // Map 0: vanilla, 1: filler, 2: all
+                const pitMap = ['vanilla', 'filler', 'all'];
+                gameSettings[optionName] = pitMap[parseInt(value)] || 'filler';
+            } else if (optionName === 'starting_partner') {
+                // Map partner values
+                const partnerMap = {
+                    '1': 'goombella',
+                    '2': 'koops',
+                    '3': 'bobbery',
+                    '4': 'yoshi',
+                    '5': 'flurrie',
+                    '6': 'vivian',
+                    '7': 'ms_mowz',
+                    '8': 'random_partner'
+                };
+                gameSettings[optionName] = partnerMap[value] || 'goombella';
+            } else if (optionName === 'yoshi_color') {
+                // Map yoshi colors
+                const colorMap = {
+                    '0': 'green',
+                    '1': 'red',
+                    '2': 'blue',
+                    '3': 'orange',
+                    '4': 'pink',
+                    '5': 'black',
+                    '6': 'white',
+                    '7': 'random_color'
+                };
+                gameSettings[optionName] = colorMap[value] || 'green';
+            } else {
+                gameSettings[optionName] = value;
+            }
+        }
     });
-    
+
     // Collect text inputs
     const textInputs = document.querySelectorAll('.text-input');
     textInputs.forEach(input => {
         const label = input.parentElement.querySelector('.text-label').textContent.trim();
-        settings[label] = input.value;
+        const optionName = labelToOption[label];
+        if (optionName) {
+            gameSettings[optionName] = input.value;
+        }
     });
-    
-    // Collect numeric inputs
-    const numericInputs = document.querySelectorAll('.numeric-input');
-    numericInputs.forEach(input => {
-        const label = input.parentElement.querySelector('.numeric-label').textContent.trim();
-        settings[label] = parseInt(input.value) || 0;
+
+    // Collect number inputs
+    const numberInputs = document.querySelectorAll('.number-input');
+    numberInputs.forEach(input => {
+        const label = input.parentElement.querySelector('.number-label').textContent.trim();
+        const optionName = labelToOption[label];
+        if (optionName) {
+            gameSettings[optionName] = parseInt(input.value) || 0;
+        }
     });
-    
-    // Add default settings if not specified
-    settings.seed = settings.seed || Math.floor(Math.random() * 1000000);
-    settings.startingPartner = settings.startingPartner || 'Goombella';
-    
+
     return settings;
 }
 
@@ -462,16 +557,7 @@ function applySettingsToUI(settings) {
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('TTYD Randomizer Generate page loaded with new generation system');
-    
-    // Update ROM file input handler
-    document.getElementById('romFileInput').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            document.getElementById('selectedROMName').textContent = file.name;
-            console.log('ROM file selected:', file.name);
-        }
-    });
+    console.log('TTYD Randomizer Generate page loaded with Flask backend integration');
 });
 </script>
 </body>

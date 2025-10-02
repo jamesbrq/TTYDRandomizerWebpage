@@ -5,23 +5,23 @@
     <title>TTYD Randomizer</title>
     <meta name="description" content="A randomizer for the game TTYD, enhancing replayability with randomized items, enemies, and more.">
     <meta name="keywords" content="TTYD, randomizer, game, mod, Mario, Paper Mario, Thousand-Year Door, randomization">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <div class="header">
         <div class="header-logo">
-            <a href="index.html">
-                <img src="images/logo.png" alt="Home" class="logo">
+            <a href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Home" class="logo">
             </a>
         </div>
         <div class="header-pages">
-            <a href="generate.html" class="pages-link">Seed Generator</a>
-            <a href="index2.html" class="pages-link">Test</a>
+            <a href="{{ url_for('generate') }}" class="pages-link">Seed Generator</a>
+            <a href="{{ url_for('index2') }}" class="pages-link">Test</a>
         </div>
     </div>
     <div class="info-parent">
         <div class="info-logo">
-            <img src="images/logo.png" alt="Home" class="main-logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Home" class="main-logo">
         </div>
         <div class="info-panel">
             <h1 class="info-header">Welcome to the TTYD Randomizer!</h1>
@@ -33,17 +33,17 @@
             </h1>
             <div class="generate-link-group">
                 <div class="info-link-container">
-                    <a href="generate.html" class="info-link">Generate Seed</a>
+                    <a href="{{ url_for('generate') }}" class="info-link">Generate Seed</a>
                 </div>
                 <h1 class="generator-version">randomizer v0.5.0</h1>
             </div>
             <h1 class="links-header">Links & Info:</h1>
             <div class="info-link-group">
                 <div class="info-link-container">
-                    <a href="gettingStarted.html" class="info-link">Getting Started</a>
+                    <a href="{{ url_for('getting_started') }}" class="info-link">Getting Started</a>
                 </div>
                 <div class="info-link-container">
-                    <a href="archipelago.html" class="info-link">Archipelago</a>
+                    <a href="{{ url_for('archipelago') }}" class="info-link">Archipelago</a>
                 </div>
             </div>
         </div>
