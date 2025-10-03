@@ -190,183 +190,22 @@ async function patchROM() {
             }
         });
 
-        updateProgress(25, 'Patching DOL with game options...');
+        // ==================== STEP 1: patch_mod ====================
+        updateProgress(25, 'Step 1/4: Patching mod and game options...')
 
-        // Patch DOL with game options (similar to patch_mod in Rom.py)
-        await patchDOLWithOptions(iso, romBuffer, seedData.settings);
+        await patchMod(iso, romBuffer, seedData.settings);
 
-        updateProgress(30, 'Adding mod files to ISO...');
+        // ==================== STEP 2: patch_icon ====================
+        updateProgress(40, 'Step 2/4: Patching icon files...')
 
-        // Add all files from static/data to the ISO
-        await addModFilesToISO(iso);
+        await patchIcon(iso, romBuffer);
 
-        updateProgress(35, 'Patching icon files...');
+        // ==================== STEP 3: patch_items ====================
+        updateProgress(55, 'Step 3/4: Patching item locations...')
 
-        // Patch icon files with IPS patches
-        await patchIconFiles(iso, romBuffer);
+        await patchItems(iso, romBuffer, seedData.locations, locationMap, itemCodeToRomId);
 
-        updateProgress(40, 'Preparing location patches...');
-
-        // Debug: List what's in the ISO tree
-        console.log('ISO tree root children:', Array.from(iso.tree.root.children.keys()));
-        const filesNode = iso.tree.root.children.get('files');
-        if (filesNode) {
-            console.log('files/ children:', Array.from(filesNode.children.keys()));
-            const relNode = filesNode.children?.get('rel');
-            if (relNode) {
-                console.log('files/rel/ children:', Array.from(relNode.children.keys()));
-            } else {
-                console.log('files/rel/ not found');
-            }
-        }
-
-        // Group patches by REL file
-        const patchesByRel = new Map();
-        const tattlePatches = []; // Special handling for tattle locations
-
-        Object.entries(seedData.locations).forEach(([locationName, [itemCode, playerNum]]) => {
-            const locationData = locationMap.get(locationName);
-            if (!locationData) {
-                console.warn(`No location data for: ${locationName}`);
-                return;
-            }
-
-            // Determine rom_id to write
-            let romId;
-            if (playerNum !== 1) {
-                // Item from another player - use "Nothing" item (0x71)
-                romId = 0x71;
-            } else {
-                // Get rom_id from items.json
-                romId = itemCodeToRomId.get(itemCode);
-                if (romId === undefined) {
-                    console.warn(`No rom_id for item code ${itemCode}, defaulting to 0x0`);
-                    romId = 0x0;
-                }
-            }
-
-            // Handle tattle locations specially
-            if (locationName.includes('Tattle')) {
-                // Tattles need special handling with unit IDs
-                if (locationData.unit_id !== undefined) {
-                    tattlePatches.push({
-                        unitId: locationData.unit_id,
-                        romId: romId,
-                        locationName: locationName
-                    });
-                }
-                return;
-            }
-
-            // Skip if no offsets
-            if (!locationData.offsets || locationData.offsets.length === 0) {
-                console.warn(`No offset data for location: ${locationName}`);
-                return;
-            }
-
-            const rel = locationData.rel || 'dol';
-            if (!patchesByRel.has(rel)) {
-                patchesByRel.set(rel, []);
-            }
-
-            // Determine if this is a shop item
-            const isShopItem = locationData.is_shop === true;
-            const shopPrice = locationData.shop_price || 0;
-
-            // Add patch for each offset
-            locationData.offsets.forEach(offsetHex => {
-                const offset = parseInt(offsetHex, 16);
-                patchesByRel.get(rel).push({
-                    offset: offset,
-                    romId: romId,
-                    locationName: locationName,
-                    isShopItem: isShopItem,
-                    shopPrice: shopPrice
-                });
-            });
-        });
-
-        console.log('Patches grouped by REL:', patchesByRel);
-        console.log('Tattle patches:', tattlePatches);
-
-        updateProgress(50, 'Applying patches to files...');
-
-        // Apply patches to each REL file and DOL
-        let patchedFiles = 0;
-        const totalFiles = patchesByRel.size + (tattlePatches.length > 0 ? 1 : 0);
-
-        for (const [relName, patches] of patchesByRel) {
-            console.log(`Patching ${relName} with ${patches.length} patches`);
-
-            // Determine file path in ISO
-            let filePath;
-            if (relName === 'dol') {
-                filePath = 'sys/main.dol';
-            } else {
-                // REL files are in rel/ directory at root level
-                filePath = `rel/${relName}.rel`;
-            }
-
-            // Get the file from ISO tree
-            const fileNode = getNodeFromTree(iso.tree.root, filePath);
-            if (!fileNode) {
-                console.warn(`File not found in ISO: ${filePath}`);
-                continue;
-            }
-
-            // Read file data - handle both original and modified files
-            let fileData;
-            if (fileNode.src.kind === 'orig') {
-                fileData = new Uint8Array(romBuffer.slice(fileNode.src.offset, fileNode.src.offset + fileNode.src.size));
-            } else if (fileNode.src.kind === 'mod') {
-                fileData = new Uint8Array(fileNode.src.data);
-            } else {
-                console.warn(`Unknown src kind for ${filePath}:`, fileNode.src.kind);
-                continue;
-            }
-            console.log(`Reading ${filePath}: size=${fileData.length}`);
-
-            // Apply patches to file
-            const patchedData = applyPatchesToFile(fileData, patches);
-
-            // Replace file in ISO tree using addOrReplace
-            window.addOrReplace(iso.tree, filePath, patchedData);
-
-            patchedFiles++;
-            updateProgress(50 + (30 * patchedFiles / totalFiles), `Patched ${relName}...`);
-        }
-
-        // Apply tattle patches to DOL if any
-        if (tattlePatches.length > 0) {
-            console.log(`Patching DOL with ${tattlePatches.length} tattle patches`);
-
-            const dolPath = 'sys/main.dol';
-            const dolNode = getNodeFromTree(iso.tree.root, dolPath);
-            if (dolNode) {
-                // Read DOL data - handle both original and modified files
-                let dolData;
-                if (dolNode.src.kind === 'orig') {
-                    dolData = new Uint8Array(romBuffer.slice(dolNode.src.offset, dolNode.src.offset + dolNode.src.size));
-                } else if (dolNode.src.kind === 'mod') {
-                    dolData = new Uint8Array(dolNode.src.data);
-                } else {
-                    console.warn('Unknown DOL src kind for tattles:', dolNode.src.kind);
-                    return;
-                }
-
-                // Apply tattle patches
-                const patchedDolData = applyTattlePatchesToDOL(dolData, tattlePatches);
-
-                // Replace DOL in ISO tree
-                window.addOrReplace(iso.tree, dolPath, patchedDolData);
-
-                patchedFiles++;
-                updateProgress(50 + (30 * patchedFiles / totalFiles), `Patched tattles in DOL...`);
-            } else {
-                console.warn('DOL file not found in ISO');
-            }
-        }
-
+        // ==================== STEP 4: close_iso ====================
         updateProgress(80, 'Rebuilding ISO...');
 
         // Rebuild ISO with patched files
@@ -402,6 +241,180 @@ async function patchROM() {
     }
 }
 
+// ==================== ROM PATCHING PROCEDURE (Matches Rom.py) ====================
+
+/**
+ * STEP 1: patch_mod - Patch DOL with game options and add mod files
+ * (Corresponds to patch_mod in Rom.py lines 24-130)
+ */
+async function patchMod(iso, romBuffer, settings) {
+    console.log('=== STEP 1: patch_mod ===');
+
+    // Patch DOL with game options
+    await patchDOLWithOptions(iso, romBuffer, settings);
+
+    // Add mod files to ISO
+    await addModFilesToISO(iso);
+}
+
+/**
+ * STEP 2: patch_icon - Patch icon files with IPS patches
+ * (Corresponds to patch_icon in Rom.py lines 142-156)
+ */
+async function patchIcon(iso, romBuffer) {
+    console.log('=== STEP 2: patch_icon ===');
+    await patchIconFiles(iso, romBuffer);
+}
+
+/**
+ * STEP 3: patch_items - Patch all item locations in REL files and DOL
+ * (Corresponds to patch_items in Rom.py lines 160-197)
+ */
+async function patchItems(iso, romBuffer, locations, locationMap, itemCodeToRomId) {
+    console.log('=== STEP 3: patch_items ===');
+
+    // Group patches by REL file
+    const patchesByRel = new Map();
+    const tattlePatches = [];
+
+    Object.entries(locations).forEach(([locationName, [itemCode, playerNum]]) => {
+        const locationData = locationMap.get(locationName);
+        if (!locationData) {
+            console.warn(`No location data for: ${locationName}`);
+            return;
+        }
+
+        // Determine rom_id to write
+        let romId;
+        if (playerNum !== 1) {
+            // Item from another player - use "Nothing" item (0x71)
+            romId = 0x71;
+        } else {
+            // Get rom_id from items.json
+            romId = itemCodeToRomId.get(itemCode);
+            if (romId === undefined) {
+                console.warn(`No rom_id for item code ${itemCode}, defaulting to 0x0`);
+                romId = 0x0;
+            }
+        }
+
+        // Handle tattle locations specially
+        if (locationName.includes('Tattle')) {
+            if (locationData.unit_id !== undefined) {
+                tattlePatches.push({
+                    unitId: locationData.unit_id,
+                    romId: romId,
+                    locationName: locationName
+                });
+            }
+            return;
+        }
+
+        // Skip if no offsets
+        if (!locationData.offsets || locationData.offsets.length === 0) {
+            console.warn(`No offset data for location: ${locationName}`);
+            return;
+        }
+
+        const rel = locationData.rel || 'dol';
+        if (!patchesByRel.has(rel)) {
+            patchesByRel.set(rel, []);
+        }
+
+        // Determine if this is a shop item
+        const isShopItem = locationData.is_shop === true;
+        const shopPrice = locationData.shop_price || 0;
+
+        // Add patch for each offset
+        locationData.offsets.forEach(offsetHex => {
+            const offset = parseInt(offsetHex, 16);
+            patchesByRel.get(rel).push({
+                offset: offset,
+                romId: romId,
+                locationName: locationName,
+                isShopItem: isShopItem,
+                shopPrice: shopPrice
+            });
+        });
+    });
+
+    console.log('Patches grouped by REL:', patchesByRel);
+    console.log('Tattle patches:', tattlePatches);
+
+    // Apply patches to each REL file (not DOL in this loop per Rom.py)
+    for (const [relName, patches] of patchesByRel) {
+        if (relName === 'dol') continue; // Skip DOL, it's handled separately
+
+        console.log(`Patching ${relName} with ${patches.length} patches`);
+
+        // Try both rel/ (root level) and files/rel/ directory locations
+        let filePath = `rel/${relName}.rel`;
+        let fileNode = getNodeFromTree(iso.tree.root, filePath);
+
+        // If not found at root level, try files/rel/
+        if (!fileNode) {
+            filePath = `files/rel/${relName}.rel`;
+            fileNode = getNodeFromTree(iso.tree.root, filePath);
+        }
+
+        if (!fileNode) {
+            console.warn(`File not found in ISO: ${filePath}`);
+            continue;
+        }
+
+        // Read file data
+        let fileData;
+        if (fileNode.src.kind === 'orig') {
+            fileData = new Uint8Array(romBuffer.slice(fileNode.src.offset, fileNode.src.offset + fileNode.src.size));
+        } else if (fileNode.src.kind === 'mod') {
+            fileData = new Uint8Array(fileNode.src.data);
+        } else {
+            console.warn(`Unknown src kind for ${filePath}:`, fileNode.src.kind);
+            continue;
+        }
+
+        // Apply patches to file
+        const patchedData = applyPatchesToFile(fileData, patches);
+
+        // CRITICAL: Save the patched REL back to ISO tree
+        window.addOrReplace(iso.tree, filePath, patchedData);
+        console.log(`Saved patched ${relName} back to ISO`);
+    }
+
+    // Apply tattle patches to DOL
+    if (tattlePatches.length > 0) {
+        console.log(`Patching DOL with ${tattlePatches.length} tattle patches`);
+
+        const dolPath = 'sys/main.dol';
+        const dolNode = getNodeFromTree(iso.tree.root, dolPath);
+        if (dolNode) {
+            // Read DOL data
+            let dolData;
+            if (dolNode.src.kind === 'orig') {
+                dolData = new Uint8Array(romBuffer.slice(dolNode.src.offset, dolNode.src.offset + dolNode.src.size));
+            } else if (dolNode.src.kind === 'mod') {
+                dolData = new Uint8Array(dolNode.src.data);
+            } else {
+                console.warn('Unknown DOL src kind for tattles:', dolNode.src.kind);
+                dolData = null;
+            }
+
+            if (dolData) {
+                // Apply tattle patches
+                const patchedDolData = applyTattlePatchesToDOL(dolData, tattlePatches);
+
+                // CRITICAL: Save the patched DOL back to ISO tree
+                window.addOrReplace(iso.tree, dolPath, patchedDolData);
+                console.log('Saved patched DOL with tattles back to ISO');
+            }
+        } else {
+            console.warn('DOL file not found in ISO');
+        }
+    }
+}
+
+// ==================== HELPER FUNCTIONS ====================
+
 /**
  * Patch DOL with game options (similar to patch_mod in Rom.py)
  */
@@ -419,7 +432,9 @@ async function patchDOLWithOptions(iso, romBuffer, settings) {
     // Read DOL data - handle both original and modified files
     let dolData;
     if (dolNode.src.kind === 'orig') {
-        dolData = new Uint8Array(romBuffer.slice(dolNode.src.offset, dolNode.src.offset + dolNode.src.size));
+        // Create a NEW buffer, not a view into the original
+        const originalSlice = romBuffer.slice(dolNode.src.offset, dolNode.src.offset + dolNode.src.size);
+        dolData = new Uint8Array(originalSlice);
     } else if (dolNode.src.kind === 'mod') {
         dolData = new Uint8Array(dolNode.src.data);
     } else {
@@ -427,7 +442,8 @@ async function patchDOLWithOptions(iso, romBuffer, settings) {
         return;
     }
 
-    const view = new DataView(dolData.buffer);
+    // Create DataView from the Uint8Array's buffer
+    const view = new DataView(dolData.buffer, dolData.byteOffset, dolData.byteLength);
 
     console.log(`DOL size: ${dolData.length} bytes (0x${dolData.length.toString(16)})`);
 
@@ -613,16 +629,6 @@ async function addModFilesToISO(iso) {
     } catch (error) {
         console.warn('Failed to load mod.txt:', error);
     }
-
-    // Add desc.txt with seed information
-    try {
-        const descText = `TTYD Randomizer Seed\nSeed: ${seedData.seed}\nGenerated: ${new Date(seedData.timestamp).toLocaleString()}`;
-        const descData = new TextEncoder().encode(descText);
-        window.addOrReplace(iso.tree, 'files/msg/US/desc.txt', descData);
-        console.log('Added desc.txt');
-    } catch (error) {
-        console.warn('Failed to create desc.txt:', error);
-    }
 }
 
 /**
@@ -637,12 +643,20 @@ async function patchIconFiles(iso, romBuffer) {
         const iconBinIpsResponse = await fetch('/static/data/icon_bin.ips');
         const iconBinIpsData = await iconBinIpsResponse.arrayBuffer();
 
-        // Get original icon files from ISO (they're at root level, not in files/)
-        const iconNode = getNodeFromTree(iso.tree.root, 'icon.tpl');
-        const iconBinNode = getNodeFromTree(iso.tree.root, 'icon.bin');
+        // Get original icon files from ISO - try both files/ directory and root
+        let iconNode = getNodeFromTree(iso.tree.root, 'files/icon.tpl');
+        let iconBinNode = getNodeFromTree(iso.tree.root, 'files/icon.bin');
+
+        // If not found in files/, try root directory
+        if (!iconNode) {
+            iconNode = getNodeFromTree(iso.tree.root, 'icon.tpl');
+        }
+        if (!iconBinNode) {
+            iconBinNode = getNodeFromTree(iso.tree.root, 'icon.bin');
+        }
 
         if (!iconNode || !iconBinNode) {
-            console.warn('Icon files not found in ISO');
+            console.warn('Icon files not found in ISO (tried both files/ and root)');
             return;
         }
 
@@ -662,8 +676,8 @@ async function patchIconFiles(iso, romBuffer) {
         }
 
         // Apply IPS patches using ips.js
-        const patchedIconData = window.applyIPS(iconIpsData, originalIconData.buffer);
-        const patchedIconBinData = window.applyIPS(iconBinIpsData, originalIconBinData.buffer);
+        const patchedIconData = window.applyIPS(originalIconData, new Uint8Array(iconIpsData));
+        const patchedIconBinData = window.applyIPS(originalIconBinData, new Uint8Array(iconBinIpsData));
 
         // Replace files in ISO
         window.addOrReplace(iso.tree, 'files/icon.tpl', new Uint8Array(patchedIconData));
