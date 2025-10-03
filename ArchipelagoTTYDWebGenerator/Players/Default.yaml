@@ -1,0 +1,336 @@
+﻿# Q. What is this file?
+# A. This file contains options which allow you to configure your multiworld experience while allowing
+#    others to play how they want as well.
+#
+# Q. How do I use it?
+# A. The options in this file are weighted. This means the higher number you assign to a value, the
+#    more chances you have for that option to be chosen. For example, an option like this:
+#
+#    map_shuffle:
+#      on: 5
+#      off: 15
+#
+#    Means you have 5 chances for map shuffle to occur, and 15 chances for map shuffle to be turned
+#    off.
+#
+# Q. I've never seen a file like this before. What characters am I allowed to use?
+# A. This is a .yaml file. You are allowed to use most characters.
+#    To test if your yaml is valid or not, you can use this website:
+#        http://www.yamllint.com/
+#    You can also verify that your Archipelago options are valid at this site:
+#        https://archipelago.gg/check
+
+# Your name in-game, limited to 16 characters.
+#     {player} will be replaced with the player's slot number.
+#     {PLAYER} will be replaced with the player's slot number, if that slot number is greater than 1.
+#     {number} will be replaced with the counter value of the name.
+#     {NUMBER} will be replaced with the counter value of the name, if the counter value is greater than 1.
+name: Player{number}
+
+# Used to describe your yaml. Useful if you have multiple files.
+description: 'Default Paper Mario: The Thousand-Year Door Template'
+
+game: 'Paper Mario: The Thousand-Year Door'
+requires:
+  version: 0.6.1 # Version of Archipelago required for this yaml to work as expected.
+
+'Paper Mario: The Thousand-Year Door':
+  # Game Options
+  progression_balancing:
+    # A system that can move progression earlier, to try and prevent the player from getting stuck and bored early.
+    # 
+    # A lower setting means more getting stuck. A higher setting means less getting stuck.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 99
+    random: 0
+    random-low: 0
+    random-high: 0
+    disabled: 0 # equivalent to 0
+    normal: 50 # equivalent to 50
+    extreme: 0 # equivalent to 99
+
+  accessibility:
+    # Set rules for reachability of your items/locations.
+    # 
+    # **Full:** ensure everything can be reached and acquired.
+    # 
+    # **Minimal:** ensure what is needed to reach your goal can be acquired.
+    full: 50
+    minimal: 0
+
+  death_link:
+    # When you die, everyone who enabled death link dies. Of course, the reverse is true too.
+    'false': 50
+    'true': 0
+
+  goal:
+    # This determines the goal of the game.
+    # shadow_queen: Defeat the Shadow Queen.
+    # crystal_stars: Collect a specified amount of Crystal Stars.
+    # bonetail: Defeat Bonetail.
+    shadow_queen: 50
+    crystal_stars: 0
+    bonetail: 0
+
+  goal_stars:
+    # This determines how many crystal stars are required for the goal option crystal_stars.
+    # This is only used if the goal option is set to crystal_stars.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 7
+    7: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  palace_stars:
+    # This determines how many Crystal Stars are required to enter the Palace of Shadow.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 7
+    7: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  tattlesanity:
+    # Creates a location for every enemy being tattled.
+    # All key items can possibly be placed in these locations.
+    'false': 50
+    'true': 0
+
+  piecesanity:
+    # Determines if Star Piece locations will be randomized.
+    # vanilla: Star Piece locations will remain in their original locations.
+    # nonpanel_only: Only Star Pieces that are not in panels will be randomized.
+    # all: All Star Pieces will be randomized.
+    vanilla: 0
+    nonpanel_only: 50
+    all: 0
+
+  shopsanity:
+    # Shop items will be randomized.
+    # This includes only regular shops.
+    'false': 0
+    'true': 50
+
+  pit_items:
+    # This determines what type of items are in the Pit of 100 Trials.
+    # vanilla: The locations contain the same items as the original game, and the locations themselves will not be created.
+    # filler: The locations will be marked as excluded.
+    # all: The locations can contain any item.
+    vanilla: 0
+    filler: 50
+    all: 0
+
+  limit_chapter_logic:
+    # Progression items will only appear in required chapters, and in common areas. You will not need to
+    # check the chapters that are out of logic whatsoever. You can still visit them for local items (badges, consumables, etc) if you want or need to.
+    'false': 50
+    'true': 0
+
+  limit_chapter_eight:
+    # All chapter 8 keys items will be placed in vanilla locations.
+    # All other locations will have local non-progression items.
+    'false': 50
+    'true': 0
+
+  palace_skip:
+    # Entering the Thousand-Year door will take you straight to Grodus.
+    'false': 50
+    'true': 0
+
+  cutscene_skip:
+    # Skips some of the longer cutscenes in the game,
+    # such as the Shadow Queen cutscene, Fahr Outpost Cannon etc.
+    'false': 50
+    'true': 0
+
+  disable_intermissions:
+    # After obtaining a crystal star, mario will stay in the boss' room,
+    # and the sequence will be updated past the intermission.
+    'false': 50
+    'true': 0
+
+  fast_travel:
+    # Enable this to gain the ability to warp to any area you have visited from the map
+    # screen in the main menu. Press A on the destination to open the warp confirmation dialog.
+    'false': 50
+    'true': 0
+
+  succeed_conditions:
+    # Enable this to make it so the battle condition in fights in the Glitz Pit
+    # will always be fulfilled, regardless of their actual fulfillment.
+    'false': 50
+    'true': 0
+
+  open_westside:
+    # Rogueport Westside is open from the start.
+    'false': 50
+    'true': 0
+
+  permanent_peekaboo:
+    # The Peekaboo badge is always active, even when not equipped.
+    'false': 50
+    'true': 0
+
+  full_run_bar:
+    # The run bar in battle always starts at 100 percent.
+    'false': 50
+    'true': 0
+
+  first_attack:
+    # The First Attack badge costs 0 BP, just like the remake.
+    'false': 50
+    'true': 0
+
+  music_settings:
+    # Choose in-game music settings.
+    # normal: Music will not change.
+    # silent: No music will play at all.
+    # randomized: Music will be randomized.
+    normal: 50
+    silent: 0
+    randomized: 0
+
+  block_visibility:
+    # Choose how visible item blocks are.
+    # normal: All blocks will keep their vanilla visibility.
+    # all_visible: All blocks will be visible.
+    normal: 0
+    all_visible: 50
+
+  experience_multiplier:
+    # Multiplies the experience you gain from battles.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 10
+    1: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  starting_hp:
+    # How much health you start with.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 100
+    10: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  starting_fp:
+    # How much flower points you start with.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 100
+    5: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  starting_bp:
+    # How many badge points you start with.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 99
+    3: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  starting_coins:
+    # How many coins you start with.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 999
+    100: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  starting_level:
+    # What level you start at.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 99
+    1: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  starting_partner:
+    # Choose the partner that you start with.
+    goombella: 0
+    koops: 0
+    bobbery: 0
+    yoshi: 0
+    flurrie: 0
+    vivian: 0
+    ms_mowz: 0
+    random: 50
+
+  yoshi_color:
+    # Select the color of your Yoshi partner.
+    green: 50
+    red: 0
+    blue: 0
+    orange: 0
+    pink: 0
+    black: 0
+    white: 0
+
+  yoshi_name:
+    # Set the name of your Yoshi partner.
+    # This has a maximum length of 8 characters.
+    Yoshi: 50
+
+  # Item & Location Options
+  local_items:
+    # Forces these items to be in their native world.
+    []
+
+  non_local_items:
+    # Forces these items to be outside their native world.
+    []
+
+  start_inventory:
+    # Start with these items.
+    {}
+
+  start_inventory_from_pool:
+    # Start with these items and don't place them in the world.
+    # 
+    # The game decides what the replacement items will be.
+    {}
+
+  start_hints:
+    # Start with these item's locations prefilled into the ``!hint`` command.
+    []
+
+  start_location_hints:
+    # Start with these locations and their item prefilled into the ``!hint`` command.
+    []
+
+  exclude_locations:
+    # Prevent these locations from having an important item.
+    []
+
+  priority_locations:
+    # Prevent these locations from having an unimportant item.
+    []
+
+  item_links:
+    # Share part of your item pool with other players.
+    []

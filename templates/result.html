@@ -120,8 +120,8 @@ function displaySeedInfo() {
     const locationCount = Object.keys(seedData.locations).length;
     const date = new Date(seedData.timestamp);
 
-    // Extract seed number from settings or derive from data
-    const seedNumber = seedData.settings.seed || 'Unknown';
+    // Extract seed number from seedData
+    const seedNumber = seedData.seed || 'Unknown';
 
     document.getElementById('seedNumber').textContent = seedNumber;
     document.getElementById('totalLocations').textContent = locationCount;
@@ -164,18 +164,91 @@ async function patchROM() {
         const iso = window.parseISO(romBuffer);
         console.log('ISO parsed successfully');
 
-        updateProgress(20, 'Applying location patches...');
+        updateProgress(20, 'Loading location data...');
 
-        // TODO: Apply location patches using seedData.locations
-        // This will require accessing REL files and patching them
+        // Load locations.json to get offset information
+        const locationsResponse = await fetch('/static/json/locations.json');
+        const locationsData = await locationsResponse.json();
 
-        updateProgress(60, 'Applying IPS patches...');
+        // Create location name to location data mapping
+        const locationMap = new Map();
+        locationsData.forEach(loc => {
+            if (loc.location_name) {
+                locationMap.set(loc.location_name, loc);
+            }
+        });
 
-        // TODO: Apply IPS patches for mod files
+        updateProgress(30, 'Preparing location patches...');
+
+        // Group patches by REL file
+        const patchesByRel = new Map();
+
+        Object.entries(seedData.locations).forEach(([locationName, [itemCode, playerNum]]) => {
+            const locationData = locationMap.get(locationName);
+            if (!locationData || !locationData.offsets || locationData.offsets.length === 0) {
+                console.warn(`No offset data for location: ${locationName}`);
+                return;
+            }
+
+            const rel = locationData.rel || 'dol';
+            if (!patchesByRel.has(rel)) {
+                patchesByRel.set(rel, []);
+            }
+
+            // Add patch for each offset
+            locationData.offsets.forEach(offsetHex => {
+                const offset = parseInt(offsetHex, 16);
+                patchesByRel.get(rel).push({
+                    offset: offset,
+                    itemCode: itemCode,
+                    locationName: locationName
+                });
+            });
+        });
+
+        console.log('Patches grouped by REL:', patchesByRel);
+
+        updateProgress(50, 'Applying patches to files...');
+
+        // Apply patches to each REL file and DOL
+        let patchedFiles = 0;
+        const totalFiles = patchesByRel.size;
+
+        for (const [relName, patches] of patchesByRel) {
+            console.log(`Patching ${relName} with ${patches.length} patches`);
+
+            // Determine file path in ISO
+            let filePath;
+            if (relName === 'dol') {
+                filePath = 'sys/main.dol';
+            } else {
+                // REL files are typically in rel/ directory
+                filePath = `rel/${relName}.rel`;
+            }
+
+            // Get the file from ISO tree
+            const fileNode = getNodeFromTree(iso.tree.root, filePath);
+            if (!fileNode) {
+                console.warn(`File not found in ISO: ${filePath}`);
+                continue;
+            }
+
+            // Read file data
+            const fileData = new Uint8Array(romBuffer.slice(fileNode.offset, fileNode.offset + fileNode.size));
+
+            // Apply patches to file
+            const patchedData = applyPatchesToFile(fileData, patches);
+
+            // Replace file in ISO tree using addOrReplace
+            window.addOrReplace(iso.tree, filePath, patchedData);
+
+            patchedFiles++;
+            updateProgress(50 + (30 * patchedFiles / totalFiles), `Patched ${relName}...`);
+        }
 
         updateProgress(80, 'Rebuilding ISO...');
 
-        // Rebuild ISO
+        // Rebuild ISO with patched files
         const patchedISO = window.rebuildISO(romBuffer, iso.tree.root);
         console.log('ISO rebuilt, size:', patchedISO.byteLength);
 
@@ -189,7 +262,7 @@ async function patchROM() {
         const downloadLinks = document.getElementById('downloadLinks');
 
         downloadLinks.innerHTML = `
-            <a href="${url}" download="TTYD_Randomized_Seed_${seedData.settings.seed || 'Unknown'}.iso" class="preset-button" style="display: inline-block; margin: 5px; text-decoration: none;">
+            <a href="${url}" download="TTYD_Randomized_Seed_${seedData.seed || 'Unknown'}.iso" class="preset-button" style="display: inline-block; margin: 5px; text-decoration: none;">
                 Download Patched ROM
             </a>
         `;
@@ -208,6 +281,48 @@ async function patchROM() {
     }
 }
 
+/**
+ * Get a node from the ISO tree by path
+ */
+function getNodeFromTree(root, path) {
+    const parts = path.split('/').filter(Boolean);
+    let current = root;
+
+    for (const part of parts) {
+        if (!current.children || !current.children.has(part)) {
+            return null;
+        }
+        current = current.children.get(part);
+    }
+
+    return current;
+}
+
+/**
+ * Apply patches to a file buffer
+ */
+function applyPatchesToFile(fileData, patches) {
+    // Create a copy of the file data
+    const patchedData = new Uint8Array(fileData);
+    const view = new DataView(patchedData.buffer);
+
+    // Sort patches by offset to apply in order
+    patches.sort((a, b) => a.offset - b.offset);
+
+    // Apply each patch
+    patches.forEach(patch => {
+        // Write the item code as a 32-bit big-endian integer
+        if (patch.offset + 4 <= patchedData.length) {
+            view.setUint32(patch.offset, patch.itemCode, false); // false = big-endian
+            console.log(`Patched ${patch.locationName} at offset 0x${patch.offset.toString(16)} with item code ${patch.itemCode}`);
+        } else {
+            console.warn(`Offset 0x${patch.offset.toString(16)} out of bounds for ${patch.locationName}`);
+        }
+    });
+
+    return patchedData;
+}
+
 function updateProgress(percent, status) {
     document.getElementById('progressBar').style.width = percent + '%';
     document.getElementById('progressText').textContent = Math.round(percent) + '%';
@@ -223,38 +338,92 @@ function readFileAsArrayBuffer(file) {
     });
 }
 
-function downloadSpoiler() {
+async function downloadSpoiler() {
     if (!seedData) {
         alert('No seed data available.');
         return;
     }
 
-    // Generate spoiler log text
-    let spoilerText = '='.repeat(60) + '\n';
-    spoilerText += 'TTYD RANDOMIZER SPOILER LOG\n';
-    spoilerText += '='.repeat(60) + '\n\n';
-    spoilerText += `Seed: ${seedData.settings.seed || 'Unknown'}\n`;
-    spoilerText += `Generated: ${new Date(seedData.timestamp).toLocaleString()}\n\n`;
-    spoilerText += '='.repeat(60) + '\n';
-    spoilerText += 'ITEM LOCATIONS\n';
-    spoilerText += '='.repeat(60) + '\n\n';
+    try {
+        // Load items.json to map item codes to names
+        const itemsResponse = await fetch('/static/json/items.json');
+        const itemsData = await itemsResponse.json();
 
-    // Sort locations alphabetically
-    const sortedLocations = Object.entries(seedData.locations).sort((a, b) => a[0].localeCompare(b[0]));
+        // Create item code to name mapping and progression info
+        const itemCodeToName = new Map();
+        const itemCodeToProgression = new Map();
+        itemsData.forEach(item => {
+            if (item.id) {
+                itemCodeToName.set(item.id, item.item_name);
+                itemCodeToProgression.set(item.id, item.progression);
+            }
+        });
 
-    for (const [locationName, [itemCode, playerNum]] of sortedLocations) {
-        spoilerText += `${locationName}\n`;
-        spoilerText += `  → Item Code: ${itemCode}, Player: ${playerNum}\n\n`;
+        // Generate spoiler log text
+        let spoilerText = '===============================================\n';
+        spoilerText += '    TTYD Randomizer - Spoiler Log\n';
+        spoilerText += '===============================================\n\n';
+
+        // Basic Info
+        spoilerText += `Seed: ${seedData.seed || 'Unknown'}\n`;
+        spoilerText += `Generated: ${new Date(seedData.timestamp).toLocaleString()}\n\n`;
+
+        // Settings (excluding death_link)
+        if (seedData.settings) {
+            spoilerText += 'SETTINGS:\n';
+            spoilerText += '---------\n';
+            const gameSettings = seedData.settings['Paper Mario: The Thousand-Year Door'];
+            if (gameSettings) {
+                Object.entries(gameSettings)
+                    .filter(([key]) => key !== 'death_link') // Exclude death_link
+                    .forEach(([key, value]) => {
+                        spoilerText += `  ${key}: ${value}\n`;
+                    });
+            }
+            spoilerText += '\n';
+        }
+
+        // All Locations
+        spoilerText += '='.repeat(60) + '\n';
+        spoilerText += 'ITEM LOCATIONS\n';
+        spoilerText += '='.repeat(60) + '\n\n';
+
+        // Sort locations alphabetically
+        const sortedLocations = Object.entries(seedData.locations).sort((a, b) => a[0].localeCompare(b[0]));
+
+        sortedLocations.forEach(([locationName, [itemCode, playerNum]]) => {
+            const itemName = itemCodeToName.get(itemCode) || `Unknown Item (${itemCode})`;
+            spoilerText += `${locationName}: ${itemName}\n`;
+        });
+
+        // Statistics
+        spoilerText += '='.repeat(60) + '\n';
+        spoilerText += 'STATISTICS\n';
+        spoilerText += '='.repeat(60) + '\n';
+        spoilerText += `Total Locations: ${Object.keys(seedData.locations).length}\n`;
+
+        // Count progression items
+        let progressionItemCount = 0;
+        Object.values(seedData.locations).forEach(([itemCode]) => {
+            if (itemCodeToProgression.get(itemCode) === 'progression') {
+                progressionItemCount++;
+            }
+        });
+        spoilerText += `Progression Items: ${progressionItemCount}\n`;
+
+        // Create and download the file
+        const blob = new Blob([spoilerText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `TTYD_Spoiler_Seed_${seedData.seed || 'Unknown'}.txt`;
+        link.click();
+        URL.revokeObjectURL(url);
+
+    } catch (error) {
+        console.error('Error generating spoiler:', error);
+        alert('Failed to generate spoiler log: ' + error.message);
     }
-
-    // Create and download the file
-    const blob = new Blob([spoilerText], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `TTYD_Spoiler_Seed_${seedData.settings.seed || 'Unknown'}.txt`;
-    link.click();
-    URL.revokeObjectURL(url);
 }
 </script>
 </body>

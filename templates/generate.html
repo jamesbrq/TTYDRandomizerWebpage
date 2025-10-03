@@ -36,15 +36,14 @@
         <h3 class="preset-header">Preset Settings</h3>
         <div class="preset-controls">
             <select class="preset-dropdown" onchange="loadPreset()">
-                <option>Select Preset...</option>
-                <option data-settings="eyJSYW5kb21pemUgSXRlbXMiOmZhbHNlLCJSYW5kb21pemUgQmFkZ2VzIjpmYWxzZSwiSW5jbHVkZSBLZXkgSXRlbXMiOnRydWUsIlJhbmRvbWl6ZSBFBW5lbWllcyI6ZmFsc2UsIlNodWZmbGUgTlBDcyI6ZmFsc2UsIlJhbmRvbWl6ZSBTaG9wIFByaWNlcyI6ZmFsc2UsIkhhcmQgTW9kZSI6ZmFsc2UsIkJvc3MgUnVzaCBNb2RlIjpmYWxzZSwiRGlmZmljdWx0eSBMZXZlbCI6MywiU2VlZCBWYWx1ZSI6MCwiRmFzdCBUZXh0Ijp0cnVlLCJEZWJ1ZyBNb2RlIjpmYWxzZX0=">Default Settings</option>
-                <option data-settings="eyJSYW5kb21pemUgSXRlbXMiOnRydWUsIlJhbmRvbWl6ZSBCYW5nZXMiOmZhbHNlLCJJbmNsdWRlIEtleSBJdGVtcyI6dHJ1ZSwiUmFuZG9taXplIEVuZW1pZXMiOmZhbHNlLCJTaHVmZmxlIE5QQ3MiOmZhbHNlLCJSYW5kb21pemUgU2hvcCBQcmljZXMiOmZhbHNlLCJIYXJkIE1vZGUiOmZhbHNlLCJCb3NzIFJ1c2ggTW9kZSI6ZmFsc2UsIkRpZmZpY3VsdHkgTGV2ZWwiOjEsIlNlZWQgVmFsdWUiOjAsIkZhc3QgVGV4dCI6dHJ1ZSwiRGVidWcgTW9kZSI6ZmFsc2V9">Beginner Mode</option>
-                <option data-settings="eyJSYW5kb21pemUgSXRlbXMiOnRydWUsIlJhbmRvbWl6ZSBCYW5nZXMiOnRydWUsIkluY2x1ZGUgS2V5IEl0ZW1zIjp0cnVlLCJSYW5kb21pemUgRW5lbWllcyI6dHJ1ZSwiU2h1ZmZsZSBOUENzIjp0cnVlLCJSYW5kb21pemUgU2hvcCBQcmljZXMiOnRydWUsIkhhcmQgTW9kZSI6dHJ1ZSwiQm9zcyBSdXNoIE1vZGUiOnRydWUsIkRpZmZpY3VsdHkgTGV2ZWwiOjcsIlNlZWQgVmFsdWUiOjAsIkZhc3QgVGV4dCI6dHJ1ZSwiRGVidWcgTW9kZSI6ZmFsc2V9">Expert Challenge</option>
-                <option>Custom Config 1</option>
+                <option value="">Select a preset to load...</option>
+                <option data-settings="eyJuYW1lIjoiUGxheWVye251bWJlcn0iLCJkZXNjcmlwdGlvbiI6IkRlZmF1bHQgUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IgVGVtcGxhdGUiLCJnYW1lIjoiUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IiLCJQYXBlciBNYXJpbzogVGhlIFRob3VzYW5kLVllYXIgRG9vciI6eyJwcm9ncmVzc2lvbl9iYWxhbmNpbmciOjUwLCJhY2Nlc3NpYmlsaXR5IjoiZnVsbCIsImRlYXRoX2xpbmsiOmZhbHNlLCJnb2FsIjoic2hhZG93X3F1ZWVuIiwiZ29hbF9zdGFycyI6NywicGFsYWNlX3N0YXJzIjo3LCJ0YXR0bGVzYW5pdHkiOmZhbHNlLCJwaWVjZXNhbml0eSI6Im5vbnBhbmVsX29ubHkiLCJzaG9wc2FuaXR5Ijp0cnVlLCJwaXRfaXRlbXMiOiJmaWxsZXIiLCJsaW1pdF9jaGFwdGVyX2xvZ2ljIjpmYWxzZSwibGltaXRfY2hhcHRlcl9laWdodCI6ZmFsc2UsInBhbGFjZV9za2lwIjpmYWxzZSwiY3V0c2NlbmVfc2tpcCI6ZmFsc2UsImRpc2FibGVfaW50ZXJtaXNzaW9ucyI6ZmFsc2UsImZhc3RfdHJhdmVsIjpmYWxzZSwic3VjY2VlZF9jb25kaXRpb25zIjpmYWxzZSwib3Blbl93ZXN0c2lkZSI6ZmFsc2UsInBlcm1hbmVudF9wZWVrYWJvbyI6ZmFsc2UsImZ1bGxfcnVuX2JhciI6ZmFsc2UsImZpcnN0X2F0dGFjayI6ZmFsc2UsIm11c2ljX3NldHRpbmdzIjoibm9ybWFsIiwiYmxvY2tfdmlzaWJpbGl0eSI6ImFsbF92aXNpYmxlIiwiZXhwZXJpZW5jZV9tdWx0aXBsaWVyIjoxLCJzdGFydGluZ19ocCI6MTAsInN0YXJ0aW5nX2ZwIjo1LCJzdGFydGluZ19icCI6Mywic3RhcnRpbmdfY29pbnMiOjEwMCwic3RhcnRpbmdfbGV2ZWwiOjEsInN0YXJ0aW5nX3BhcnRuZXIiOiJyYW5kb21fcGFydG5lciIsInlvc2hpX2NvbG9yIjoiZ3JlZW4iLCJ5b3NoaV9uYW1lIjoiWW9zaGkifX0=">Default Settings</option>
+                <option data-settings="eyJuYW1lIjoiUGxheWVye251bWJlcn0iLCJkZXNjcmlwdGlvbiI6IkRlZmF1bHQgUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IgVGVtcGxhdGUiLCJnYW1lIjoiUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IiLCJQYXBlciBNYXJpbzogVGhlIFRob3VzYW5kLVllYXIgRG9vciI6eyJwcm9ncmVzc2lvbl9iYWxhbmNpbmciOjUwLCJhY2Nlc3NpYmlsaXR5IjoiZnVsbCIsImRlYXRoX2xpbmsiOmZhbHNlLCJnb2FsIjoiY3J5c3RhbF9zdGFycyIsImdvYWxfc3RhcnMiOjMsInBhbGFjZV9zdGFycyI6MywidGF0dGxlc2FuaXR5IjpmYWxzZSwicGllY2VzYW5pdHkiOiJ2YW5pbGxhIiwic2hvcHNhbml0eSI6dHJ1ZSwicGl0X2l0ZW1zIjoidmFuaWxsYSIsImxpbWl0X2NoYXB0ZXJfbG9naWMiOmZhbHNlLCJsaW1pdF9jaGFwdGVyX2VpZ2h0Ijp0cnVlLCJwYWxhY2Vfc2tpcCI6ZmFsc2UsImN1dHNjZW5lX3NraXAiOmZhbHNlLCJkaXNhYmxlX2ludGVybWlzc2lvbnMiOmZhbHNlLCJmYXN0X3RyYXZlbCI6ZmFsc2UsInN1Y2NlZWRfY29uZGl0aW9ucyI6ZmFsc2UsIm9wZW5fd2VzdHNpZGUiOnRydWUsInBlcm1hbmVudF9wZWVrYWJvbyI6dHJ1ZSwiZnVsbF9ydW5fYmFyIjpmYWxzZSwiZmlyc3RfYXR0YWNrIjp0cnVlLCJtdXNpY19zZXR0aW5ncyI6Im5vcm1hbCIsImJsb2NrX3Zpc2liaWxpdHkiOiJhbGxfdmlzaWJsZSIsImV4cGVyaWVuY2VfbXVsdGlwbGllciI6Miwic3RhcnRpbmdfaHAiOjIwLCJzdGFydGluZ19mcCI6MTAsInN0YXJ0aW5nX2JwIjo5LCJzdGFydGluZ19jb2lucyI6MjAwLCJzdGFydGluZ19sZXZlbCI6MSwic3RhcnRpbmdfcGFydG5lciI6Imdvb21iZWxsYSIsInlvc2hpX2NvbG9yIjoiZ3JlZW4iLCJ5b3NoaV9uYW1lIjoiWW9zaGkifX0=">Beginner Mode</option>
+                <option data-settings="eyJuYW1lIjoiUGxheWVye251bWJlcn0iLCJkZXNjcmlwdGlvbiI6IkRlZmF1bHQgUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IgVGVtcGxhdGUiLCJnYW1lIjoiUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IiLCJQYXBlciBNYXJpbzogVGhlIFRob3VzYW5kLVllYXIgRG9vciI6eyJwcm9ncmVzc2lvbl9iYWxhbmNpbmciOjI1LCJhY2Nlc3NpYmlsaXR5IjoibWluaW1hbCIsImRlYXRoX2xpbmsiOmZhbHNlLCJnb2FsIjoiY3J5c3RhbF9zdGFycyIsImdvYWxfc3RhcnMiOjcsInBhbGFjZV9zdGFycyI6MCwidGF0dGxlc2FuaXR5Ijp0cnVlLCJwaWVjZXNhbml0eSI6ImFsbCIsInNob3BzYW5pdHkiOnRydWUsInBpdF9pdGVtcyI6ImFsbCIsImxpbWl0X2NoYXB0ZXJfbG9naWMiOmZhbHNlLCJsaW1pdF9jaGFwdGVyX2VpZ2h0IjpmYWxzZSwicGFsYWNlX3NraXAiOmZhbHNlLCJjdXRzY2VuZV9za2lwIjpmYWxzZSwiZGlzYWJsZV9pbnRlcm1pc3Npb25zIjpmYWxzZSwiZmFzdF90cmF2ZWwiOmZhbHNlLCJzdWNjZWVkX2NvbmRpdGlvbnMiOmZhbHNlLCJvcGVuX3dlc3RzaWRlIjpmYWxzZSwicGVybWFuZW50X3BlZWthYm9vIjpmYWxzZSwiZnVsbF9ydW5fYmFyIjpmYWxzZSwiZmlyc3RfYXR0YWNrIjpmYWxzZSwibXVzaWNfc2V0dGluZ3MiOiJub3JtYWwiLCJibG9ja192aXNpYmlsaXR5Ijoibm9ybWFsIiwiZXhwZXJpZW5jZV9tdWx0aXBsaWVyIjoxLCJzdGFydGluZ19ocCI6MTAsInN0YXJ0aW5nX2ZwIjo1LCJzdGFydGluZ19icCI6Mywic3RhcnRpbmdfY29pbnMiOjEwMCwic3RhcnRpbmdfbGV2ZWwiOjEsInN0YXJ0aW5nX3BhcnRuZXIiOiJyYW5kb21fcGFydG5lciIsInlvc2hpX2NvbG9yIjoiZ3JlZW4iLCJ5b3NoaV9uYW1lIjoiWW9zaGkifX0=">Expert Shuffle</option>
+                <option data-settings="eyJuYW1lIjoiUGxheWVye251bWJlcn0iLCJkZXNjcmlwdGlvbiI6IkRlZmF1bHQgUGFwZXIgTWFyaW8gVGhlIFRob3VzYW5kIFllYXIgRG9vciBUZW1wbGF0ZSIsImdhbWUiOiJQYXBlciBNYXJpbzogVGhlIFRob3VzYW5kLVllYXIgRG9vciIsIlBhcGVyIE1hcmlvOiBUaGUgVGhvdXNhbmQtWWVhciBEb29yIjp7InByb2dyZXNzaW9uX2JhbGFuY2luZyI6NTAsImFjY2Vzc2liaWxpdHkiOiJmdWxsIiwiZGVhdGhfbGluayI6ZmFsc2UsImdvYWwiOiJzaGFkb3dfcXVlZW4iLCJnb2FsX3N0YXJzIjo3LCJwYWxhY2Vfc3RhcnMiOjQsInRhdHRsZXNhbml0eSI6ZmFsc2UsInBpdF9pdGVtcyI6ImZpbGxlciIsImxpbWl0X2NoYXB0ZXJfbG9naWMiOnRydWUsImxpbWl0X2NoYXB0ZXJfZWlnaHQiOmZhbHNlLCJwYWxhY2Vfc2tpcCI6dHJ1ZSwiY3V0c2NlbmVfc2tpcCI6dHJ1ZSwiZGlzYWJsZV9pbnRlcm1pc3Npb25zIjp0cnVlLCJmYXN0X3RyYXZlbCI6dHJ1ZSwic3VjY2VlZF9jb25kaXRpb25zIjp0cnVlLCJvcGVuX3dlc3RzaWRlIjpmYWxzZSwicGVybWFuZW50X3BlZWthYm9vIjp0cnVlLCJmdWxsX3J1bl9iYXIiOnRydWUsImV4cGVyaWVuY2VfbXVsdGlwbGllciI6MSwic3RhcnRpbmdfaHAiOjEwLCJzdGFydGluZ19mcCI6MTAsInN0YXJ0aW5nX2JwIjozLCJzdGFydGluZ19jb2lucyI6MjAwLCJzdGFydGluZ19sZXZlbCI6MSwic3RhcnRpbmdfcGFydG5lciI6InJhbmRvbV9wYXJ0bmVyIiwieW9zaGlfY29sb3IiOiJncmVlbiIsInlvc2hpX25hbWUiOiJZb3NoaSJ9fQ==">Race Settings</option>
             </select>
-            <button class="preset-button" onclick="savePreset()">Save</button>
-            <button class="preset-button" onclick="loadPreset()">Load</button>
-            <button class="delete-preset-button" id="deletePresetBtn" onclick="deleteCurrentPreset()" style="display: none;">Delete</button>
+            <button class="preset-button" onclick="savePreset()">Save as New Preset</button>
+            <button class="delete-preset-button" id="deletePresetBtn" onclick="deleteCurrentPreset()" style="display: none;">Delete Preset</button>
         </div>
         
         <div class="settings-string-section">
@@ -76,17 +75,17 @@
                         <option value="2">Bonetail</option>
                     </select>
                 </div>
-                
+
                 <div class="number-container">
                     <span class="number-label">Goal Crystal Stars</span>
                     <input type="number" class="number-input" min="0" max="7" value="7">
                 </div>
-                
+
                 <div class="number-container">
                     <span class="number-label">Palace Crystal Stars</span>
                     <input type="number" class="number-input" min="0" max="7" value="7">
                 </div>
-                
+
                 <div class="dropdown-container">
                     <span class="dropdown-label">Pit Items</span>
                     <select class="dropdown-select">
@@ -95,21 +94,50 @@
                         <option value="2">All</option>
                     </select>
                 </div>
-                
+
+                <div class="number-container">
+                    <span class="number-label">Progression Balancing</span>
+                    <input type="number" class="number-input" min="0" max="99" value="50">
+                </div>
+
+                <div class="dropdown-container">
+                    <span class="dropdown-label">Accessibility</span>
+                    <select class="dropdown-select">
+                        <option value="0" selected>Full</option>
+                        <option value="1">Minimal</option>
+                    </select>
+                </div>
+
                 <div class="toggle-container">
                     <span class="toggle-label">Tattlesanity</span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
-                
+
+                <div class="dropdown-container">
+                    <span class="dropdown-label">Piecesanity</span>
+                    <select class="dropdown-select">
+                        <option value="0">Vanilla</option>
+                        <option value="1" selected>Non-Panel Only</option>
+                        <option value="2">All</option>
+                    </select>
+                </div>
+
+                <div class="toggle-container">
+                    <span class="toggle-label">Shopsanity</span>
+                    <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+
                 <div class="toggle-container">
                     <span class="toggle-label">Limit Chapter Logic</span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
-                
+
                 <div class="toggle-container">
                     <span class="toggle-label">Limit Chapter 8</span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
@@ -173,22 +201,32 @@
                     <span class="number-label">Starting HP</span>
                     <input type="number" class="number-input" min="1" max="100" value="10">
                 </div>
-                
+
                 <div class="number-container">
                     <span class="number-label">Starting FP</span>
                     <input type="number" class="number-input" min="0" max="100" value="5">
                 </div>
-                
+
                 <div class="number-container">
                     <span class="number-label">Starting BP</span>
                     <input type="number" class="number-input" min="0" max="99" value="3">
                 </div>
-                
+
                 <div class="number-container">
                     <span class="number-label">Starting Coins</span>
                     <input type="number" class="number-input" min="0" max="999" value="100">
                 </div>
-                
+
+                <div class="number-container">
+                    <span class="number-label">Starting Level</span>
+                    <input type="number" class="number-input" min="1" max="99" value="1">
+                </div>
+
+                <div class="number-container">
+                    <span class="number-label">Experience Multiplier</span>
+                    <input type="number" class="number-input" min="0" max="10" value="1">
+                </div>
+
                 <div class="dropdown-container">
                     <span class="dropdown-label">Starting Partner</span>
                     <select class="dropdown-select">
@@ -214,14 +252,38 @@
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
-                
+
                 <div class="toggle-container">
                     <span class="toggle-label">Full Run Bar</span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
-                
+
+                <div class="toggle-container">
+                    <span class="toggle-label">First Attack</span>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+
+                <div class="dropdown-container">
+                    <span class="dropdown-label">Music Settings</span>
+                    <select class="dropdown-select">
+                        <option value="0" selected>Normal</option>
+                        <option value="1">Silent</option>
+                        <option value="2">Randomized</option>
+                    </select>
+                </div>
+
+                <div class="dropdown-container">
+                    <span class="dropdown-label">Block Visibility</span>
+                    <select class="dropdown-select">
+                        <option value="0" selected>Normal</option>
+                        <option value="1">All Visible</option>
+                    </select>
+                </div>
+
                 <div class="dropdown-container">
                     <span class="dropdown-label">Yoshi Color</span>
                     <select class="dropdown-select">
@@ -235,7 +297,7 @@
                         <option value="7">Random Color</option>
                     </select>
                 </div>
-                
+
                 <div class="text-container">
                     <span class="text-label">Yoshi Name</span>
                     <input type="text" class="text-input" maxlength="8" value="Yoshi">
@@ -302,7 +364,8 @@ async function generateRandomizedROM() {
         if (response.ok && result) {
             // Store seed data in sessionStorage
             const seedData = {
-                locations: result,
+                locations: result.locations || result,
+                seed: result.seed,
                 settings: settings,
                 timestamp: Date.now()
             };
@@ -338,7 +401,11 @@ function collectSettingsFromUI() {
         'Goal Crystal Stars': 'goal_stars',
         'Palace Crystal Stars': 'palace_stars',
         'Pit Items': 'pit_items',
+        'Progression Balancing': 'progression_balancing',
+        'Accessibility': 'accessibility',
         'Tattlesanity': 'tattlesanity',
+        'Piecesanity': 'piecesanity',
+        'Shopsanity': 'shopsanity',
         'Limit Chapter Logic': 'limit_chapter_logic',
         'Limit Chapter 8': 'limit_chapter_eight',
 
@@ -355,11 +422,16 @@ function collectSettingsFromUI() {
         'Starting FP': 'starting_fp',
         'Starting BP': 'starting_bp',
         'Starting Coins': 'starting_coins',
+        'Starting Level': 'starting_level',
+        'Experience Multiplier': 'experience_multiplier',
         'Starting Partner': 'starting_partner',
 
         // Quality of Life
         'Permanent Peekaboo': 'permanent_peekaboo',
         'Full Run Bar': 'full_run_bar',
+        'First Attack': 'first_attack',
+        'Music Settings': 'music_settings',
+        'Block Visibility': 'block_visibility',
         'Yoshi Color': 'yoshi_color',
         'Yoshi Name': 'yoshi_name'
     };
@@ -372,6 +444,9 @@ function collectSettingsFromUI() {
     };
 
     const gameSettings = settings["Paper Mario: The Thousand-Year Door"];
+
+    // Set death_link default to false (not exposed in UI)
+    gameSettings.death_link = false;
 
     // Collect toggle switches (boolean values)
     const toggles = document.querySelectorAll('.toggle-switch');
@@ -402,6 +477,22 @@ function collectSettingsFromUI() {
                 // Map 0: vanilla, 1: filler, 2: all
                 const pitMap = ['vanilla', 'filler', 'all'];
                 gameSettings[optionName] = pitMap[parseInt(value)] || 'filler';
+            } else if (optionName === 'accessibility') {
+                // Map 0: full, 1: minimal
+                const accessibilityMap = ['full', 'minimal'];
+                gameSettings[optionName] = accessibilityMap[parseInt(value)] || 'full';
+            } else if (optionName === 'music_settings') {
+                // Map 0: normal, 1: silent, 2: randomized
+                const musicMap = ['normal', 'silent', 'randomized'];
+                gameSettings[optionName] = musicMap[parseInt(value)] || 'normal';
+            } else if (optionName === 'block_visibility') {
+                // Map 0: normal, 1: all_visible
+                const visibilityMap = ['normal', 'all_visible'];
+                gameSettings[optionName] = visibilityMap[parseInt(value)] || 'normal';
+            } else if (optionName === 'piecesanity') {
+                // Map 0: vanilla, 1: nonpanel_only, 2: all
+                const piecesanityMap = ['vanilla', 'nonpanel_only', 'all'];
+                gameSettings[optionName] = piecesanityMap[parseInt(value)] || 'nonpanel_only';
             } else if (optionName === 'starting_partner') {
                 // Map partner values
                 const partnerMap = {
@@ -412,7 +503,7 @@ function collectSettingsFromUI() {
                     '5': 'flurrie',
                     '6': 'vivian',
                     '7': 'ms_mowz',
-                    '8': 'random_partner'
+                    '8': 'random'
                 };
                 gameSettings[optionName] = partnerMap[value] || 'goombella';
             } else if (optionName === 'yoshi_color') {
@@ -425,7 +516,7 @@ function collectSettingsFromUI() {
                     '4': 'pink',
                     '5': 'black',
                     '6': 'white',
-                    '7': 'random_color'
+                    '7': 'random'
                 };
                 gameSettings[optionName] = colorMap[value] || 'green';
             } else {
@@ -487,15 +578,31 @@ function toggleSwitch(element) {
 }
 
 /**
+ * Switch between tabs in the settings panel
+ */
+function switchTab(button, tabId) {
+    // Remove active class from all tabs and content
+    const tabs = document.querySelectorAll('.panel-tab');
+    const contents = document.querySelectorAll('.panel-content');
+
+    tabs.forEach(tab => tab.classList.remove('active'));
+    contents.forEach(content => content.classList.remove('active'));
+
+    // Add active class to clicked tab and corresponding content
+    button.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+}
+
+/**
  * Modal system functions
  */
 function showModal(title, message, buttons = [{ text: 'OK', action: () => hideModal() }]) {
     document.getElementById('modalTitle').textContent = title;
     document.getElementById('modalMessage').textContent = message;
-    
+
     const modalButtons = document.getElementById('modalButtons');
     modalButtons.innerHTML = '';
-    
+
     buttons.forEach(button => {
         const btn = document.createElement('button');
         btn.textContent = button.text;
@@ -503,12 +610,18 @@ function showModal(title, message, buttons = [{ text: 'OK', action: () => hideMo
         btn.onclick = button.action;
         modalButtons.appendChild(btn);
     });
-    
-    document.getElementById('modalOverlay').style.display = 'flex';
+
+    document.getElementById('modalOverlay').classList.add('show');
 }
 
 function hideModal() {
-    document.getElementById('modalOverlay').style.display = 'none';
+    const modalOverlay = document.getElementById('modalOverlay');
+    modalOverlay.classList.remove('show');
+    // Hide input field when closing modal
+    const modalInput = document.getElementById('modalInput');
+    if (modalInput) {
+        modalInput.style.display = 'none';
+    }
 }
 
 // Close modal when clicking overlay
@@ -519,13 +632,96 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 });
 
 /**
- * Preset management functions (simplified versions)
+ * Preset management functions with localStorage support
  */
+
+// Load custom presets from localStorage
+function loadCustomPresets() {
+    try {
+        const stored = localStorage.getItem('ttyd_custom_presets');
+        return stored ? JSON.parse(stored) : {};
+    } catch (error) {
+        console.error('Error loading custom presets:', error);
+        return {};
+    }
+}
+
+// Save custom presets to localStorage
+function saveCustomPresets(presets) {
+    try {
+        localStorage.setItem('ttyd_custom_presets', JSON.stringify(presets));
+    } catch (error) {
+        console.error('Error saving custom presets:', error);
+        showModal('Error', 'Failed to save preset to storage.');
+    }
+}
+
+// Populate the dropdown with custom presets
+function populateCustomPresets() {
+    const dropdown = document.querySelector('.preset-dropdown');
+    const customPresets = loadCustomPresets();
+
+    // Remove old custom presets from dropdown (keep only built-in ones)
+    const options = Array.from(dropdown.options);
+    options.forEach(option => {
+        if (option.dataset.custom === 'true') {
+            dropdown.removeChild(option);
+        }
+    });
+
+    // Add custom presets
+    Object.keys(customPresets).forEach(name => {
+        const option = document.createElement('option');
+        option.textContent = name;
+        option.dataset.settings = customPresets[name];
+        option.dataset.custom = 'true';
+        dropdown.appendChild(option);
+    });
+
+    // Update delete button visibility
+    updateDeleteButtonVisibility();
+}
+
+// Update delete button visibility based on selection
+function updateDeleteButtonVisibility() {
+    const dropdown = document.querySelector('.preset-dropdown');
+    const selected = dropdown.options[dropdown.selectedIndex];
+    const deleteBtn = document.getElementById('deletePresetBtn');
+
+    if (selected && selected.dataset.custom === 'true') {
+        deleteBtn.style.display = 'inline-block';
+    } else {
+        deleteBtn.style.display = 'none';
+    }
+}
+
+function exportToField() {
+    const settings = collectSettingsFromUI();
+    const encoded = btoa(JSON.stringify(settings));
+    document.getElementById('settingsStringInput').value = encoded;
+}
+
+function importFromField() {
+    const encoded = document.getElementById('settingsStringInput').value.trim();
+    if (!encoded) {
+        showModal('Error', 'Please paste a settings string first.');
+        return;
+    }
+
+    try {
+        const settings = JSON.parse(atob(encoded));
+        applySettingsToUI(settings);
+        showModal('Success', 'Settings imported successfully!');
+    } catch (error) {
+        showModal('Error', 'Invalid settings string: ' + error.message);
+    }
+}
+
 function loadPreset() {
     const dropdown = document.querySelector('.preset-dropdown');
     const selected = dropdown.options[dropdown.selectedIndex];
-    
-    if (selected.dataset.settings) {
+
+    if (selected && selected.dataset.settings) {
         try {
             const settings = JSON.parse(atob(selected.dataset.settings));
             applySettingsToUI(settings);
@@ -534,30 +730,262 @@ function loadPreset() {
             showModal('Error', 'Failed to load preset: ' + error.message);
         }
     }
+
+    // Update delete button visibility
+    updateDeleteButtonVisibility();
 }
 
 function savePreset() {
     const settings = collectSettingsFromUI();
     const encoded = btoa(JSON.stringify(settings));
-    
-    showModal('Preset Saved', 'Settings string: ' + encoded, [
-        { text: 'Copy to Clipboard', action: () => { navigator.clipboard.writeText(encoded); hideModal(); }},
-        { text: 'Close', action: () => hideModal() }
+
+    // Show modal with input field for preset name
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMessage = document.getElementById('modalMessage');
+    const modalInput = document.getElementById('modalInput');
+    const modalButtons = document.getElementById('modalButtons');
+
+    modalTitle.textContent = 'Save Preset';
+    modalMessage.textContent = 'Enter a name for this preset:';
+    modalInput.style.display = 'block';
+    modalInput.value = '';
+    modalInput.placeholder = 'Preset Name';
+
+    modalButtons.innerHTML = '';
+
+    const saveBtn = document.createElement('button');
+    saveBtn.textContent = 'Save';
+    saveBtn.className = 'modal-button';
+    saveBtn.onclick = () => {
+        const presetName = modalInput.value.trim();
+        if (!presetName) {
+            alert('Please enter a preset name');
+            return;
+        }
+
+        // Save to localStorage
+        const customPresets = loadCustomPresets();
+        customPresets[presetName] = encoded;
+        saveCustomPresets(customPresets);
+
+        // Refresh dropdown
+        populateCustomPresets();
+
+        // Select the new preset
+        const dropdown = document.querySelector('.preset-dropdown');
+        const options = Array.from(dropdown.options);
+        const newOption = options.find(opt => opt.textContent === presetName);
+        if (newOption) {
+            dropdown.value = newOption.value;
+        }
+
+        // Update delete button visibility for the newly selected custom preset
+        updateDeleteButtonVisibility();
+
+        modalInput.style.display = 'none';
+        hideModal();
+        showModal('Success', `Preset "${presetName}" saved successfully!`);
+    };
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.className = 'modal-button';
+    cancelBtn.onclick = () => {
+        modalInput.style.display = 'none';
+        hideModal();
+    };
+
+    const exportBtn = document.createElement('button');
+    exportBtn.textContent = 'Export String';
+    exportBtn.className = 'modal-button';
+    exportBtn.onclick = () => {
+        navigator.clipboard.writeText(encoded);
+        modalInput.style.display = 'none';
+        hideModal();
+        showModal('Success', 'Settings string copied to clipboard!');
+    };
+
+    modalButtons.appendChild(saveBtn);
+    modalButtons.appendChild(exportBtn);
+    modalButtons.appendChild(cancelBtn);
+
+    // Use class-based approach to show modal
+    modalOverlay.classList.add('show');
+}
+
+function deleteCurrentPreset() {
+    const dropdown = document.querySelector('.preset-dropdown');
+    const selected = dropdown.options[dropdown.selectedIndex];
+
+    if (!selected || selected.dataset.custom !== 'true') {
+        showModal('Error', 'Cannot delete built-in presets.');
+        return;
+    }
+
+    const presetName = selected.textContent;
+
+    showModal('Confirm Delete', `Are you sure you want to delete "${presetName}"?`, [
+        {
+            text: 'Delete',
+            action: () => {
+                const customPresets = loadCustomPresets();
+                delete customPresets[presetName];
+                saveCustomPresets(customPresets);
+
+                // Refresh dropdown
+                populateCustomPresets();
+
+                // Select default option
+                dropdown.selectedIndex = 0;
+                updateDeleteButtonVisibility();
+
+                hideModal();
+                showModal('Success', `Preset "${presetName}" deleted successfully!`);
+            }
+        },
+        {
+            text: 'Cancel',
+            action: () => hideModal()
+        }
     ]);
 }
 
 function applySettingsToUI(settings) {
-    // Apply settings back to UI elements
-    Object.entries(settings).forEach(([key, value]) => {
-        // Find corresponding UI element and set its value
-        // This is a simplified version - would need more robust mapping
-        console.log(`Setting ${key} = ${value}`);
+    // Extract game settings if in YAML format
+    const gameSettings = settings["Paper Mario: The Thousand-Year Door"] || settings;
+
+    // Reverse mapping from YAML option names to UI labels
+    const optionToLabel = {
+        // Logic & Progression
+        'goal': 'Goal',
+        'goal_stars': 'Goal Crystal Stars',
+        'palace_stars': 'Palace Crystal Stars',
+        'pit_items': 'Pit Items',
+        'progression_balancing': 'Progression Balancing',
+        'accessibility': 'Accessibility',
+        'tattlesanity': 'Tattlesanity',
+        'piecesanity': 'Piecesanity',
+        'shopsanity': 'Shopsanity',
+        'limit_chapter_logic': 'Limit Chapter Logic',
+        'limit_chapter_eight': 'Limit Chapter 8',
+
+        // World & Gameplay
+        'palace_skip': 'Palace Skip',
+        'cutscene_skip': 'Skip Cutscenes',
+        'disable_intermissions': 'Disable Intermissions',
+        'open_westside': 'Open West Side',
+        'fast_travel': 'Fast Travel',
+        'succeed_conditions': 'Always Succeed Conditions',
+
+        // Starting Stats
+        'starting_hp': 'Starting HP',
+        'starting_fp': 'Starting FP',
+        'starting_bp': 'Starting BP',
+        'starting_coins': 'Starting Coins',
+        'starting_level': 'Starting Level',
+        'experience_multiplier': 'Experience Multiplier',
+        'starting_partner': 'Starting Partner',
+
+        // Quality of Life
+        'permanent_peekaboo': 'Permanent Peekaboo',
+        'full_run_bar': 'Full Run Bar',
+        'first_attack': 'First Attack',
+        'music_settings': 'Music Settings',
+        'block_visibility': 'Block Visibility',
+        'yoshi_color': 'Yoshi Color',
+        'yoshi_name': 'Yoshi Name'
+    };
+
+    Object.entries(gameSettings).forEach(([optionName, value]) => {
+        const label = optionToLabel[optionName];
+        if (!label) return;
+
+        // Handle toggles
+        const toggleElement = Array.from(document.querySelectorAll('.toggle-label'))
+            .find(el => el.textContent.trim() === label)
+            ?.parentElement.querySelector('.toggle-switch');
+        if (toggleElement) {
+            if (value === true || value === 'true') {
+                toggleElement.classList.add('active');
+            } else {
+                toggleElement.classList.remove('active');
+            }
+            return;
+        }
+
+        // Handle dropdowns
+        const dropdownElement = Array.from(document.querySelectorAll('.dropdown-label'))
+            .find(el => el.textContent.trim() === label)
+            ?.parentElement.querySelector('.dropdown-select');
+        if (dropdownElement) {
+            // Convert YAML value to dropdown index
+            let dropdownValue = 0;
+            if (optionName === 'goal') {
+                const goalMap = { 'shadow_queen': 0, 'crystal_stars': 1, 'bonetail': 2 };
+                dropdownValue = goalMap[value] !== undefined ? goalMap[value] : 0;
+            } else if (optionName === 'pit_items') {
+                const pitMap = { 'vanilla': 0, 'filler': 1, 'all': 2 };
+                dropdownValue = pitMap[value] !== undefined ? pitMap[value] : 1;
+            } else if (optionName === 'accessibility') {
+                const accessMap = { 'full': 0, 'minimal': 1 };
+                dropdownValue = accessMap[value] !== undefined ? accessMap[value] : 0;
+            } else if (optionName === 'music_settings') {
+                const musicMap = { 'normal': 0, 'silent': 1, 'randomized': 2 };
+                dropdownValue = musicMap[value] !== undefined ? musicMap[value] : 0;
+            } else if (optionName === 'block_visibility') {
+                const visMap = { 'normal': 0, 'all_visible': 1 };
+                dropdownValue = visMap[value] !== undefined ? visMap[value] : 0;
+            } else if (optionName === 'piecesanity') {
+                const piecesanityMap = { 'vanilla': 0, 'nonpanel_only': 1, 'all': 2 };
+                dropdownValue = piecesanityMap[value] !== undefined ? piecesanityMap[value] : 1;
+            } else if (optionName === 'starting_partner') {
+                const partnerMap = {
+                    'goombella': 1, 'koops': 2, 'bobbery': 3, 'yoshi': 4,
+                    'flurrie': 5, 'vivian': 6, 'ms_mowz': 7, 'random_partner': 8
+                };
+                dropdownValue = partnerMap[value] !== undefined ? partnerMap[value] : 1;
+            } else if (optionName === 'yoshi_color') {
+                const colorMap = {
+                    'green': 0, 'red': 1, 'blue': 2, 'orange': 3,
+                    'pink': 4, 'black': 5, 'white': 6, 'random_color': 7
+                };
+                dropdownValue = colorMap[value] !== undefined ? colorMap[value] : 0;
+            }
+            dropdownElement.value = dropdownValue;
+            return;
+        }
+
+        // Handle number inputs
+        const numberElement = Array.from(document.querySelectorAll('.number-label'))
+            .find(el => el.textContent.trim() === label)
+            ?.parentElement.querySelector('.number-input');
+        if (numberElement) {
+            numberElement.value = value;
+            return;
+        }
+
+        // Handle text inputs
+        const textElement = Array.from(document.querySelectorAll('.text-label'))
+            .find(el => el.textContent.trim() === label)
+            ?.parentElement.querySelector('.text-input');
+        if (textElement) {
+            textElement.value = value;
+            return;
+        }
     });
 }
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', function() {
     console.log('TTYD Randomizer Generate page loaded with Flask backend integration');
+
+    // Load custom presets from localStorage
+    populateCustomPresets();
+
+    // Add change listener to preset dropdown to update delete button visibility
+    const dropdown = document.querySelector('.preset-dropdown');
+    dropdown.addEventListener('change', updateDeleteButtonVisibility);
 });
 </script>
 </body>

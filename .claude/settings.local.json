@@ -9,7 +9,8 @@
       "Bash(grep:*)",
       "Bash(find:*)",
       "Bash(start test-accessibility.html)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []

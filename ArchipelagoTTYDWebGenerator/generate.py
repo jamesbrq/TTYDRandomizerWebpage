@@ -703,6 +703,11 @@ if __name__ == '__main__':
         ttyd_world = multiworld.worlds[1]
         locations_dict = locations_to_dict(multiworld.get_locations(1))
 
-        print(json.dumps(locations_dict))
+        # Include seed in the output
+        output_data = {
+            'locations': locations_dict,
+            'seed': seed
+        }
+        print(json.dumps(output_data))
 
     atexit.unregister(confirmation)
