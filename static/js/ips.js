@@ -98,4 +98,9 @@ function applyIPS(originalData, ipsData) {
     return result;
 }
 
-export { applyIPS };
+// Export for use in other files
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { applyIPS };
+} else if (typeof window !== 'undefined') {
+    window.applyIPS = applyIPS;
+}
