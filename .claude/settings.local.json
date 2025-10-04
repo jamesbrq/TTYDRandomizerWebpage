@@ -10,7 +10,8 @@
       "Bash(find:*)",
       "Bash(start test-accessibility.html)",
       "Bash(powershell:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(timeout 30 python:*)"
     ],
     "deny": [],
     "ask": []

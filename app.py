@@ -88,18 +88,20 @@ def api_generate():
         app.logger.info(f"Python executable: {python_exec}")
         app.logger.info(f"sys.executable: {sys.executable}")
 
-        # Run generate.py as subprocess
+        # Run generate.py as subprocess with larger buffer
         result = subprocess.run(
             cmd,
             cwd=str(GENERATOR_PATH),
             capture_output=True,
             text=True,
-            timeout=300
+            timeout=300,
+            bufsize=-1  # Use system default buffering (usually larger)
         )
 
         # Debug: Log the result
         app.logger.info(f"Return code: {result.returncode}")
-        app.logger.info(f"Stdout: {result.stdout}")
+        app.logger.info(f"Stdout length: {len(result.stdout)} chars")
+        app.logger.info(f"Stdout (last 500 chars): {result.stdout[-500:]}")
         app.logger.info(f"Stderr: {result.stderr}")
 
         if result.returncode != 0:
@@ -114,6 +116,11 @@ def api_generate():
         # Parse JSON output from stdout
         try:
             output_data = json.loads(result.stdout)
+            # Debug: log what we're returning
+            app.logger.info(f"Output data keys: {list(output_data.keys())}")
+            app.logger.info(f"Has required_chapters: {'required_chapters' in output_data}")
+            if 'required_chapters' in output_data:
+                app.logger.info(f"required_chapters value: {output_data['required_chapters']}")
             return jsonify(output_data)
         except json.JSONDecodeError:
             return jsonify({

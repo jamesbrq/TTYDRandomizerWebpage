@@ -709,6 +709,15 @@ function rebuildISO(isoBuf, treeRoot, opts = {}) {
         node.size = data.length;
 
         debugLog(`Wrote sys ${name} @0x${origOff.toString(16)} size ${data.length}`);
+
+        // DEBUG: Verify written data for main.dol
+        if (name === 'main.dol' && node.src.kind === 'mod') {
+            debugLog(`DEBUG: main.dol US.bin at 0x1888: ${data[0x1888].toString(16)} ${data[0x1889].toString(16)} ${data[0x188A].toString(16)} ${data[0x188B].toString(16)}`);
+            const testView = new DataView(data.buffer, data.byteOffset, data.byteLength);
+            debugLog(`DEBUG: main.dol hook at 0x6CE38: ${testView.getUint32(0x6CE38, false).toString(16)}`);
+            debugLog(`DEBUG: Written to output at offset 0x${origOff.toString(16)}, checking output buffer...`);
+            debugLog(`DEBUG: Output buffer US.bin at 0x${(origOff + 0x1888).toString(16)}: ${out[origOff + 0x1888].toString(16)} ${out[origOff + 0x1889].toString(16)} ${out[origOff + 0x188A].toString(16)} ${out[origOff + 0x188B].toString(16)}`);
+        }
     }
 
     writeSystem(sys.boot, 0x000, 0x440, 'boot.bin');

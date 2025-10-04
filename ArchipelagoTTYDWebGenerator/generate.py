@@ -90,19 +90,23 @@ def mystery_argparse():
 def json_to_weights_cache(json_data: dict) -> dict:
     """Convert JSON configuration to weights_cache format for single TTYD player"""
     weights_cache = {}
-    
+
+    # Get options from either "options" key or nested under game name
+    game_name = "Paper Mario: The Thousand-Year Door"
+    options = json_data.get("options", json_data.get(game_name, {}))
+
     # Create the player configuration based on TTYD template structure
     player_config = {
         "name": json_data.get("name", "Player1"),
         "description": json_data.get("description", "Generated TTYD Configuration"),
-        "game": "Paper Mario: The Thousand-Year Door",
+        "game": game_name,
         "requires": {"version": "0.6.1"},
-        "Paper Mario: The Thousand-Year Door": json_data.get("options", {})
+        game_name: options
     }
-    
+
     filename = "ttyd_player.yaml"
     weights_cache[filename] = (player_config,)
-    
+
     return weights_cache
 
 
@@ -703,10 +707,19 @@ if __name__ == '__main__':
         ttyd_world = multiworld.worlds[1]
         locations_dict = locations_to_dict(multiworld.get_locations(1))
 
-        # Include seed in the output
+        # Debug: Check if required_chapters exists
+        import sys
+        if hasattr(ttyd_world, 'required_chapters'):
+            sys.stderr.write(f"DEBUG: required_chapters = {ttyd_world.required_chapters}\n")
+        else:
+            sys.stderr.write("DEBUG: ttyd_world has no required_chapters attribute!\n")
+            sys.stderr.write(f"DEBUG: ttyd_world attributes: {dir(ttyd_world)}\n")
+
+        # Include seed and required_chapters in the output
         output_data = {
             'locations': locations_dict,
-            'seed': seed
+            'seed': seed,
+            'required_chapters': getattr(ttyd_world, 'required_chapters', [])
         }
         print(json.dumps(output_data))
 

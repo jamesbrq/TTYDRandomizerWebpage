@@ -263,7 +263,6 @@ class StartingPartner(Choice):
     option_flurrie = 5
     option_vivian = 6
     option_ms_mowz = 7
-    option_random_partner = 8
     default = 1
 
 
@@ -279,7 +278,6 @@ class YoshiColor(Choice):
     option_pink = 4
     option_black = 5
     option_white = 6
-    option_random_color = 7
     default = 0
 
 
