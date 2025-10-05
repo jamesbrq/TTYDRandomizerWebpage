@@ -3,13 +3,28 @@ import json
 import os
 import sys
 import tempfile
+import hashlib
+import time
+import gzip
+import threading
 from pathlib import Path
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
 # Add ArchipelagoTTYDWebGenerator to Python path
 GENERATOR_PATH = Path(__file__).parent / 'ArchipelagoTTYDWebGenerator'
 sys.path.insert(0, str(GENERATOR_PATH))
+
+# Directory to store seed data
+SEED_DATA_DIR = Path(__file__).parent / 'seed_data'
+SEED_DATA_DIR.mkdir(exist_ok=True)
+
+# Seed data retention period (60 days)
+SEED_RETENTION_DAYS = 60
+
+# File to track last cleanup time
+LAST_CLEANUP_FILE = SEED_DATA_DIR / '.last_cleanup'
 
 @app.route('/')
 def index():
@@ -27,21 +42,14 @@ def getting_started():
 def archipelago():
     return render_template('archipelago.html')
 
-@app.route('/test')
-def test():
-    return render_template('test.html')
-
-@app.route('/index2')
-def index2():
-    return render_template('index2.html')
-
-@app.route('/test-accessibility')
-def test_accessibility():
-    return render_template('test-accessibility.html')
+@app.route('/patch')
+def patch():
+    return render_template('patch.html')
 
 @app.route('/result')
-def result():
-    return render_template('result.html')
+@app.route('/result/<seed_id>')
+def result(seed_id=None):
+    return render_template('result.html', seed_id=seed_id)
 
 @app.route('/api/generate', methods=['POST'])
 def api_generate():
@@ -121,6 +129,20 @@ def api_generate():
             app.logger.info(f"Has required_chapters: {'required_chapters' in output_data}")
             if 'required_chapters' in output_data:
                 app.logger.info(f"required_chapters value: {output_data['required_chapters']}")
+
+            # Generate unique identifier based on seed + all settings
+            seed_id = generate_seed_id(output_data.get('seed'), settings)
+
+            # Run cleanup if needed (once per 24 hours)
+            cleanup_if_needed()
+
+            # Save seed data to disk
+            save_seed_data(seed_id, output_data, settings)
+
+            # Add seed_id to response
+            output_data['seed_id'] = seed_id
+            app.logger.info(f"Generated seed_id: {seed_id}")
+
             return jsonify(output_data)
         except json.JSONDecodeError:
             return jsonify({
@@ -141,6 +163,138 @@ def api_generate():
             'error': str(e),
             'traceback': traceback.format_exc()
         }), 500
+
+def generate_seed_id(seed_number, settings):
+    """
+    Generate a unique identifier based on seed number and all settings.
+    This ensures the same seed with different settings gets a different ID.
+    """
+    # Create a deterministic string from seed + settings
+    seed_str = str(seed_number) if seed_number else 'random'
+    settings_str = json.dumps(settings, sort_keys=True)
+    combined = f"{seed_str}:{settings_str}"
+
+    # Generate SHA256 hash and take first 16 characters
+    hash_obj = hashlib.sha256(combined.encode('utf-8'))
+    seed_id = hash_obj.hexdigest()[:16]
+
+    return seed_id
+
+def save_seed_data(seed_id, output_data, settings):
+    """
+    Save seed data to disk with gzip compression for space efficiency.
+    """
+    seed_file = SEED_DATA_DIR / f"{seed_id}.json.gz"
+
+    data_to_save = {
+        'seed': output_data.get('seed'),
+        'locations': output_data.get('locations', {}),
+        'required_chapters': output_data.get('required_chapters', []),
+        'settings': settings,
+        'timestamp': output_data.get('timestamp') or int(time.time() * 1000)
+    }
+
+    # Compress and save
+    json_str = json.dumps(data_to_save)
+    json_bytes = json_str.encode('utf-8')
+
+    with gzip.open(seed_file, 'wb', compresslevel=9) as f:
+        f.write(json_bytes)
+
+    # Log compression stats
+    original_size = len(json_bytes)
+    compressed_size = seed_file.stat().st_size
+    ratio = (1 - compressed_size / original_size) * 100
+    app.logger.info(f"Saved seed data to {seed_file} (compressed {original_size} -> {compressed_size} bytes, {ratio:.1f}% reduction)")
+
+@app.route('/api/seed/<seed_id>', methods=['GET'])
+def get_seed_data(seed_id):
+    """
+    Retrieve seed data by ID, supporting both compressed (.json.gz) and legacy (.json) formats.
+    """
+    # Try compressed format first
+    seed_file_gz = SEED_DATA_DIR / f"{seed_id}.json.gz"
+    seed_file_json = SEED_DATA_DIR / f"{seed_id}.json"
+
+    if seed_file_gz.exists():
+        try:
+            with gzip.open(seed_file_gz, 'rb') as f:
+                json_bytes = f.read()
+                data = json.loads(json_bytes.decode('utf-8'))
+            return jsonify(data)
+        except Exception as e:
+            app.logger.error(f"Error reading compressed seed file: {e}")
+            return jsonify({'error': str(e)}), 500
+    elif seed_file_json.exists():
+        # Fallback to legacy uncompressed format
+        try:
+            with open(seed_file_json, 'r') as f:
+                data = json.load(f)
+            return jsonify(data)
+        except Exception as e:
+            app.logger.error(f"Error reading legacy seed file: {e}")
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': 'Seed not found'}), 404
+
+def cleanup_old_seeds():
+    """
+    Remove seed files older than SEED_RETENTION_DAYS.
+    """
+    try:
+        cutoff_time = time.time() - (SEED_RETENTION_DAYS * 24 * 60 * 60)
+        deleted_count = 0
+        total_size_freed = 0
+
+        for seed_file in SEED_DATA_DIR.glob('*.json*'):
+            # Skip the cleanup tracker file
+            if seed_file.name == '.last_cleanup':
+                continue
+
+            # Check file modification time
+            if seed_file.stat().st_mtime < cutoff_time:
+                file_size = seed_file.stat().st_size
+                seed_file.unlink()
+                deleted_count += 1
+                total_size_freed += file_size
+                app.logger.info(f"Deleted old seed file: {seed_file.name}")
+
+        if deleted_count > 0:
+            app.logger.info(f"Cleanup complete: Deleted {deleted_count} seed(s), freed {total_size_freed} bytes")
+        else:
+            app.logger.info("Cleanup complete: No old seeds to delete")
+
+        # Update last cleanup timestamp
+        with open(LAST_CLEANUP_FILE, 'w') as f:
+            f.write(str(int(time.time())))
+
+    except Exception as e:
+        app.logger.error(f"Error during seed cleanup: {e}")
+
+def cleanup_if_needed():
+    """
+    Run cleanup only if last cleanup was more than 24 hours ago.
+    """
+    try:
+        # Check when last cleanup occurred
+        if LAST_CLEANUP_FILE.exists():
+            with open(LAST_CLEANUP_FILE, 'r') as f:
+                last_cleanup = int(f.read().strip())
+        else:
+            # No cleanup has ever run
+            last_cleanup = 0
+
+        # Run cleanup if more than 24 hours since last cleanup
+        current_time = int(time.time())
+        if current_time - last_cleanup >= (24 * 60 * 60):
+            app.logger.info("Running scheduled seed cleanup (24 hours elapsed)")
+            cleanup_old_seeds()
+        else:
+            hours_remaining = ((24 * 60 * 60) - (current_time - last_cleanup)) / 3600
+            app.logger.debug(f"Cleanup not needed yet ({hours_remaining:.1f} hours until next cleanup)")
+
+    except Exception as e:
+        app.logger.error(f"Error checking cleanup schedule: {e}")
 
 # Standard way to run the application locally for testing
 if __name__ == '__main__':

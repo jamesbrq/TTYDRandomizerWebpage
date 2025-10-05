@@ -707,14 +707,6 @@ if __name__ == '__main__':
         ttyd_world = multiworld.worlds[1]
         locations_dict = locations_to_dict(multiworld.get_locations(1))
 
-        # Debug: Check if required_chapters exists
-        import sys
-        if hasattr(ttyd_world, 'required_chapters'):
-            sys.stderr.write(f"DEBUG: required_chapters = {ttyd_world.required_chapters}\n")
-        else:
-            sys.stderr.write("DEBUG: ttyd_world has no required_chapters attribute!\n")
-            sys.stderr.write(f"DEBUG: ttyd_world attributes: {dir(ttyd_world)}\n")
-
         # Include seed and required_chapters in the output
         output_data = {
             'locations': locations_dict,

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TTYD Randomizer - Seed Result</title>
+    <title>TTYD Randomizer - Patch ROM</title>
+    <meta name="description" content="Patch your TTYD ROM with a seed patch file">
+    <meta name="keywords" content="TTYD, randomizer, patch, Paper Mario, Thousand-Year Door">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
@@ -22,26 +24,40 @@
 </div>
 
 <div class="generate-panel">
-    <h1 class="info-header">Seed Generated Successfully!</h1>
+    <h1 class="info-header">Patch Your ROM</h1>
 
-    <!-- Seed Info Section -->
+    <!-- Patch File Upload Section -->
     <div class="preset-section">
-        <h3 class="preset-header">Seed Information</h3>
-        <div id="seedInfo" style="padding: 15px; background: #f0f0f0; border-radius: 5px; margin-bottom: 20px;">
-            <p><strong>Seed Number:</strong> <span id="seedNumber">Loading...</span></p>
-            <p><strong>Total Locations:</strong> <span id="totalLocations">Loading...</span></p>
-            <p><strong>Generated:</strong> <span id="timestamp">Loading...</span></p>
-            <p><strong>Share URL:</strong> <span id="shareUrl" style="font-family: monospace; font-size: 0.9em;">Loading...</span>
-                <button class="preset-button" onclick="copyShareUrl()" style="margin-left: 10px; padding: 5px 10px; font-size: 0.9em;">Copy URL</button>
+        <h3 class="preset-header">Step 1: Load Seed Patch</h3>
+        <div style="padding: 15px;">
+            <p style="margin-bottom: 15px;">
+                Select a .ttydp seed patch file to load the randomization data.
             </p>
+            <input type="file" id="patchFileInput" accept=".ttydp" style="display: none;" onchange="loadPatchFile(event)">
+            <button class="preset-button" onclick="document.getElementById('patchFileInput').click()">
+                Select .ttydp Patch File
+            </button>
+            <span id="selectedPatchName" style="margin-left: 10px; font-style: italic; color: #666;"></span>
+        </div>
+    </div>
+
+    <!-- Seed Information Section -->
+    <div class="preset-section" id="seedInfoSection" style="display: none;">
+        <h3 class="preset-header">Seed Information</h3>
+        <div id="seedInfo" style="padding: 15px; background: #f0f0f0; border-radius: 5px; margin: 15px;">
+            <p><strong>Seed Number:</strong> <span id="seedNumber">-</span></p>
+            <p><strong>Total Locations:</strong> <span id="totalLocations">-</span></p>
+            <p><strong>Generated:</strong> <span id="timestamp">-</span></p>
         </div>
     </div>
 
     <!-- ROM Patching Section -->
-    <div class="preset-section">
-        <h3 class="preset-header">Patch Your ROM</h3>
+    <div class="preset-section" id="romPatchSection" style="display: none;">
+        <h3 class="preset-header">Step 2: Patch Your ROM</h3>
         <div style="padding: 15px;">
-            <p>Select your TTYD (US) ISO file to apply the randomization:</p>
+            <p style="margin-bottom: 15px;">
+                Select your TTYD (US) ISO file to apply the randomization.
+            </p>
 
             <input type="file" id="romFileInput" accept=".iso,.gcm" style="display: none;">
             <button class="preset-button" onclick="document.getElementById('romFileInput').click()">
@@ -74,114 +90,99 @@
         </div>
     </div>
 
-    <!-- Download Section -->
-    <div class="preset-section">
-        <h3 class="preset-header">Downloads</h3>
+    <!-- Spoiler Section -->
+    <div class="preset-section" id="spoilerSection" style="display: none;">
+        <h3 class="preset-header">Spoiler Log</h3>
         <div style="padding: 15px;">
-            <button class="preset-button" onclick="downloadPatch()" style="margin-right: 10px;">
-                Download Seed Patch (.ttydp)
-            </button>
             <button class="preset-button" onclick="downloadSpoiler()">
                 Download Spoiler Log
             </button>
             <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
-                The seed patch file (.ttydp) can be shared with others to apply the same randomization to their ROM.
+                Download a complete spoiler log showing all item locations for this seed.
             </p>
         </div>
     </div>
 </div>
 
-<!-- Import gciso.js as module -->
+<!-- Import gciso.js and other dependencies -->
 <script type="module">
     import { parseISO, addOrReplace, rebuildISO } from '{{ url_for("static", filename="js/gciso.js") }}';
-
-    // Make functions available globally
     window.parseISO = parseISO;
     window.addOrReplace = addOrReplace;
     window.rebuildISO = rebuildISO;
 </script>
-
 <script src="{{ url_for('static', filename='js/ips.js') }}"></script>
 <script src="{{ url_for('static', filename='js/patcher.js') }}"></script>
 
 <script>
-// Load seed data from URL parameter or sessionStorage
-document.addEventListener('DOMContentLoaded', async function() {
-    // Extract seed_id from URL path
-    const pathParts = window.location.pathname.split('/');
-    const seedIdFromUrl = pathParts[pathParts.length - 1] !== 'result' ? pathParts[pathParts.length - 1] : null;
+/**
+ * Load and parse a .ttydp patch file
+ */
+async function loadPatchFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-    if (seedIdFromUrl) {
-        // Load seed data from server using seed_id
-        console.log('Loading seed data from server with ID:', seedIdFromUrl);
-        try {
-            const response = await fetch(`/api/seed/${seedIdFromUrl}`);
-            if (!response.ok) {
-                throw new Error('Seed not found');
-            }
-            seedData = await response.json();
-            seedData.seed_id = seedIdFromUrl; // Add seed_id to loaded data
-            console.log('Loaded seed data from server:', seedData);
-        } catch (error) {
-            console.error('Failed to load seed from server:', error);
-            alert('Failed to load seed data. The seed may have expired or does not exist.');
-            window.location.href = '/generate';
-            return;
+    try {
+        // Read file as ArrayBuffer
+        const arrayBuffer = await file.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+
+        // Verify magic header
+        const magic = new TextDecoder().decode(data.slice(0, 9));
+        if (magic !== 'TTYDPATCH') {
+            throw new Error('Invalid patch file format');
         }
-    } else {
-        // Fallback to sessionStorage (for backwards compatibility)
-        const storedData = sessionStorage.getItem('ttydSeedData');
-        if (!storedData) {
-            alert('No seed data found. Please generate a seed first.');
-            window.location.href = '/generate';
-            return;
-        }
-        seedData = JSON.parse(storedData);
-        console.log('Loaded seed data from sessionStorage:', seedData);
+
+        // Get version
+        const version = data[9];
+        console.log(`Loading patch file version ${version}`);
+
+        // Extract and deobfuscate data
+        const obfuscatedData = data.slice(10);
+        const deobfuscatedData = deobfuscatePatchData(obfuscatedData);
+
+        // Parse JSON
+        const jsonStr = new TextDecoder().decode(deobfuscatedData);
+        const patchData = JSON.parse(jsonStr);
+
+        console.log('Loaded patch data:', patchData);
+
+        // Store seed data globally
+        seedData = {
+            locations: patchData.locations,
+            seed: patchData.seed,
+            required_chapters: patchData.required_chapters,
+            settings: patchData.settings,
+            timestamp: patchData.timestamp
+        };
+
+        // Update UI
+        document.getElementById('selectedPatchName').textContent = file.name;
+        displaySeedInfo();
+
+        // Show ROM patching and spoiler sections
+        document.getElementById('seedInfoSection').style.display = 'block';
+        document.getElementById('romPatchSection').style.display = 'block';
+        document.getElementById('spoilerSection').style.display = 'block';
+
+    } catch (error) {
+        console.error('Error loading patch file:', error);
+        alert(`Failed to load patch file: ${error.message}`);
     }
 
-    console.log('Seed data keys:', Object.keys(seedData));
-    console.log('Has required_chapters?', 'required_chapters' in seedData);
-    console.log('required_chapters value:', seedData.required_chapters);
-
-    // Display seed information
-    displaySeedInfo();
-
-    // Set up ROM file input handler
-    document.getElementById('romFileInput').addEventListener('change', handleROMSelection);
-});
+    // Clear file input
+    event.target.value = '';
+}
 
 function displaySeedInfo() {
     const locationCount = Object.keys(seedData.locations).length;
     const date = new Date(seedData.timestamp);
-
-    // Extract seed number from seedData
-    const seedNumber = seedData.seed || 'Unknown';
-
-    document.getElementById('seedNumber').textContent = seedNumber;
+    document.getElementById('seedNumber').textContent = seedData.seed || 'Unknown';
     document.getElementById('totalLocations').textContent = locationCount;
     document.getElementById('timestamp').textContent = date.toLocaleString();
-
-    // Display share URL if seed_id exists
-    if (seedData.seed_id) {
-        const shareUrl = `${window.location.origin}/result/${seedData.seed_id}`;
-        document.getElementById('shareUrl').textContent = shareUrl;
-    } else {
-        document.getElementById('shareUrl').textContent = 'Not available (legacy seed)';
-    }
 }
 
-function copyShareUrl() {
-    if (seedData.seed_id) {
-        const shareUrl = `${window.location.origin}/result/${seedData.seed_id}`;
-        navigator.clipboard.writeText(shareUrl).then(() => {
-            alert('Share URL copied to clipboard!');
-        }).catch(err => {
-            console.error('Failed to copy URL:', err);
-            alert('Failed to copy URL. Please copy it manually.');
-        });
-    }
-}
+document.getElementById('romFileInput').addEventListener('change', handleROMSelection);
 </script>
 </div>
 

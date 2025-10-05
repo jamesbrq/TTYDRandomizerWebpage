@@ -6,19 +6,9 @@
     <meta name="description" content="A randomizer for the game TTYD, enhancing replayability with randomized items, enemies, and more.">
     <meta name="keywords" content="TTYD, randomizer, game, mod, Mario, Paper Mario, Thousand-Year Door, randomization">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <!-- Core dependencies -->
-    <script src="{{ url_for('static', filename='js/parser.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/gameState.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/itemPool.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/location.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/debugLogger.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/generate.js') }}"></script>
-
-    <!-- Optional utilities -->
-    <script src="{{ url_for('static', filename='js/spoilerGenerator.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/gciso.js') }}"></script>
 </head>
 <body>
+<div class="page-wrapper">
 <div class="header">
     <div class="header-logo">
         <a href="{{ url_for('index') }}">
@@ -26,12 +16,27 @@
         </a>
     </div>
     <div class="header-pages">
+        <a href="#" id="recentSeedLink" class="pages-link" style="display: none;">Most Recent Seed</a>
         <a href="{{ url_for('generate') }}" class="pages-link">Seed Generator</a>
-        <a href="{{ url_for('test') }}" class="pages-link">Test</a>
+        <a href="{{ url_for('patch') }}" class="pages-link">Patch ROM</a>
+        <a href="{{ url_for('archipelago') }}" class="pages-link">Archipelago</a>
     </div>
 </div>
 
 <div class="generate-panel">
+    <div class="preset-section">
+        <h3 class="preset-header">Load Seed Patch</h3>
+        <div class="preset-controls">
+            <input type="file" id="patchFileInput" accept=".ttydp" style="display: none;" onchange="loadPatchFile(event)">
+            <button class="preset-button" onclick="document.getElementById('patchFileInput').click()">
+                Load .ttydp Patch File
+            </button>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                Load a seed patch file (.ttydp) to apply someone else's seed configuration.
+            </p>
+        </div>
+    </div>
+
     <div class="preset-section">
         <h3 class="preset-header">Preset Settings</h3>
         <div class="preset-controls">
@@ -68,7 +73,7 @@
         <div id="logic" class="panel-content active">
             <div class="settings-grid">
                 <div class="dropdown-container">
-                    <span class="dropdown-label">Goal</span>
+                    <span class="dropdown-label">Goal<span class="help-icon" data-tooltip="This determines the goal of the game. Shadow Queen: Defeat the Shadow Queen. Crystal Stars: Collect a specified amount of Crystal Stars. Bonetail: Defeat Bonetail.">?</span></span>
                     <select class="dropdown-select goal-dropdown">
                         <option value="0" selected>Shadow Queen</option>
                         <option value="1">Crystal Stars</option>
@@ -77,17 +82,17 @@
                 </div>
 
                 <div class="number-container">
-                    <span class="number-label">Goal Crystal Stars</span>
+                    <span class="number-label">Goal Crystal Stars<span class="help-icon" data-tooltip="This determines how many crystal stars are required for the goal option Crystal Stars. This is only used if the goal option is set to Crystal Stars.">?</span></span>
                     <input type="number" class="number-input" min="0" max="7" value="7">
                 </div>
 
                 <div class="number-container">
-                    <span class="number-label">Palace Crystal Stars</span>
+                    <span class="number-label">Palace Crystal Stars<span class="help-icon" data-tooltip="This determines how many Crystal Stars are required to enter the Palace of Shadow.">?</span></span>
                     <input type="number" class="number-input" min="0" max="7" value="7">
                 </div>
 
                 <div class="dropdown-container">
-                    <span class="dropdown-label">Pit Items</span>
+                    <span class="dropdown-label">Pit Items<span class="help-icon" data-tooltip="This determines what type of items are in the Pit of 100 Trials. Vanilla: The locations contain the same items as the original game, and the locations themselves will not be created. Filler: The locations will be marked as excluded. All: The locations can contain any item.">?</span></span>
                     <select class="dropdown-select">
                         <option value="0">Vanilla</option>
                         <option value="1" selected>Filler</option>
@@ -96,12 +101,12 @@
                 </div>
 
                 <div class="number-container">
-                    <span class="number-label">Progression Balancing</span>
+                    <span class="number-label">Progression Balancing<span class="help-icon" data-tooltip="A system that can move progression earlier, to try and prevent the player from getting stuck and bored early. A lower setting means more getting stuck. A higher setting means less getting stuck.">?</span></span>
                     <input type="number" class="number-input" min="0" max="99" value="50">
                 </div>
 
                 <div class="dropdown-container">
-                    <span class="dropdown-label">Accessibility</span>
+                    <span class="dropdown-label">Accessibility<span class="help-icon" data-tooltip="Set rules for reachability of your items/locations. Full: ensure everything can be reached and acquired. Minimal: ensure what is needed to reach your goal can be acquired.">?</span></span>
                     <select class="dropdown-select">
                         <option value="0" selected>Full</option>
                         <option value="1">Minimal</option>
@@ -109,14 +114,14 @@
                 </div>
 
                 <div class="toggle-container">
-                    <span class="toggle-label">Tattlesanity</span>
+                    <span class="toggle-label">Tattlesanity<span class="help-icon" data-tooltip="Creates a location for every enemy being tattled. All key items can possibly be placed in these locations.">?</span></span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
 
                 <div class="dropdown-container">
-                    <span class="dropdown-label">Piecesanity</span>
+                    <span class="dropdown-label">Piecesanity<span class="help-icon" data-tooltip="Shuffles Star Piece collection. Vanilla: no changes. Non-Panel Only: only non-panel pieces shuffled. All: all star pieces shuffled.">?</span></span>
                     <select class="dropdown-select">
                         <option value="0">Vanilla</option>
                         <option value="1" selected>Non-Panel Only</option>
@@ -125,21 +130,21 @@
                 </div>
 
                 <div class="toggle-container">
-                    <span class="toggle-label">Shopsanity</span>
+                    <span class="toggle-label">Shopsanity<span class="help-icon" data-tooltip="When enabled, shop purchases become location checks that can contain any item.">?</span></span>
                     <div class="toggle-switch active" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
 
                 <div class="toggle-container">
-                    <span class="toggle-label">Limit Chapter Logic</span>
+                    <span class="toggle-label">Limit Chapter Logic<span class="help-icon" data-tooltip="Progression items will only appear in required chapters, and in common areas. You will not need to check the chapters that are out of logic whatsoever.">?</span></span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
 
                 <div class="toggle-container">
-                    <span class="toggle-label">Limit Chapter 8</span>
+                    <span class="toggle-label">Limit Chapter 8<span class="help-icon" data-tooltip="All chapter 8 key items will be placed in vanilla locations. All other locations will have non-progression items.">?</span></span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
@@ -151,42 +156,42 @@
         <div id="world" class="panel-content">
             <div class="settings-grid">
                 <div class="toggle-container">
-                    <span class="toggle-label">Palace Skip</span>
+                    <span class="toggle-label">Palace Skip<span class="help-icon" data-tooltip="Entering the Thousand-Year door will take you straight to Grodus.">?</span></span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
-                
+
                 <div class="toggle-container">
-                    <span class="toggle-label">Skip Cutscenes</span>
+                    <span class="toggle-label">Skip Cutscenes<span class="help-icon" data-tooltip="Skips some of the longer cutscenes in the game, such as the Shadow Queen cutscene, Fahr Outpost Cannon etc.">?</span></span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
-                
+
                 <div class="toggle-container">
-                    <span class="toggle-label">Disable Intermissions</span>
+                    <span class="toggle-label">Disable Intermissions<span class="help-icon" data-tooltip="After obtaining a crystal star, mario will stay in the boss' room, and the sequence will be updated past the intermission.">?</span></span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
-                
+
                 <div class="toggle-container">
-                    <span class="toggle-label">Open West Side</span>
+                    <span class="toggle-label">Open West Side<span class="help-icon" data-tooltip="Rogueport Westside is open from the start.">?</span></span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
-                
+
                 <div class="toggle-container">
-                    <span class="toggle-label">Fast Travel</span>
+                    <span class="toggle-label">Fast Travel<span class="help-icon" data-tooltip="Enable this to gain the ability to warp to any area you have visited from the map screen in the main menu. Press A on the destination to open the warp confirmation dialog.">?</span></span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
-                
+
                 <div class="toggle-container">
-                    <span class="toggle-label">Always Succeed Conditions</span>
+                    <span class="toggle-label">Always Succeed Conditions<span class="help-icon" data-tooltip="Enable this to make it so the battle condition in fights in the Glitz Pit will always be fulfilled, regardless of their actual fulfillment.">?</span></span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
@@ -198,37 +203,37 @@
         <div id="stats" class="panel-content">
             <div class="settings-grid">
                 <div class="number-container">
-                    <span class="number-label">Starting HP</span>
+                    <span class="number-label">Starting HP<span class="help-icon" data-tooltip="How much health you start with.">?</span></span>
                     <input type="number" class="number-input" min="1" max="100" value="10">
                 </div>
 
                 <div class="number-container">
-                    <span class="number-label">Starting FP</span>
+                    <span class="number-label">Starting FP<span class="help-icon" data-tooltip="How much flower points you start with.">?</span></span>
                     <input type="number" class="number-input" min="0" max="100" value="5">
                 </div>
 
                 <div class="number-container">
-                    <span class="number-label">Starting BP</span>
+                    <span class="number-label">Starting BP<span class="help-icon" data-tooltip="How many badge points you start with.">?</span></span>
                     <input type="number" class="number-input" min="0" max="99" value="3">
                 </div>
 
                 <div class="number-container">
-                    <span class="number-label">Starting Coins</span>
+                    <span class="number-label">Starting Coins<span class="help-icon" data-tooltip="How many coins you start with.">?</span></span>
                     <input type="number" class="number-input" min="0" max="999" value="100">
                 </div>
 
                 <div class="number-container">
-                    <span class="number-label">Starting Level</span>
+                    <span class="number-label">Starting Level<span class="help-icon" data-tooltip="What level you start at.">?</span></span>
                     <input type="number" class="number-input" min="1" max="99" value="1">
                 </div>
 
                 <div class="number-container">
-                    <span class="number-label">Experience Multiplier</span>
+                    <span class="number-label">Experience Multiplier<span class="help-icon" data-tooltip="Multiplies the experience you gain from battles.">?</span></span>
                     <input type="number" class="number-input" min="0" max="10" value="1">
                 </div>
 
                 <div class="dropdown-container">
-                    <span class="dropdown-label">Starting Partner</span>
+                    <span class="dropdown-label">Starting Partner<span class="help-icon" data-tooltip="Choose the partner that you start with.">?</span></span>
                     <select class="dropdown-select">
                         <option value="1" selected>Goombella</option>
                         <option value="2">Koops</option>
@@ -247,28 +252,28 @@
         <div id="qol" class="panel-content">
             <div class="settings-grid">
                 <div class="toggle-container">
-                    <span class="toggle-label">Permanent Peekaboo</span>
+                    <span class="toggle-label">Permanent Peekaboo<span class="help-icon" data-tooltip="The Peekaboo badge is always active, even when not equipped.">?</span></span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
 
                 <div class="toggle-container">
-                    <span class="toggle-label">Full Run Bar</span>
+                    <span class="toggle-label">Full Run Bar<span class="help-icon" data-tooltip="The run bar in battle always starts at 100 percent.">?</span></span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
 
                 <div class="toggle-container">
-                    <span class="toggle-label">First Attack</span>
+                    <span class="toggle-label">First Attack<span class="help-icon" data-tooltip="The First Attack badge costs 0 BP, just like the remake.">?</span></span>
                     <div class="toggle-switch" onclick="toggleSwitch(this)">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
 
                 <div class="dropdown-container">
-                    <span class="dropdown-label">Music Settings</span>
+                    <span class="dropdown-label">Music Settings<span class="help-icon" data-tooltip="Choose in-game music settings. Normal: Music will not change. Silent: No music will play at all. Randomized: Music will be randomized.">?</span></span>
                     <select class="dropdown-select">
                         <option value="0" selected>Normal</option>
                         <option value="1">Silent</option>
@@ -277,7 +282,7 @@
                 </div>
 
                 <div class="dropdown-container">
-                    <span class="dropdown-label">Block Visibility</span>
+                    <span class="dropdown-label">Block Visibility<span class="help-icon" data-tooltip="Choose how visible item blocks are. Normal: All blocks will keep their vanilla visibility. All Visible: All blocks will be visible.">?</span></span>
                     <select class="dropdown-select">
                         <option value="0" selected>Normal</option>
                         <option value="1">All Visible</option>
@@ -285,7 +290,7 @@
                 </div>
 
                 <div class="dropdown-container">
-                    <span class="dropdown-label">Yoshi Color</span>
+                    <span class="dropdown-label">Yoshi Color<span class="help-icon" data-tooltip="Select the color of your Yoshi partner.">?</span></span>
                     <select class="dropdown-select">
                         <option value="0" selected>Green</option>
                         <option value="1">Red</option>
@@ -299,7 +304,7 @@
                 </div>
 
                 <div class="text-container">
-                    <span class="text-label">Yoshi Name</span>
+                    <span class="text-label">Yoshi Name<span class="help-icon" data-tooltip="Set the name of your Yoshi partner. This has a maximum length of 8 characters.">?</span></span>
                     <input type="text" class="text-input" maxlength="8" value="Yoshi">
                 </div>
             </div>
@@ -309,6 +314,13 @@
     <!-- Generation Section -->
     <div class="iso-generation-section">
         <h3>Generate Seed</h3>
+        <div class="seed-input-section" style="margin-top: 10px;">
+            <label class="settings-string-label">Seed (optional)</label>
+            <div class="settings-string-controls">
+                <input type="text" class="settings-string-input" id="seedInput" placeholder="Leave empty for random seed">
+                <button class="preset-button" onclick="generateRandomSeed()">Random</button>
+            </div>
+        </div>
         <div class="iso-controls" style="margin-top: 10px;">
             <button class="preset-button" id="generateBtn" onclick="generateRandomizedROM()">Generate Seed</button>
         </div>
@@ -328,8 +340,46 @@
         <div class="modal-buttons" id="modalButtons"></div>
     </div>
 </div>
+</div>
 
 <script>
+/**
+ * Convert any seed value (string or number) to a consistent integer
+ * Uses a simple hash function for strings
+ */
+function convertSeedToInt(seed) {
+    // If empty, null, or undefined, return null (random seed)
+    if (!seed || seed.toString().trim() === '') {
+        return null;
+    }
+
+    // If already a valid integer, return it
+    const parsed = parseInt(seed);
+    if (!isNaN(parsed) && parsed.toString() === seed.toString().trim()) {
+        return parsed;
+    }
+
+    // For strings, convert to int using a hash function
+    // This ensures the same string always produces the same seed
+    const str = seed.toString();
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32-bit integer
+    }
+    // Return absolute value to ensure positive integer
+    return Math.abs(hash);
+}
+
+/**
+ * Generate a random seed value
+ */
+function generateRandomSeed() {
+    const randomSeed = Math.floor(Math.random() * 2147483647); // Max 32-bit int
+    document.getElementById('seedInput').value = randomSeed;
+}
+
 /**
  * Main generation function called by the Generate button
  * Collects settings from UI and sends to Flask backend
@@ -347,6 +397,18 @@ async function generateRandomizedROM() {
 
         // Collect settings from UI
         const settings = collectSettingsFromUI();
+
+        // Handle seed conversion - only add seed if user provided one
+        const seedInput = document.getElementById('seedInput').value;
+        const convertedSeed = convertSeedToInt(seedInput);
+        if (convertedSeed !== null) {
+            // Add seed at top level for Flask to pass to --seed flag
+            settings.seed = convertedSeed;
+            console.log(`Seed input: "${seedInput}" -> ${convertedSeed}`);
+        } else {
+            console.log('No seed provided, using random seed');
+        }
+
         console.log('Collected settings:', settings);
 
         // Send settings to Flask backend
@@ -362,18 +424,22 @@ async function generateRandomizedROM() {
         console.log('Generation result:', result);
 
         if (response.ok && result) {
-            // Store seed data in sessionStorage
+            // Store seed data in sessionStorage (for backwards compatibility)
             const seedData = {
                 locations: result.locations || result,
                 seed: result.seed,
                 required_chapters: result.required_chapters,
+                seed_id: result.seed_id,
                 settings: settings,
                 timestamp: Date.now()
             };
             sessionStorage.setItem('ttydSeedData', JSON.stringify(seedData));
 
-            // Redirect to result page
-            window.location.href = '/result';
+            // Store most recent seed ID in localStorage
+            localStorage.setItem('ttyd_most_recent_seed', result.seed_id);
+
+            // Redirect to result page with seed_id in URL
+            window.location.href = `/result/${result.seed_id}`;
         } else {
             showModal('Error', `Generation failed: ${result.error}`);
             if (result.traceback) {
@@ -987,7 +1053,133 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add change listener to preset dropdown to update delete button visibility
     const dropdown = document.querySelector('.preset-dropdown');
     dropdown.addEventListener('change', updateDeleteButtonVisibility);
+
+    // Check for most recent seed and show link if exists
+    showMostRecentSeedLink();
 });
+
+/**
+ * Show link to most recent seed if one exists in localStorage
+ */
+function showMostRecentSeedLink() {
+    const recentSeedId = localStorage.getItem('ttyd_most_recent_seed');
+
+    if (recentSeedId) {
+        const recentSeedLink = document.getElementById('recentSeedLink');
+        recentSeedLink.href = `/result/${recentSeedId}`;
+        recentSeedLink.style.display = 'inline-block';
+
+        console.log('Most recent seed ID:', recentSeedId);
+    }
+}
+
+/**
+ * Load and parse a .ttydp patch file
+ */
+async function loadPatchFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+        // Read file as ArrayBuffer
+        const arrayBuffer = await file.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+
+        // Verify magic header: "TTYDPATCH"
+        const magic = new TextDecoder().decode(data.slice(0, 9));
+        if (magic !== 'TTYDPATCH') {
+            throw new Error('Invalid patch file format');
+        }
+
+        // Get version
+        const version = data[9];
+        console.log(`Loading patch file version ${version}`);
+
+        // Extract and deobfuscate data
+        const obfuscatedData = data.slice(10);
+        const deobfuscatedData = deobfuscatePatchData(obfuscatedData);
+
+        // Parse JSON
+        const jsonStr = new TextDecoder().decode(deobfuscatedData);
+        const patchData = JSON.parse(jsonStr);
+
+        console.log('Loaded patch data:', patchData);
+
+        // Store in sessionStorage and redirect to result page
+        const seedData = {
+            locations: patchData.locations,
+            seed: patchData.seed,
+            required_chapters: patchData.required_chapters,
+            settings: patchData.settings,
+            timestamp: patchData.timestamp
+        };
+
+        sessionStorage.setItem('ttydSeedData', JSON.stringify(seedData));
+
+        // Redirect to result page
+        showModal('Patch Loaded', `Successfully loaded seed ${patchData.seed}. Redirecting to result page...`, [
+            {
+                text: 'Continue',
+                action: () => {
+                    hideModal();
+                    window.location.href = '/result';
+                }
+            }
+        ]);
+
+    } catch (error) {
+        console.error('Error loading patch file:', error);
+        showModal('Error', `Failed to load patch file: ${error.message}`);
+    }
+
+    // Clear file input
+    event.target.value = '';
+}
+
+/**
+ * Deobfuscate patch data using XOR
+ */
+function deobfuscatePatchData(data) {
+    const key = new Uint8Array([0x54, 0x54, 0x59, 0x44, 0x50, 0x41, 0x54, 0x43, 0x48]); // "TTYDPATCH"
+    const deobfuscated = new Uint8Array(data.length);
+
+    for (let i = 0; i < data.length; i++) {
+        deobfuscated[i] = data[i] ^ key[i % key.length];
+    }
+
+    return deobfuscated;
+}
 </script>
+</div>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="https://discord.gg/YJXeYdVWwJ" class="footer-link" target="_blank" rel="noopener noreferrer">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                </svg>
+                Discord
+            </a>
+            <a href="https://github.com/jamesbrq/ArchipelagoTTYD" class="footer-link" target="_blank" rel="noopener noreferrer">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                GitHub
+            </a>
+            <a href="https://github.com/jamesbrq/ArchipelagoTTYD/issues" class="footer-link" target="_blank" rel="noopener noreferrer">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+                Report Issue
+            </a>
+        </div>
+        <div class="footer-divider"></div>
+        <p class="footer-text">
+            Paper Mario: The Thousand-Year Door Randomizer<br>
+            Created by the TTYD Randomizer Community
+        </p>
+    </div>
+</footer>
 </body>
 </html>
