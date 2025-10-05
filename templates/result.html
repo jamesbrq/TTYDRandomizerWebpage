@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TTYD Randomizer - Seed Result</title>
+    <script src="{{ url_for('static', filename='js/theme-switcher.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-vivian.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-yoshi.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-goombella.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-msmowz.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-rawkhawk.css') }}">
 </head>
 <body>
 <div class="page-wrapper">
@@ -17,8 +23,8 @@
     <div class="header-pages">
         <a href="{{ url_for('generate') }}" class="pages-link">Seed Generator</a>
         <a href="{{ url_for('patch') }}" class="pages-link">Patch ROM</a>
-        <a href="{{ url_for('archipelago') }}" class="pages-link">Archipelago</a>
         <a href="{{ url_for('about') }}" class="pages-link">About</a>
+        <a href="{{ url_for('archipelago') }}" class="pages-link">Archipelago</a>
     </div>
 </div>
 
@@ -92,6 +98,16 @@
     </div>
 </div>
 
+<!-- Modal System -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <p class="modal-message" id="modalMessage"></p>
+        <input type="text" class="modal-input" id="modalInput" style="display: none;">
+        <div class="modal-buttons" id="modalButtons"></div>
+    </div>
+</div>
+
 <!-- Import gciso.js as module -->
 <script type="module">
     import { parseISO, addOrReplace, rebuildISO } from '{{ url_for("static", filename="js/gciso.js") }}';
@@ -102,6 +118,7 @@
     window.rebuildISO = rebuildISO;
 </script>
 
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
 <script src="{{ url_for('static', filename='js/ips.js') }}"></script>
 <script src="{{ url_for('static', filename='js/patcher.js') }}"></script>
 
@@ -125,16 +142,18 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log('Loaded seed data from server:', seedData);
         } catch (error) {
             console.error('Failed to load seed from server:', error);
-            alert('Failed to load seed data. The seed may have expired or does not exist.');
-            window.location.href = '/generate';
+            showModal('Error', 'Failed to load seed data. The seed may have expired or does not exist.', [
+                { text: 'OK', action: () => { window.location.href = '/generate'; } }
+            ]);
             return;
         }
     } else {
         // Fallback to sessionStorage (for backwards compatibility)
         const storedData = sessionStorage.getItem('ttydSeedData');
         if (!storedData) {
-            alert('No seed data found. Please generate a seed first.');
-            window.location.href = '/generate';
+            showModal('Error', 'No seed data found. Please generate a seed first.', [
+                { text: 'OK', action: () => { window.location.href = '/generate'; } }
+            ]);
             return;
         }
         seedData = JSON.parse(storedData);
@@ -176,10 +195,10 @@ function copyShareUrl() {
     if (seedData.seed_id) {
         const shareUrl = `${window.location.origin}/result/${seedData.seed_id}`;
         navigator.clipboard.writeText(shareUrl).then(() => {
-            alert('Share URL copied to clipboard!');
+            showModal('Success', 'Share URL copied to clipboard!');
         }).catch(err => {
             console.error('Failed to copy URL:', err);
-            alert('Failed to copy URL. Please copy it manually.');
+            showModal('Error', 'Failed to copy URL. Please copy it manually.');
         });
     }
 }

@@ -1,0 +1,272 @@
+/* ==================== VIVIAN THEME ====================
+ * Based on Vivian the Shadow Siren from TTYD
+ * Color palette: Purple, pink, shadowy purples, and mystic tones
+ */
+
+/* Override main colors */
+body[data-theme="vivian"] {
+    --primary-color: #8B5A9F; /* Vivian's purple */
+    --secondary-color: #D97FB8; /* Vivian's pink */
+    --accent-color: #6B4C7A; /* Dark purple */
+    --bg-color: #1A0F1F; /* Deep shadow purple */
+    --text-color: #E8D5F0; /* Light lavender */
+}
+
+/* Background */
+body[data-theme="vivian"] {
+    background: linear-gradient(135deg, #1A0F1F 0%, #2D1B3D 50%, #1A0F1F 100%);
+}
+
+/* Page wrapper background */
+body[data-theme="vivian"] .page-wrapper {
+    background-color: rgba(107, 76, 122, 0.15);
+}
+
+/* Header */
+body[data-theme="vivian"] .header {
+    background: linear-gradient(180deg, #9D6BB3 0%, #8B5A9F 50%, #6B4C7A 100%);
+    border-bottom: 3px solid #D97FB8;
+    box-shadow: 0 2px 8px rgba(217, 127, 184, 0.3);
+}
+
+/* Links */
+body[data-theme="vivian"] .pages-link {
+    background: linear-gradient(135deg, #8B5A9F 0%, #7A4F8E 100%);
+    border: 2px solid #D97FB8;
+    color: #E8D5F0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+body[data-theme="vivian"] .pages-link:hover {
+    background: linear-gradient(135deg, #A070B8 0%, #8B5A9F 100%);
+    border-color: #F0A8D8;
+    color: #FFF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(217, 127, 184, 0.4);
+}
+
+/* Info panel */
+body[data-theme="vivian"] .info-panel {
+    background-color: rgba(139, 90, 159, 0.85);
+    border: 3px solid #D97FB8;
+}
+
+/* Headers */
+body[data-theme="vivian"] .info-header,
+body[data-theme="vivian"] .large-header {
+    color: #F0A8D8;
+    text-shadow: 2px 2px 4px rgba(107, 76, 122, 0.8);
+}
+
+body[data-theme="vivian"] .basic-header,
+body[data-theme="vivian"] .links-header {
+    color: #E8D5F0;
+}
+
+/* Buttons and Links */
+body[data-theme="vivian"] .info-link,
+body[data-theme="vivian"] .preset-button {
+    background: linear-gradient(135deg, #8B5A9F 0%, #6B4C7A 100%);
+    border: 2px solid #D97FB8;
+    color: #FFF;
+}
+
+body[data-theme="vivian"] .info-link:hover,
+body[data-theme="vivian"] .preset-button:hover {
+    background: linear-gradient(135deg, #A070B8 0%, #8B5A9F 100%);
+    border-color: #F0A8D8;
+    box-shadow: 0 4px 15px rgba(217, 127, 184, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Generate panel */
+body[data-theme="vivian"] .generate-panel {
+    background-color: rgba(139, 90, 159, 0.85);
+    border: 3px solid #D97FB8;
+}
+
+/* Preset section */
+body[data-theme="vivian"] .preset-section {
+    background-color: rgba(107, 76, 122, 0.6);
+    border: 2px solid #D97FB8;
+}
+
+body[data-theme="vivian"] .preset-header {
+    color: #F0A8D8;
+    border-bottom: 2px solid #D97FB8;
+}
+
+/* Dropdowns and inputs */
+body[data-theme="vivian"] .dropdown-select,
+body[data-theme="vivian"] .number-input,
+body[data-theme="vivian"] .text-input,
+body[data-theme="vivian"] .settings-string-input,
+body[data-theme="vivian"] .preset-dropdown {
+    background-color: rgba(26, 15, 31, 0.8);
+    border: 2px solid #8B5A9F;
+    color: #E8D5F0;
+}
+
+body[data-theme="vivian"] .dropdown-select:focus,
+body[data-theme="vivian"] .number-input:focus,
+body[data-theme="vivian"] .text-input:focus,
+body[data-theme="vivian"] .settings-string-input:focus {
+    border-color: #D97FB8;
+    box-shadow: 0 0 10px rgba(217, 127, 184, 0.4);
+}
+
+/* Toggle switches */
+body[data-theme="vivian"] .toggle-switch {
+    background-color: rgba(107, 76, 122, 0.6);
+    border: 2px solid #8B5A9F;
+}
+
+body[data-theme="vivian"] .toggle-switch.active {
+    background-color: #D97FB8;
+    border-color: #F0A8D8;
+}
+
+body[data-theme="vivian"] .toggle-slider {
+    background-color: #6B4C7A;
+}
+
+body[data-theme="vivian"] .toggle-switch.active .toggle-slider {
+    background-color: #FFF;
+}
+
+/* Tabs */
+body[data-theme="vivian"] .panel-tab {
+    background-color: rgba(107, 76, 122, 0.6);
+    border: 2px solid #8B5A9F;
+    color: #E8D5F0;
+}
+
+body[data-theme="vivian"] .panel-tab:hover {
+    background-color: rgba(139, 90, 159, 0.6);
+    border-color: #D97FB8;
+}
+
+body[data-theme="vivian"] .panel-tab.active {
+    background-color: #8B5A9F;
+    border-color: #F0A8D8;
+    color: #FFF;
+}
+
+/* Modal */
+body[data-theme="vivian"] .modal {
+    background-color: rgba(139, 90, 159, 0.95);
+    border: 2px solid #D97FB8;
+    box-shadow: 0 8px 32px rgba(217, 127, 184, 0.4);
+}
+
+body[data-theme="vivian"] .modal-title {
+    color: #FFF;
+    text-shadow: 2px 2px 4px rgba(26, 15, 31, 0.8);
+}
+
+body[data-theme="vivian"] .modal-message {
+    color: #E8D5F0;
+}
+
+body[data-theme="vivian"] .modal-button {
+    background: linear-gradient(135deg, #6B4C7A 0%, #4A335A 100%);
+    border: 2px solid #D97FB8;
+    color: #FFF;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+body[data-theme="vivian"] .modal-button:hover {
+    background: linear-gradient(135deg, #8B5A9F 0%, #6B4C7A 100%);
+    border-color: #F0A8D8;
+    box-shadow: 0 2px 10px rgba(217, 127, 184, 0.5);
+}
+
+/* Footer */
+body[data-theme="vivian"] .footer {
+    background: linear-gradient(180deg, rgba(107, 76, 122, 0.9) 0%, rgba(139, 90, 159, 0.95) 100%);
+    border-top: 2px solid #D97FB8;
+}
+
+body[data-theme="vivian"] .footer-link {
+    color: #E8D5F0;
+    border: 2px solid #8B5A9F;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+body[data-theme="vivian"] .footer-link:hover {
+    background-color: rgba(217, 127, 184, 0.3);
+    border-color: #D97FB8;
+    color: #FFF;
+    box-shadow: 0 0 10px rgba(217, 127, 184, 0.4);
+}
+
+body[data-theme="vivian"] .footer-text {
+    color: #E8D5F0;
+}
+
+/* Progress bar */
+body[data-theme="vivian"] #progressBar {
+    background: linear-gradient(90deg, #8B5A9F 0%, #D97FB8 100%);
+}
+
+body[data-theme="vivian"] #progressSection > div {
+    background: rgba(26, 15, 31, 0.6);
+}
+
+/* Version text */
+body[data-theme="vivian"] .generator-version {
+    color: #D97FB8;
+}
+
+/* Help icons */
+body[data-theme="vivian"] .help-icon {
+    background-color: #8B5A9F;
+    border-color: #D97FB8;
+    color: #FFF;
+}
+
+body[data-theme="vivian"] .help-icon:hover {
+    background-color: #D97FB8;
+    border-color: #F0A8D8;
+}
+
+/* Labels */
+body[data-theme="vivian"] .dropdown-label,
+body[data-theme="vivian"] .number-label,
+body[data-theme="vivian"] .text-label,
+body[data-theme="vivian"] .toggle-label,
+body[data-theme="vivian"] .settings-string-label {
+    color: #E8D5F0;
+}
+
+/* Code blocks */
+body[data-theme="vivian"] code {
+    background: rgba(26, 15, 31, 0.8) !important;
+    color: #F0A8D8 !important;
+    border: 1px solid #D97FB8 !important;
+    padding: 3px 8px !important;
+    border-radius: 4px !important;
+    font-family: 'Courier New', monospace !important;
+}
+
+/* Helper text */
+body[data-theme="vivian"] .helper-text {
+    color: #D4B8E0;
+}
+
+/* Delete preset button */
+body[data-theme="vivian"] .delete-preset-button {
+    background-color: #8B3A6B;
+    border: 2px solid #D97FB8;
+}
+
+body[data-theme="vivian"] .delete-preset-button:hover {
+    background-color: #A84F84;
+    border-color: #F0A8D8;
+}

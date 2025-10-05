@@ -1,0 +1,306 @@
+/* ==================== GOOMBELLA THEME ====================
+ * Based on Goombella from TTYD
+ * Color palette: Pink, coral, blonde/cream accents
+ */
+
+/* Override main colors */
+body[data-theme="goombella"] {
+    --primary-color: #FF8BA0; /* Goombella pink */
+    --secondary-color: #FFD4A3; /* Blonde/cream */
+    --accent-color: #FF6B85; /* Deeper pink */
+    --bg-color: #FFF5F0; /* Soft cream background */
+    --text-color: #5D3A3A; /* Warm brown text */
+}
+
+/* Background */
+body[data-theme="goombella"] {
+    background: linear-gradient(135deg, #FFE5E0 0%, #FFD4C8 50%, #FFF5DC 100%);
+}
+
+/* Page wrapper background */
+body[data-theme="goombella"] .page-wrapper {
+    background-color: rgba(255, 229, 224, 0.15);
+}
+
+/* Header */
+body[data-theme="goombella"] .header {
+    background: linear-gradient(180deg, #FF9BB0 0%, #FF8BA0 50%, #FF7A95 100%);
+    border-bottom: 3px solid #FFD4A3;
+    box-shadow: 0 2px 8px rgba(255, 212, 163, 0.4);
+}
+
+/* Links */
+body[data-theme="goombella"] .pages-link {
+    background: linear-gradient(135deg, #FF8BA0 0%, #FF7A95 100%);
+    border: 2px solid #FFD4A3;
+    color: #FFF;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+body[data-theme="goombella"] .pages-link:hover {
+    background: linear-gradient(135deg, #FFA5B8 0%, #FF8BA0 100%);
+    border-color: #FFBD6E;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 189, 110, 0.5);
+}
+
+/* Info panel */
+body[data-theme="goombella"] .info-panel {
+    background-color: rgba(255, 155, 176, 0.85);
+    border: 3px solid #FFD4A3;
+}
+
+/* Headers */
+body[data-theme="goombella"] .info-header,
+body[data-theme="goombella"] .large-header {
+    color: #7D3A4A;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.7);
+}
+
+body[data-theme="goombella"] .basic-header,
+body[data-theme="goombella"] .links-header {
+    color: #5D3A3A;
+}
+
+/* Buttons and Links */
+body[data-theme="goombella"] .info-link,
+body[data-theme="goombella"] .preset-button {
+    background: linear-gradient(135deg, #FF8BA0 0%, #FF7A95 100%);
+    border: 2px solid #FFD4A3;
+    color: #FFF;
+}
+
+body[data-theme="goombella"] .info-link:hover,
+body[data-theme="goombella"] .preset-button:hover {
+    background: linear-gradient(135deg, #FFBD6E 0%, #FFA347 100%);
+    border-color: #FF9347;
+    box-shadow: 0 4px 15px rgba(255, 147, 71, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Generate panel */
+body[data-theme="goombella"] .generate-panel {
+    background-color: rgba(255, 155, 176, 0.85);
+    border: 3px solid #FFD4A3;
+}
+
+/* Preset section */
+body[data-theme="goombella"] .preset-section {
+    background-color: rgba(255, 212, 200, 0.6);
+    border: 2px solid #FFD4A3;
+}
+
+body[data-theme="goombella"] .preset-header {
+    color: #7D3A4A;
+    border-bottom: 2px solid #FFD4A3;
+}
+
+/* Dropdowns and inputs */
+body[data-theme="goombella"] .dropdown-select,
+body[data-theme="goombella"] .number-input,
+body[data-theme="goombella"] .text-input,
+body[data-theme="goombella"] .settings-string-input,
+body[data-theme="goombella"] .preset-dropdown {
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 2px solid #FF8BA0;
+    color: #5D3A3A;
+}
+
+body[data-theme="goombella"] .dropdown-select:focus,
+body[data-theme="goombella"] .number-input:focus,
+body[data-theme="goombella"] .text-input:focus,
+body[data-theme="goombella"] .settings-string-input:focus {
+    border-color: #FFBD6E;
+    box-shadow: 0 0 10px rgba(255, 189, 110, 0.4);
+}
+
+/* Toggle switches */
+body[data-theme="goombella"] .toggle-switch {
+    background-color: rgba(255, 212, 200, 0.6);
+    border: 2px solid #FF8BA0;
+}
+
+body[data-theme="goombella"] .toggle-switch.active {
+    background-color: #FFBD6E;
+    border-color: #FFA347;
+}
+
+body[data-theme="goombella"] .toggle-slider {
+    background-color: #FFD4C8;
+}
+
+body[data-theme="goombella"] .toggle-switch.active .toggle-slider {
+    background-color: #FFF;
+}
+
+/* Tabs */
+body[data-theme="goombella"] .panel-tab {
+    background-color: rgba(255, 212, 200, 0.6);
+    border: 2px solid #FF8BA0;
+    color: #5D3A3A;
+}
+
+body[data-theme="goombella"] .panel-tab:hover {
+    background-color: rgba(255, 189, 110, 0.4);
+    border-color: #FFBD6E;
+}
+
+body[data-theme="goombella"] .panel-tab.active {
+    background-color: #FFBD6E;
+    border-color: #FFA347;
+    color: #FFF;
+}
+
+/* Modal */
+body[data-theme="goombella"] .modal {
+    background-color: rgba(255, 155, 176, 0.95);
+    border: 2px solid #FFD4A3;
+    box-shadow: 0 8px 32px rgba(255, 212, 163, 0.4);
+}
+
+body[data-theme="goombella"] .modal-title {
+    color: #7D3A4A;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.7);
+}
+
+body[data-theme="goombella"] .modal-message {
+    color: #5D3A3A;
+}
+
+body[data-theme="goombella"] .modal-button {
+    background: linear-gradient(135deg, #FF8BA0 0%, #FF7A95 100%);
+    border: 2px solid #FFD4A3;
+    color: #FFF;
+}
+
+body[data-theme="goombella"] .modal-button:hover {
+    background: linear-gradient(135deg, #FFBD6E 0%, #FFA347 100%);
+    border-color: #FF9347;
+    box-shadow: 0 2px 10px rgba(255, 147, 71, 0.5);
+}
+
+/* Footer */
+body[data-theme="goombella"] .footer {
+    background: linear-gradient(180deg, rgba(255, 139, 160, 0.9) 0%, rgba(255, 155, 176, 0.95) 100%);
+    border-top: 2px solid #FFD4A3;
+}
+
+body[data-theme="goombella"] .footer-link {
+    background-color: #FF8BA0;
+    color: #FFF;
+    border: 2px solid #FFD4A3;
+}
+
+body[data-theme="goombella"] .footer-link:hover {
+    background-color: #FFBD6E;
+    border-color: #FFA347;
+    box-shadow: 0 0 10px rgba(255, 147, 71, 0.4);
+}
+
+body[data-theme="goombella"] .footer-text {
+    color: #5D3A3A;
+}
+
+/* Progress bar */
+body[data-theme="goombella"] #progressBar {
+    background: linear-gradient(90deg, #FF8BA0 0%, #FFBD6E 100%);
+}
+
+body[data-theme="goombella"] #progressSection > div {
+    background: rgba(255, 229, 224, 0.6);
+}
+
+/* Version text */
+body[data-theme="goombella"] .generator-version {
+    color: #FFBD6E;
+}
+
+/* Help icons */
+body[data-theme="goombella"] .help-icon {
+    background-color: #FF8BA0;
+    border-color: #FFD4A3;
+    color: #FFF;
+}
+
+body[data-theme="goombella"] .help-icon:hover {
+    background-color: #FFBD6E;
+    border-color: #FFA347;
+}
+
+/* Labels */
+body[data-theme="goombella"] .dropdown-label,
+body[data-theme="goombella"] .number-label,
+body[data-theme="goombella"] .text-label,
+body[data-theme="goombella"] .toggle-label,
+body[data-theme="goombella"] .settings-string-label {
+    color: #5D3A3A;
+}
+
+/* Code blocks */
+body[data-theme="goombella"] code {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #FF6B85 !important;
+    border: 1px solid #FFD4A3 !important;
+    padding: 3px 8px !important;
+    border-radius: 4px !important;
+    font-family: 'Courier New', monospace !important;
+}
+
+/* Helper text */
+body[data-theme="goombella"] .helper-text {
+    color: #9D6A6A;
+}
+
+/* Delete preset button */
+body[data-theme="goombella"] .delete-preset-button {
+    background-color: #E57373;
+    border: 2px solid #FF8BA0;
+}
+
+body[data-theme="goombella"] .delete-preset-button:hover {
+    background-color: #EF5350;
+    border-color: #FF6B85;
+}
+
+/* Theme selector styles */
+body[data-theme="goombella"] .theme-selector {
+    background-color: rgba(255, 155, 176, 0.95);
+    border-color: #FFD4A3;
+}
+
+body[data-theme="goombella"] .theme-selector-header {
+    color: #5D3A3A;
+}
+
+body[data-theme="goombella"] .theme-selector-header:hover {
+    background-color: rgba(255, 212, 163, 0.3);
+}
+
+body[data-theme="goombella"] .theme-selector-options {
+    border-top-color: #FFD4A3;
+}
+
+body[data-theme="goombella"] .theme-option {
+    border-bottom-color: rgba(255, 212, 163, 0.3);
+}
+
+body[data-theme="goombella"] .theme-option:hover {
+    background-color: rgba(255, 212, 163, 0.2);
+}
+
+body[data-theme="goombella"] .theme-option.active {
+    background-color: rgba(255, 189, 110, 0.4);
+    border-left-color: #FFBD6E;
+}
+
+body[data-theme="goombella"] .theme-name {
+    color: #5D3A3A;
+}
+
+body[data-theme="goombella"] .theme-description {
+    color: #9D6A6A;
+}
+
+body[data-theme="goombella"] .theme-option.active .theme-name {
+    color: #FF6B85;
+}

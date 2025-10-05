@@ -1,0 +1,319 @@
+/* ==================== RAWK HAWK THEME ====================
+ * Based on Rawk Hawk from TTYD
+ * Color palette: Bold yellow/gold with red/orange accents
+ */
+
+/* Override main colors */
+body[data-theme="rawkhawk"] {
+    --primary-color: #FFD700; /* Champion gold */
+    --secondary-color: #FF4500; /* Wrestling red-orange */
+    --accent-color: #FFA500; /* Bright orange */
+    --bg-color: #FFF8DC; /* Cornsilk background */
+    --text-color: #2C1810; /* Dark brown text */
+}
+
+/* Background */
+body[data-theme="rawkhawk"] {
+    background: linear-gradient(135deg, #FFE87C 0%, #FFD700 50%, #FFAA00 100%);
+}
+
+/* Page wrapper background */
+body[data-theme="rawkhawk"] .page-wrapper {
+    background-color: rgba(255, 232, 124, 0.2);
+}
+
+/* Header */
+body[data-theme="rawkhawk"] .header {
+    background: linear-gradient(180deg, #FFD700 0%, #FFC700 50%, #FFB700 100%);
+    border-bottom: 3px solid #FF4500;
+    box-shadow: 0 2px 8px rgba(255, 69, 0, 0.4);
+}
+
+/* Links */
+body[data-theme="rawkhawk"] .pages-link {
+    background: linear-gradient(135deg, #FF4500 0%, #FF6347 100%);
+    border: 2px solid #FFD700;
+    color: #FFF;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+body[data-theme="rawkhawk"] .pages-link:hover {
+    background: linear-gradient(135deg, #FF6347 0%, #FF7F50 100%);
+    border-color: #FFA500;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 165, 0, 0.5);
+}
+
+/* Info panel */
+body[data-theme="rawkhawk"] .info-panel {
+    background-color: rgba(255, 215, 0, 0.9);
+    border: 3px solid #FF4500;
+}
+
+/* Headers */
+body[data-theme="rawkhawk"] .info-header,
+body[data-theme="rawkhawk"] .large-header {
+    color: #C41E3A;
+    text-shadow: 2px 2px 4px rgba(255, 215, 0, 0.8);
+}
+
+body[data-theme="rawkhawk"] .basic-header,
+body[data-theme="rawkhawk"] .links-header {
+    color: #2C1810;
+}
+
+/* Buttons and Links */
+body[data-theme="rawkhawk"] .info-link,
+body[data-theme="rawkhawk"] .preset-button {
+    background: linear-gradient(135deg, #FF4500 0%, #FF6347 100%);
+    border: 2px solid #FFD700;
+    color: #FFF;
+}
+
+body[data-theme="rawkhawk"] .info-link:hover,
+body[data-theme="rawkhawk"] .preset-button:hover {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border-color: #FF4500;
+    color: #2C1810;
+    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Generate panel */
+body[data-theme="rawkhawk"] .generate-panel {
+    background-color: rgba(255, 215, 0, 0.9);
+    border: 3px solid #FF4500;
+}
+
+/* Preset section */
+body[data-theme="rawkhawk"] .preset-section {
+    background-color: rgba(255, 200, 100, 0.7);
+    border: 2px solid #FF6347;
+}
+
+body[data-theme="rawkhawk"] .preset-header {
+    color: #C41E3A;
+    border-bottom: 2px solid #FF4500;
+}
+
+/* Dropdowns and inputs */
+body[data-theme="rawkhawk"] .dropdown-select,
+body[data-theme="rawkhawk"] .number-input,
+body[data-theme="rawkhawk"] .text-input,
+body[data-theme="rawkhawk"] .settings-string-input,
+body[data-theme="rawkhawk"] .preset-dropdown {
+    background-color: #FFFAF0;
+    border: 2px solid #FF4500;
+    color: #2C1810;
+}
+
+body[data-theme="rawkhawk"] .dropdown-select:focus,
+body[data-theme="rawkhawk"] .number-input:focus,
+body[data-theme="rawkhawk"] .text-input:focus,
+body[data-theme="rawkhawk"] .settings-string-input:focus {
+    border-color: #FFD700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+/* Toggle switches */
+body[data-theme="rawkhawk"] .toggle-switch {
+    background-color: rgba(255, 200, 100, 0.7);
+    border: 2px solid #FF4500;
+}
+
+body[data-theme="rawkhawk"] .toggle-switch.active {
+    background-color: #FF4500;
+    border-color: #FFD700;
+}
+
+body[data-theme="rawkhawk"] .toggle-slider {
+    background-color: #FFE87C;
+}
+
+body[data-theme="rawkhawk"] .toggle-switch.active .toggle-slider {
+    background-color: #FFF;
+}
+
+/* Tabs */
+body[data-theme="rawkhawk"] .panel-tab {
+    background-color: rgba(255, 200, 100, 0.7);
+    border: 2px solid #FF4500;
+    color: #2C1810;
+}
+
+body[data-theme="rawkhawk"] .panel-tab:hover {
+    background-color: rgba(255, 165, 0, 0.5);
+    border-color: #FFD700;
+}
+
+body[data-theme="rawkhawk"] .panel-tab.active {
+    background-color: #FF4500;
+    border-color: #FFD700;
+    color: #FFF;
+}
+
+/* Modal */
+body[data-theme="rawkhawk"] .modal {
+    background-color: rgba(255, 215, 0, 0.98);
+    border: 2px solid #FF4500;
+    box-shadow: 0 8px 32px rgba(255, 69, 0, 0.4);
+}
+
+body[data-theme="rawkhawk"] .modal-title {
+    color: #C41E3A;
+    text-shadow: 2px 2px 4px rgba(255, 215, 0, 0.8);
+}
+
+body[data-theme="rawkhawk"] .modal-message {
+    color: #2C1810;
+}
+
+body[data-theme="rawkhawk"] .modal-button {
+    background: linear-gradient(135deg, #FF4500 0%, #FF6347 100%);
+    border: 2px solid #FFD700;
+    color: #FFF;
+}
+
+body[data-theme="rawkhawk"] .modal-button:hover {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border-color: #FF4500;
+    color: #2C1810;
+    box-shadow: 0 2px 10px rgba(255, 165, 0, 0.5);
+}
+
+/* Footer */
+body[data-theme="rawkhawk"] .footer {
+    background: linear-gradient(180deg, rgba(255, 215, 0, 0.95) 0%, rgba(255, 200, 100, 0.98) 100%);
+    border-top: 2px solid #FF4500;
+}
+
+body[data-theme="rawkhawk"] .footer-link {
+    background-color: #FF4500;
+    color: #FFF;
+    border: 2px solid #FFD700;
+}
+
+body[data-theme="rawkhawk"] .footer-link:hover {
+    background-color: #FFD700;
+    color: #2C1810;
+    border-color: #FF4500;
+    box-shadow: 0 0 10px rgba(255, 165, 0, 0.4);
+}
+
+body[data-theme="rawkhawk"] .footer-text {
+    color: #2C1810;
+}
+
+/* Progress bar */
+body[data-theme="rawkhawk"] #progressBar {
+    background: linear-gradient(90deg, #FFD700 0%, #FF4500 100%);
+}
+
+body[data-theme="rawkhawk"] #progressSection > div {
+    background: rgba(255, 232, 124, 0.6);
+}
+
+/* Version text */
+body[data-theme="rawkhawk"] .generator-version {
+    color: #FF4500;
+}
+
+/* Help icons */
+body[data-theme="rawkhawk"] .help-icon {
+    background-color: #FF4500;
+    border-color: #FFD700;
+    color: #FFF;
+}
+
+body[data-theme="rawkhawk"] .help-icon:hover {
+    background-color: #FFD700;
+    border-color: #FF4500;
+    color: #2C1810;
+}
+
+/* Labels */
+body[data-theme="rawkhawk"] .dropdown-label,
+body[data-theme="rawkhawk"] .number-label,
+body[data-theme="rawkhawk"] .text-label,
+body[data-theme="rawkhawk"] .toggle-label,
+body[data-theme="rawkhawk"] .settings-string-label {
+    color: #2C1810;
+}
+
+/* Code blocks */
+body[data-theme="rawkhawk"] code {
+    background: #FFFAF0 !important;
+    color: #FF4500 !important;
+    border: 1px solid #FFD700 !important;
+    padding: 3px 8px !important;
+    border-radius: 4px !important;
+    font-family: 'Courier New', monospace !important;
+}
+
+/* Helper text */
+body[data-theme="rawkhawk"] .helper-text {
+    color: #8B4513;
+}
+
+/* Delete preset button */
+body[data-theme="rawkhawk"] .delete-preset-button {
+    background-color: #8B0000;
+    border: 2px solid #FFD700;
+}
+
+body[data-theme="rawkhawk"] .delete-preset-button:hover {
+    background-color: #A52A2A;
+    border-color: #FF4500;
+}
+
+/* Theme selector styles */
+body[data-theme="rawkhawk"] .theme-selector {
+    background-color: rgba(255, 215, 0, 0.98);
+    border-color: #FF4500;
+}
+
+body[data-theme="rawkhawk"] .theme-selector-header {
+    color: #2C1810;
+}
+
+body[data-theme="rawkhawk"] .theme-selector-header:hover {
+    background-color: rgba(255, 69, 0, 0.2);
+}
+
+body[data-theme="rawkhawk"] .theme-selector-options {
+    border-top-color: #FF4500;
+}
+
+body[data-theme="rawkhawk"] .theme-option {
+    border-bottom-color: rgba(255, 69, 0, 0.3);
+}
+
+body[data-theme="rawkhawk"] .theme-option:hover {
+    background-color: rgba(255, 69, 0, 0.15);
+}
+
+body[data-theme="rawkhawk"] .theme-option.active {
+    background-color: rgba(255, 69, 0, 0.3);
+    border-left-color: #FF4500;
+}
+
+body[data-theme="rawkhawk"] .theme-name {
+    color: #2C1810;
+}
+
+body[data-theme="rawkhawk"] .theme-description {
+    color: #8B4513;
+}
+
+body[data-theme="rawkhawk"] .theme-option.active .theme-name {
+    color: #C41E3A;
+}
+
+/* Custom scrollbar for Rawk Hawk theme */
+body[data-theme="rawkhawk"] .theme-selector-options::-webkit-scrollbar-thumb {
+    background: #FF4500;
+}
+
+body[data-theme="rawkhawk"] .theme-selector-options::-webkit-scrollbar-thumb:hover {
+    background: #FF6347;
+}

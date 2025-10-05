@@ -6,7 +6,13 @@
     <title>TTYD Randomizer - Patch ROM</title>
     <meta name="description" content="Patch your TTYD ROM with a seed patch file">
     <meta name="keywords" content="TTYD, randomizer, patch, Paper Mario, Thousand-Year Door">
+    <script src="{{ url_for('static', filename='js/theme-switcher.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-vivian.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-yoshi.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-goombella.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-msmowz.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-rawkhawk.css') }}">
 </head>
 <body>
 <div class="page-wrapper">
@@ -19,8 +25,8 @@
     <div class="header-pages">
         <a href="{{ url_for('generate') }}" class="pages-link">Seed Generator</a>
         <a href="{{ url_for('patch') }}" class="pages-link">Patch ROM</a>
-        <a href="{{ url_for('archipelago') }}" class="pages-link">Archipelago</a>
         <a href="{{ url_for('about') }}" class="pages-link">About</a>
+        <a href="{{ url_for('archipelago') }}" class="pages-link">Archipelago</a>
     </div>
 </div>
 
@@ -105,6 +111,16 @@
     </div>
 </div>
 
+<!-- Modal System -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <p class="modal-message" id="modalMessage"></p>
+        <input type="text" class="modal-input" id="modalInput" style="display: none;">
+        <div class="modal-buttons" id="modalButtons"></div>
+    </div>
+</div>
+
 <!-- Import gciso.js and other dependencies -->
 <script type="module">
     import { parseISO, addOrReplace, rebuildISO } from '{{ url_for("static", filename="js/gciso.js") }}';
@@ -112,6 +128,7 @@
     window.addOrReplace = addOrReplace;
     window.rebuildISO = rebuildISO;
 </script>
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
 <script src="{{ url_for('static', filename='js/ips.js') }}"></script>
 <script src="{{ url_for('static', filename='js/patcher.js') }}"></script>
 
@@ -196,7 +213,7 @@ async function loadPatchFile(event) {
 
     } catch (error) {
         console.error('Error loading patch file:', error);
-        alert(`Failed to load patch file: ${error.message}`);
+        showModal('Error', `Failed to load patch file: ${error.message}`);
     }
 
     // Clear file input

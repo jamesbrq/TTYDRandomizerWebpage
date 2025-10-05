@@ -1,0 +1,250 @@
+/* Doopliss Theme - Darker White with Blue */
+body[data-theme="doopliss"] {
+    --primary-color: #5C7CBA; /* Doopliss blue */
+    --secondary-color: #E0E0E0; /* Darker white/gray */
+    --accent-color: #4A6FA5; /* Deeper blue */
+    --bg-color: #F5F5F5; /* Light gray background */
+    --text-color: #2C2C2C; /* Dark gray text */
+}
+
+body[data-theme="doopliss"] {
+    background: linear-gradient(135deg, #E0E0E0 0%, #F5F5F5 50%, #D3D3D3 100%);
+    color: var(--text-color);
+}
+
+/* Header */
+body[data-theme="doopliss"] .header {
+    background: linear-gradient(135deg, #5C7CBA 0%, #4A6FA5 100%);
+    border-bottom: 3px solid #3A5A8A;
+}
+
+body[data-theme="doopliss"] .pages-link {
+    background: linear-gradient(135deg, #E0E0E0 0%, #D3D3D3 100%);
+    color: #2C2C2C;
+    border: 2px solid #B8B8B8;
+}
+
+body[data-theme="doopliss"] .pages-link:hover {
+    background: linear-gradient(135deg, #5C7CBA 0%, #4A6FA5 100%);
+    color: #FFFFFF;
+    border-color: #3A5A8A;
+}
+
+/* Main Panels */
+body[data-theme="doopliss"] .info-panel,
+body[data-theme="doopliss"] .generate-panel {
+    background-color: #FFFFFF;
+    border: 3px solid #5C7CBA;
+    box-shadow: 0 8px 16px rgba(92, 124, 186, 0.3);
+}
+
+body[data-theme="doopliss"] .preset-section {
+    background-color: #F8F8F8;
+    border: 2px solid #D3D3D3;
+}
+
+/* Buttons */
+body[data-theme="doopliss"] .preset-button,
+body[data-theme="doopliss"] .info-link {
+    background: linear-gradient(135deg, #5C7CBA 0%, #4A6FA5 100%);
+    color: #FFFFFF;
+    border: 2px solid #3A5A8A;
+}
+
+body[data-theme="doopliss"] .preset-button:hover,
+body[data-theme="doopliss"] .info-link:hover {
+    background: linear-gradient(135deg, #E0E0E0 0%, #D3D3D3 100%);
+    color: #2C2C2C;
+    border-color: #B8B8B8;
+}
+
+body[data-theme="doopliss"] .preset-button:disabled {
+    background: #D3D3D3;
+    color: #888888;
+    border-color: #B8B8B8;
+}
+
+/* Headers */
+body[data-theme="doopliss"] .large-header,
+body[data-theme="doopliss"] .info-header {
+    color: #5C7CBA;
+    text-shadow: 2px 2px 4px rgba(74, 111, 165, 0.3);
+}
+
+body[data-theme="doopliss"] .preset-header {
+    color: #4A6FA5;
+}
+
+body[data-theme="doopliss"] .basic-header {
+    color: var(--text-color);
+}
+
+/* Form Elements */
+body[data-theme="doopliss"] .settings-string-input,
+body[data-theme="doopliss"] .dropdown-select,
+body[data-theme="doopliss"] .number-input,
+body[data-theme="doopliss"] .text-input,
+body[data-theme="doopliss"] .preset-dropdown {
+    background-color: #FFFFFF;
+    color: var(--text-color);
+    border: 2px solid #D3D3D3;
+}
+
+body[data-theme="doopliss"] .settings-string-input:focus,
+body[data-theme="doopliss"] .dropdown-select:focus,
+body[data-theme="doopliss"] .number-input:focus,
+body[data-theme="doopliss"] .text-input:focus {
+    border-color: #5C7CBA;
+    box-shadow: 0 0 8px rgba(92, 124, 186, 0.4);
+}
+
+/* Checkboxes */
+body[data-theme="doopliss"] .settings-checkbox {
+    border: 2px solid #D3D3D3;
+    background-color: #FFFFFF;
+}
+
+body[data-theme="doopliss"] .settings-checkbox:checked {
+    background-color: #5C7CBA;
+    border-color: #4A6FA5;
+}
+
+body[data-theme="doopliss"] .settings-checkbox:focus {
+    box-shadow: 0 0 8px rgba(92, 124, 186, 0.4);
+}
+
+/* Page Wrapper */
+body[data-theme="doopliss"] .page-wrapper {
+    background-color: transparent;
+}
+
+/* Footer */
+body[data-theme="doopliss"] .footer {
+    background: linear-gradient(135deg, #5C7CBA 0%, #4A6FA5 100%);
+    border-top: 3px solid #3A5A8A;
+}
+
+body[data-theme="doopliss"] .footer-text {
+    color: #FFFFFF;
+}
+
+body[data-theme="doopliss"] .footer-link {
+    background-color: #E0E0E0;
+    color: #2C2C2C;
+    border: 2px solid #B8B8B8;
+}
+
+body[data-theme="doopliss"] .footer-link:hover {
+    background-color: #FFFFFF;
+    border-color: #5C7CBA;
+}
+
+body[data-theme="doopliss"] .footer-divider {
+    background-color: #E0E0E0;
+}
+
+/* Modal */
+body[data-theme="doopliss"] .modal {
+    background-color: #FFFFFF;
+    border: 3px solid #5C7CBA;
+    box-shadow: 0 10px 30px rgba(92, 124, 186, 0.4);
+}
+
+body[data-theme="doopliss"] .modal-overlay {
+    background-color: rgba(92, 124, 186, 0.6);
+}
+
+body[data-theme="doopliss"] .modal-title {
+    color: #5C7CBA;
+}
+
+body[data-theme="doopliss"] .modal-message {
+    color: var(--text-color);
+}
+
+body[data-theme="doopliss"] .modal-input {
+    background-color: #FFFFFF;
+    color: var(--text-color);
+    border: 2px solid #D3D3D3;
+}
+
+body[data-theme="doopliss"] .modal-input:focus {
+    border-color: #5C7CBA;
+    box-shadow: 0 0 8px rgba(92, 124, 186, 0.4);
+}
+
+/* Tabs */
+body[data-theme="doopliss"] .panel-tab {
+    background: linear-gradient(135deg, #E0E0E0 0%, #D3D3D3 100%);
+    color: #2C2C2C;
+    border: 2px solid #B8B8B8;
+}
+
+body[data-theme="doopliss"] .panel-tab:hover {
+    background: linear-gradient(135deg, #F5F5F5 0%, #E0E0E0 100%);
+    border-color: #5C7CBA;
+}
+
+body[data-theme="doopliss"] .panel-tab.active {
+    background: linear-gradient(135deg, #5C7CBA 0%, #4A6FA5 100%);
+    color: #FFFFFF;
+    border-color: #3A5A8A;
+}
+
+/* Theme Selector */
+body[data-theme="doopliss"] .theme-selector-header {
+    background: linear-gradient(135deg, #E0E0E0 0%, #D3D3D3 100%);
+    color: #2C2C2C;
+    border: 2px solid #B8B8B8;
+}
+
+body[data-theme="doopliss"] .theme-selector-header:hover {
+    background: linear-gradient(135deg, #F5F5F5 0%, #E0E0E0 100%);
+    border-color: #5C7CBA;
+}
+
+body[data-theme="doopliss"] .theme-selector.expanded .theme-selector-options {
+    background: #FFFFFF;
+    border: 2px solid #5C7CBA;
+    border-top: 2px solid #5C7CBA;
+}
+
+body[data-theme="doopliss"] .theme-option {
+    background: #FFFFFF;
+    color: #2C2C2C;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+body[data-theme="doopliss"] .theme-option:hover {
+    background: linear-gradient(135deg, #5C7CBA 0%, #4A6FA5 100%);
+    color: #FFFFFF;
+}
+
+body[data-theme="doopliss"] .theme-option.active {
+    background: linear-gradient(135deg, #E0E0E0 0%, #D3D3D3 100%);
+    color: #2C2C2C;
+    border-left: 4px solid #5C7CBA;
+}
+
+/* Scrollbar */
+body[data-theme="doopliss"] .theme-selector-options::-webkit-scrollbar-thumb {
+    background: #5C7CBA;
+}
+
+body[data-theme="doopliss"] .theme-selector-options::-webkit-scrollbar-thumb:hover {
+    background: #4A6FA5;
+}
+
+/* Progress Bar */
+body[data-theme="doopliss"] #progressBar {
+    background: linear-gradient(135deg, #5C7CBA 0%, #4A6FA5 100%);
+}
+
+/* Links */
+body[data-theme="doopliss"] a {
+    color: #5C7CBA;
+}
+
+body[data-theme="doopliss"] a:hover {
+    color: #4A6FA5;
+}

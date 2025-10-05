@@ -5,7 +5,13 @@
     <title>TTYD Randomizer</title>
     <meta name="description" content="A randomizer for the game TTYD, enhancing replayability with randomized items, enemies, and more.">
     <meta name="keywords" content="TTYD, randomizer, game, mod, Mario, Paper Mario, Thousand-Year Door, randomization">
+    <script src="{{ url_for('static', filename='js/theme-switcher.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-vivian.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-yoshi.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-goombella.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-msmowz.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-rawkhawk.css') }}">
 </head>
 <body>
     <div class="page-wrapper">
@@ -18,8 +24,8 @@
         <div class="header-pages">
             <a href="{{ url_for('generate') }}" class="pages-link">Seed Generator</a>
             <a href="{{ url_for('patch') }}" class="pages-link">Patch ROM</a>
+            <a href="{{ url_for('about') }}" class="pages-link">About</a>
             <a href="{{ url_for('archipelago') }}" class="pages-link">Archipelago</a>
-        <a href="{{ url_for('about') }}" class="pages-link">About</a>
         </div>
     </div>
     <div class="info-parent">
@@ -38,7 +44,7 @@
                 <div class="info-link-container">
                     <a href="{{ url_for('generate') }}" class="info-link">Generate Seed</a>
                 </div>
-                <h1 class="generator-version">randomizer v0.5.0</h1>
+                <h1 class="generator-version">Randomizer v0.6.0</h1>
             </div>
             <h1 class="links-header">Links & Info:</h1>
             <div class="info-link-group">

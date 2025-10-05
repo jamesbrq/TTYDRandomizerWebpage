@@ -54,7 +54,7 @@ const LOCATION_TO_UNIT = {
 
 async function patchROM() {
     if (!romFile || !seedData) {
-        alert('Please select a ROM file first.');
+        showModal('Error', 'Please select a ROM file first.');
         return;
     }
 
@@ -165,7 +165,7 @@ async function patchROM() {
 
     } catch (error) {
         console.error('Patching failed:', error);
-        alert(`Patching failed: ${error.message}`);
+        showModal('Patching Error', `Patching failed: ${error.message}`);
         patchBtn.textContent = 'Patch ROM';
         patchBtn.disabled = false;
         progressSection.style.display = 'none';
@@ -755,7 +755,7 @@ function readFileAsArrayBuffer(file) {
  */
 async function downloadPatch() {
     if (!seedData) {
-        alert('No seed data available.');
+        showModal('Error', 'No seed data available.');
         return;
     }
 
@@ -800,7 +800,7 @@ async function downloadPatch() {
 
     } catch (error) {
         console.error('Error generating patch file:', error);
-        alert('Failed to generate patch file: ' + error.message);
+        showModal('Error', 'Failed to generate patch file: ' + error.message);
     }
 }
 
@@ -835,7 +835,7 @@ function deobfuscatePatchData(data) {
 
 async function downloadSpoiler() {
     if (!seedData) {
-        alert('No seed data available.');
+        showModal('Error', 'No seed data available.');
         return;
     }
 
@@ -917,15 +917,43 @@ async function downloadSpoiler() {
 
     } catch (error) {
         console.error('Error generating spoiler:', error);
-        alert('Failed to generate spoiler log: ' + error.message);
+        showModal('Error', 'Failed to generate spoiler log: ' + error.message);
     }
 }
 
-function handleROMSelection(event) {
+async function handleROMSelection(event) {
     const file = event.target.files[0];
-    if (file) {
+    if (!file) return;
+
+    // Check file extension
+    const fileName = file.name.toLowerCase();
+    if (!fileName.endsWith('.iso')) {
+        showModal('Invalid File Format', 'Please select a .iso file.');
+        event.target.value = ''; // Clear the file input
+        return;
+    }
+
+    try {
+        // Read first 6 bytes to verify game ID
+        const headerBlob = file.slice(0, 6);
+        const headerBuffer = await headerBlob.arrayBuffer();
+        const gameID = new TextDecoder().decode(headerBuffer);
+
+        // Check if it's US version of TTYD
+        if (gameID !== 'G8ME01') {
+            showModal('Invalid ROM', `Expected US version of Paper Mario: The Thousand-Year Door (G8ME01), but found: ${gameID}\n\nPlease provide a US TTYD ISO.`);
+            event.target.value = ''; // Clear the file input
+            return;
+        }
+
+        // ROM is valid
         romFile = file;
-        document.getElementById('selectedROMName').textContent = file.name;
+        document.getElementById('selectedROMName').textContent = file.name + ' ✓';
         document.getElementById('patchBtn').disabled = false;
+
+    } catch (error) {
+        console.error('Error validating ROM:', error);
+        showModal('Validation Error', 'Failed to validate ROM file. Please try again.');
+        event.target.value = ''; // Clear the file input
     }
 }

@@ -5,7 +5,13 @@
     <title>TTYD Randomizer</title>
     <meta name="description" content="A randomizer for the game TTYD, enhancing replayability with randomized items, enemies, and more.">
     <meta name="keywords" content="TTYD, randomizer, game, mod, Mario, Paper Mario, Thousand-Year Door, randomization">
+    <script src="{{ url_for('static', filename='js/theme-switcher.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-vivian.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-yoshi.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-goombella.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-msmowz.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-rawkhawk.css') }}">
 </head>
 <body>
 <div class="page-wrapper">
@@ -19,8 +25,8 @@
         <a href="#" id="recentSeedLink" class="pages-link" style="display: none;">Most Recent Seed</a>
         <a href="{{ url_for('generate') }}" class="pages-link">Seed Generator</a>
         <a href="{{ url_for('patch') }}" class="pages-link">Patch ROM</a>
-        <a href="{{ url_for('archipelago') }}" class="pages-link">Archipelago</a>
         <a href="{{ url_for('about') }}" class="pages-link">About</a>
+        <a href="{{ url_for('archipelago') }}" class="pages-link">Archipelago</a>
     </div>
 </div>
 
@@ -32,7 +38,7 @@
             <button class="preset-button" onclick="document.getElementById('patchFileInput').click()">
                 Load .ttydp Patch File
             </button>
-            <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+            <p class="helper-text">
                 Load a patch file (.ttydp) to apply to your ROM.
             </p>
         </div>
@@ -828,7 +834,7 @@ function savePreset() {
     saveBtn.onclick = () => {
         const presetName = modalInput.value.trim();
         if (!presetName) {
-            alert('Please enter a preset name');
+            showModal('Error', 'Please enter a preset name');
             return;
         }
 

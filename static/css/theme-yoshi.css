@@ -1,0 +1,306 @@
+/* ==================== YOSHI THEME ====================
+ * Based on Yoshi from TTYD
+ * Color palette: Bright greens with orange/red accents
+ */
+
+/* Override main colors */
+body[data-theme="yoshi"] {
+    --primary-color: #7FD14C; /* Bright Yoshi green */
+    --secondary-color: #FF8C42; /* Yoshi orange */
+    --accent-color: #E84A3F; /* Yoshi red */
+    --bg-color: #F0F8E8; /* Pale green */
+    --text-color: #2B5A1E; /* Dark green */
+}
+
+/* Background */
+body[data-theme="yoshi"] {
+    background: linear-gradient(135deg, #D4F1C5 0%, #B8E994 50%, #FFE8D8 100%);
+}
+
+/* Page wrapper background */
+body[data-theme="yoshi"] .page-wrapper {
+    background-color: rgba(139, 195, 74, 0.1);
+}
+
+/* Header */
+body[data-theme="yoshi"] .header {
+    background: linear-gradient(180deg, #8FDB5C 0%, #7FD14C 50%, #6BC13D 100%);
+    border-bottom: 3px solid #FF8C42;
+    box-shadow: 0 2px 8px rgba(255, 140, 66, 0.3);
+}
+
+/* Links */
+body[data-theme="yoshi"] .pages-link {
+    background: linear-gradient(135deg, #7FD14C 0%, #6BC13D 100%);
+    border: 2px solid #FF8C42;
+    color: #FFF;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+body[data-theme="yoshi"] .pages-link:hover {
+    background: linear-gradient(135deg, #FF8C42 0%, #FFB374 100%);
+    border-color: #E84A3F;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 140, 66, 0.5);
+}
+
+/* Info panel */
+body[data-theme="yoshi"] .info-panel {
+    background-color: rgba(143, 219, 92, 0.85);
+    border: 3px solid #FF8C42;
+}
+
+/* Headers */
+body[data-theme="yoshi"] .info-header,
+body[data-theme="yoshi"] .large-header {
+    color: #2B5A1E;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+body[data-theme="yoshi"] .basic-header,
+body[data-theme="yoshi"] .links-header {
+    color: #3A7A25;
+}
+
+/* Buttons and Links */
+body[data-theme="yoshi"] .info-link,
+body[data-theme="yoshi"] .preset-button {
+    background: linear-gradient(135deg, #7FD14C 0%, #6BC13D 100%);
+    border: 2px solid #FF8C42;
+    color: #FFF;
+}
+
+body[data-theme="yoshi"] .info-link:hover,
+body[data-theme="yoshi"] .preset-button:hover {
+    background: linear-gradient(135deg, #FF8C42 0%, #FFB374 100%);
+    border-color: #E84A3F;
+    box-shadow: 0 4px 15px rgba(232, 74, 63, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Generate panel */
+body[data-theme="yoshi"] .generate-panel {
+    background-color: rgba(143, 219, 92, 0.85);
+    border: 3px solid #FF8C42;
+}
+
+/* Preset section */
+body[data-theme="yoshi"] .preset-section {
+    background-color: rgba(184, 233, 148, 0.6);
+    border: 2px solid #FFB374;
+}
+
+body[data-theme="yoshi"] .preset-header {
+    color: #2B5A1E;
+    border-bottom: 2px solid #FF8C42;
+}
+
+/* Dropdowns and inputs */
+body[data-theme="yoshi"] .dropdown-select,
+body[data-theme="yoshi"] .number-input,
+body[data-theme="yoshi"] .text-input,
+body[data-theme="yoshi"] .settings-string-input,
+body[data-theme="yoshi"] .preset-dropdown {
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 2px solid #7FD14C;
+    color: #2B5A1E;
+}
+
+body[data-theme="yoshi"] .dropdown-select:focus,
+body[data-theme="yoshi"] .number-input:focus,
+body[data-theme="yoshi"] .text-input:focus,
+body[data-theme="yoshi"] .settings-string-input:focus {
+    border-color: #FF8C42;
+    box-shadow: 0 0 10px rgba(255, 140, 66, 0.4);
+}
+
+/* Toggle switches */
+body[data-theme="yoshi"] .toggle-switch {
+    background-color: rgba(184, 233, 148, 0.6);
+    border: 2px solid #7FD14C;
+}
+
+body[data-theme="yoshi"] .toggle-switch.active {
+    background-color: #FF8C42;
+    border-color: #E84A3F;
+}
+
+body[data-theme="yoshi"] .toggle-slider {
+    background-color: #B8E994;
+}
+
+body[data-theme="yoshi"] .toggle-switch.active .toggle-slider {
+    background-color: #FFF;
+}
+
+/* Tabs */
+body[data-theme="yoshi"] .panel-tab {
+    background-color: rgba(184, 233, 148, 0.6);
+    border: 2px solid #7FD14C;
+    color: #2B5A1E;
+}
+
+body[data-theme="yoshi"] .panel-tab:hover {
+    background-color: rgba(255, 179, 116, 0.4);
+    border-color: #FF8C42;
+}
+
+body[data-theme="yoshi"] .panel-tab.active {
+    background-color: #FF8C42;
+    border-color: #E84A3F;
+    color: #FFF;
+}
+
+/* Modal */
+body[data-theme="yoshi"] .modal {
+    background-color: rgba(143, 219, 92, 0.95);
+    border: 2px solid #FF8C42;
+    box-shadow: 0 8px 32px rgba(255, 140, 66, 0.4);
+}
+
+body[data-theme="yoshi"] .modal-title {
+    color: #2B5A1E;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+body[data-theme="yoshi"] .modal-message {
+    color: #3A7A25;
+}
+
+body[data-theme="yoshi"] .modal-button {
+    background: linear-gradient(135deg, #7FD14C 0%, #6BC13D 100%);
+    border: 2px solid #FF8C42;
+    color: #FFF;
+}
+
+body[data-theme="yoshi"] .modal-button:hover {
+    background: linear-gradient(135deg, #FF8C42 0%, #E84A3F 100%);
+    border-color: #E84A3F;
+    box-shadow: 0 2px 10px rgba(232, 74, 63, 0.4);
+}
+
+/* Footer */
+body[data-theme="yoshi"] .footer {
+    background: linear-gradient(180deg, rgba(127, 209, 76, 0.9) 0%, rgba(143, 219, 92, 0.95) 100%);
+    border-top: 2px solid #FF8C42;
+}
+
+body[data-theme="yoshi"] .footer-link {
+    background-color: #7FD14C;
+    color: #FFF;
+    border: 2px solid #FF8C42;
+}
+
+body[data-theme="yoshi"] .footer-link:hover {
+    background-color: #FF8C42;
+    border-color: #E84A3F;
+    box-shadow: 0 0 10px rgba(232, 74, 63, 0.4);
+}
+
+body[data-theme="yoshi"] .footer-text {
+    color: #2B5A1E;
+}
+
+/* Progress bar */
+body[data-theme="yoshi"] #progressBar {
+    background: linear-gradient(90deg, #7FD14C 0%, #FF8C42 100%);
+}
+
+body[data-theme="yoshi"] #progressSection > div {
+    background: rgba(212, 241, 197, 0.6);
+}
+
+/* Version text */
+body[data-theme="yoshi"] .generator-version {
+    color: #FF8C42;
+}
+
+/* Help icons */
+body[data-theme="yoshi"] .help-icon {
+    background-color: #7FD14C;
+    border-color: #FF8C42;
+    color: #FFF;
+}
+
+body[data-theme="yoshi"] .help-icon:hover {
+    background-color: #FF8C42;
+    border-color: #E84A3F;
+}
+
+/* Labels */
+body[data-theme="yoshi"] .dropdown-label,
+body[data-theme="yoshi"] .number-label,
+body[data-theme="yoshi"] .text-label,
+body[data-theme="yoshi"] .toggle-label,
+body[data-theme="yoshi"] .settings-string-label {
+    color: #2B5A1E;
+}
+
+/* Code blocks */
+body[data-theme="yoshi"] code {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #E84A3F !important;
+    border: 1px solid #FF8C42 !important;
+    padding: 3px 8px !important;
+    border-radius: 4px !important;
+    font-family: 'Courier New', monospace !important;
+}
+
+/* Helper text */
+body[data-theme="yoshi"] .helper-text {
+    color: #5A9B35;
+}
+
+/* Delete preset button */
+body[data-theme="yoshi"] .delete-preset-button {
+    background-color: #E57373;
+    border: 2px solid #66BB6A;
+}
+
+body[data-theme="yoshi"] .delete-preset-button:hover {
+    background-color: #EF5350;
+    border-color: #4CAF50;
+}
+
+/* Theme selector styles */
+body[data-theme="yoshi"] .theme-selector {
+    background-color: rgba(143, 219, 92, 0.95);
+    border-color: #FF8C42;
+}
+
+body[data-theme="yoshi"] .theme-selector-header {
+    color: #2B5A1E;
+}
+
+body[data-theme="yoshi"] .theme-selector-header:hover {
+    background-color: rgba(255, 140, 66, 0.3);
+}
+
+body[data-theme="yoshi"] .theme-selector-options {
+    border-top-color: #FF8C42;
+}
+
+body[data-theme="yoshi"] .theme-option {
+    border-bottom-color: rgba(255, 140, 66, 0.3);
+}
+
+body[data-theme="yoshi"] .theme-option:hover {
+    background-color: rgba(255, 140, 66, 0.2);
+}
+
+body[data-theme="yoshi"] .theme-option.active {
+    background-color: rgba(255, 140, 66, 0.4);
+    border-left-color: #FF8C42;
+}
+
+body[data-theme="yoshi"] .theme-name {
+    color: #2B5A1E;
+}
+
+body[data-theme="yoshi"] .theme-description {
+    color: #5A9B35;
+}
+
+body[data-theme="yoshi"] .theme-option.active .theme-name {
+    color: #E84A3F;
+}
