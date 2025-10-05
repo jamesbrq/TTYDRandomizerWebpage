@@ -28,34 +28,26 @@
     <div class="info-panel">
         <h1 class="large-header">~ About TTYD Randomizer ~</h1>
         <h1 class="basic-header">
-            The Paper Mario: The Thousand-Year Door Randomizer is a community-driven project that brings new life to this beloved GameCube classic.
+            The Paper Mario: The Thousand-Year Door Randomizer brings new life to this beloved GameCube classic.
             By randomizing item locations, the randomizer creates unique playthroughs where every seed presents new challenges and surprises.
         </h1>
         <h1 class="basic-header">
             This web-based generator allows you to create randomized seeds directly in your browser, with full customization options
-            and the ability to patch your ROM without uploading it anywhere - everything happens locally on your device.
+            and the ability to patch your ROM.
         </h1>
 
         <h1 class="large-header">~ Project Credits ~</h1>
         <h1 class="basic-header">
-            <strong>Lead Developer:</strong> jamesbrq
+            <strong>Developer:</strong> jamesbrq
         </h1>
         <h1 class="basic-header">
-            <strong>Contributors:</strong> The TTYD Randomizer Community
+            <strong>Contributors:</strong> JDaster64, Zephiles, earthor1, kittenchilly
+        </h1>
+        <h1 class="basic-header">
+            <strong>Additional Contributors:</strong> PistonMiner for contributions to the ttyd-tools repo, kipcode66 for development of the multi-rel loader setup used by the randomizer
         </h1>
         <h1 class="basic-header">
             <strong>Special Thanks:</strong> All community members who have tested, provided feedback, and supported the project
-        </h1>
-
-        <h1 class="large-header">~ Technology ~</h1>
-        <h1 class="basic-header">
-            <strong>Web Generator:</strong> Built with Flask, JavaScript, and client-side ROM patching
-        </h1>
-        <h1 class="basic-header">
-            <strong>Core Randomizer:</strong> Based on the Archipelago TTYD implementation
-        </h1>
-        <h1 class="basic-header">
-            <strong>ROM Patching:</strong> Uses in-browser ISO parsing and IPS patching - your ROM never leaves your computer
         </h1>
 
         <h1 class="large-header">~ Version Information ~</h1>
@@ -72,9 +64,6 @@
         <h1 class="large-header">~ Features ~</h1>
         <h1 class="basic-header">
             - Comprehensive item randomization with logic-based progression
-        </h1>
-        <h1 class="basic-header">
-            - Multiple randomization modes: Standard, Piecesanity, Shopsanity, Tattlesanity
         </h1>
         <h1 class="basic-header">
             - Customizable starting stats and quality of life options
@@ -147,9 +136,58 @@
         <div class="footer-divider"></div>
         <p class="footer-text">
             Paper Mario: The Thousand-Year Door Randomizer<br>
-            Created by the TTYD Randomizer Community
+            Created by jamesbrq<br>
+                <span id="seedStats" style="font-size: 0.9em; opacity: 0.8;">Loading stats...</span>
         </p>
     </div>
 </footer>
+<script>
+// Fetch and display seed statistics
+async function updateSeedStats() {
+    try {
+        const response = await fetch('/api/stats');
+        const stats = await response.json();
+
+        const statsElement = document.getElementById('seedStats');
+        if (statsElement) {
+            let statsText = 'Total Seeds Generated: ' + stats.total_seeds.toLocaleString();
+
+            if (stats.last_generation) {
+                const lastGen = new Date(stats.last_generation);
+                const now = new Date();
+                const diffMs = now - lastGen;
+                const diffMins = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMs / 3600000);
+                const diffDays = Math.floor(diffMs / 86400000);
+
+                let timeAgo;
+                if (diffMins < 1) {
+                    timeAgo = 'just now';
+                } else if (diffMins < 60) {
+                    timeAgo = diffMins + ' minute' + (diffMins !== 1 ? 's' : '') + ' ago';
+                } else if (diffHours < 24) {
+                    timeAgo = diffHours + ' hour' + (diffHours !== 1 ? 's' : '') + ' ago';
+                } else {
+                    timeAgo = diffDays + ' day' + (diffDays !== 1 ? 's' : '') + ' ago';
+                }
+
+                statsText += ' | Last seed: ' + timeAgo;
+            }
+
+            statsElement.textContent = statsText;
+        }
+    } catch (error) {
+        console.error('Error fetching seed stats:', error);
+        const statsElement = document.getElementById('seedStats');
+        if (statsElement) {
+            statsElement.textContent = 'Stats unavailable';
+        }
+    }
+}
+
+// Update stats on page load
+document.addEventListener('DOMContentLoaded', updateSeedStats);
+</script>
+
 </body>
 </html>

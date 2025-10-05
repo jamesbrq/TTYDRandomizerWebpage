@@ -26,6 +26,9 @@ SEED_RETENTION_DAYS = 60
 # File to track last cleanup time
 LAST_CLEANUP_FILE = SEED_DATA_DIR / '.last_cleanup'
 
+# File to track seed counter and last generation time
+SEED_STATS_FILE = SEED_DATA_DIR / '.seed_stats.json'
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -142,6 +145,9 @@ def api_generate():
 
             # Save seed data to disk
             save_seed_data(seed_id, output_data, settings)
+
+            # Increment seed counter
+            increment_seed_counter()
 
             # Add seed_id to response
             output_data['seed_id'] = seed_id
@@ -299,6 +305,53 @@ def cleanup_if_needed():
 
     except Exception as e:
         app.logger.error(f"Error checking cleanup schedule: {e}")
+
+def get_seed_stats():
+    """
+    Get the current seed statistics (count and last generation time).
+    """
+    try:
+        if SEED_STATS_FILE.exists():
+            with open(SEED_STATS_FILE, 'r') as f:
+                return json.load(f)
+        else:
+            # Initialize with default values
+            return {
+                'total_seeds': 0,
+                'last_generation': None
+            }
+    except Exception as e:
+        app.logger.error(f"Error reading seed stats: {e}")
+        return {
+            'total_seeds': 0,
+            'last_generation': None
+        }
+
+def increment_seed_counter():
+    """
+    Increment the seed counter and update last generation time.
+    """
+    try:
+        stats = get_seed_stats()
+        stats['total_seeds'] += 1
+        stats['last_generation'] = int(time.time() * 1000)  # Milliseconds
+
+        with open(SEED_STATS_FILE, 'w') as f:
+            json.dump(stats, f)
+
+        app.logger.info(f"Seed counter incremented to {stats['total_seeds']}")
+        return stats
+    except Exception as e:
+        app.logger.error(f"Error incrementing seed counter: {e}")
+        return None
+
+@app.route('/api/stats', methods=['GET'])
+def get_stats():
+    """
+    API endpoint to get seed statistics.
+    """
+    stats = get_seed_stats()
+    return jsonify(stats)
 
 # Standard way to run the application locally for testing
 if __name__ == '__main__':

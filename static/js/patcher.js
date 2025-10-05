@@ -70,13 +70,11 @@ async function patchROM() {
 
         // Read ROM file
         const romBuffer = await readFileAsArrayBuffer(romFile);
-        console.log('ROM file loaded, size:', romBuffer.byteLength);
 
         updateProgress(10, 'Parsing ISO structure...');
 
         // Parse ISO using gciso.js
         const iso = window.parseISO(romBuffer);
-        console.log('ISO parsed successfully');
 
         updateProgress(20, 'Loading data files...');
 
@@ -85,13 +83,9 @@ async function patchROM() {
         const locationsData = await locationsResponse.json();
 
         // Load tattles.json to get tattle location information
-        console.log('Fetching tattles.json...');
         const tattlesResponse = await fetch('/static/json/tattles.json');
-        console.log('tattles.json response status:', tattlesResponse.status);
         const tattlesData = await tattlesResponse.json();
-        console.log('tattles.json loaded, entries:', tattlesData.length);
         if (tattlesData.length > 0) {
-            console.log('First tattle entry:', tattlesData[0]);
         }
 
         // Load items.json to get rom_id mapping
@@ -107,7 +101,6 @@ async function patchROM() {
         });
 
         // Add tattle locations to the map
-        console.log('Adding tattles to locationMap...');
         let tattlesAdded = 0;
         tattlesData.forEach(loc => {
             if (loc.name) {
@@ -115,8 +108,6 @@ async function patchROM() {
                 tattlesAdded++;
             }
         });
-        console.log(`Added ${tattlesAdded} tattle locations to locationMap`);
-        console.log('Total locationMap size:', locationMap.size);
 
         // Create item code to rom_id mapping
         const itemCodeToRomId = new Map();
@@ -146,16 +137,11 @@ async function patchROM() {
 
         // Rebuild ISO with patched files
         const patchedISO = window.rebuildISO(romBuffer, iso.tree.root);
-        console.log('ISO rebuilt, size:', patchedISO.byteLength);
 
         // DEBUG: Verify final ISO has the patched data
         const finalCheck = new Uint8Array(patchedISO);
         const dolOffsetInISO = 0x20300;
-        console.log('=== FINAL ISO VERIFICATION ===');
-        console.log(`Final ISO US.bin at 0x${(dolOffsetInISO + 0x1888).toString(16)}: ${finalCheck[dolOffsetInISO + 0x1888].toString(16).padStart(2, '0')} ${finalCheck[dolOffsetInISO + 0x1889].toString(16).padStart(2, '0')} ${finalCheck[dolOffsetInISO + 0x188A].toString(16).padStart(2, '0')} ${finalCheck[dolOffsetInISO + 0x188B].toString(16).padStart(2, '0')}`);
         const finalView = new DataView(patchedISO);
-        console.log(`Final ISO hook at 0x${(dolOffsetInISO + 0x6CE38).toString(16)}: ${finalView.getUint32(dolOffsetInISO + 0x6CE38, false).toString(16).padStart(8, '0')}`);
-        console.log(`Final ISO player name at 0x${(dolOffsetInISO + 0x200).toString(16)}: ${String.fromCharCode(...finalCheck.slice(dolOffsetInISO + 0x200, dolOffsetInISO + 0x20F))}`);
 
         updateProgress(100, 'Complete!');
 
@@ -193,7 +179,6 @@ async function patchROM() {
  * (Corresponds to patch_mod in Rom.py lines 24-130)
  */
 async function patchMod(iso, romBuffer, settings) {
-    console.log('=== STEP 1: patch_mod ===');
 
     // Patch DOL with game options
     await patchDOLWithOptions(iso, romBuffer, settings);
@@ -207,7 +192,6 @@ async function patchMod(iso, romBuffer, settings) {
  * (Corresponds to patch_icon in Rom.py lines 142-156)
  */
 async function patchIcon(iso, romBuffer) {
-    console.log('=== STEP 2: patch_icon ===');
     await patchIconFiles(iso, romBuffer);
 }
 
@@ -216,13 +200,10 @@ async function patchIcon(iso, romBuffer) {
  * (Corresponds to patch_items in Rom.py lines 160-197)
  */
 async function patchItems(iso, romBuffer, locations, locationMap, itemCodeToRomId) {
-    console.log('=== STEP 3: patch_items ===');
 
     // Debug: Check if any tattles in locations
     const tattleLocationNames = Object.keys(locations).filter(name => name.includes('Tattle'));
-    console.log(`Found ${tattleLocationNames.length} tattle locations in seed data`);
     if (tattleLocationNames.length > 0) {
-        console.log('First 5 tattle locations:', tattleLocationNames.slice(0, 5));
     }
 
     // Group patches by REL file
@@ -264,12 +245,10 @@ async function patchItems(iso, romBuffer, locations, locationMap, itemCodeToRomI
 
         // Handle tattle locations specially
         if (locationName.includes('Tattle')) {
-            console.log(`Processing tattle: ${locationName}, locationId: ${locationData.id}, itemCode: ${itemCode}, romId: ${romId}`);
 
             // Get unit IDs from location_to_unit mapping
             const unitIds = LOCATION_TO_UNIT[locationData.id];
             if (unitIds && unitIds.length > 0) {
-                console.log(`  Found ${unitIds.length} unit IDs: ${unitIds.map(u => '0x' + u.toString(16)).join(', ')}`);
                 // Some tattles map to multiple units
                 unitIds.forEach(unitId => {
                     tattlePatches.push({
@@ -277,7 +256,6 @@ async function patchItems(iso, romBuffer, locations, locationMap, itemCodeToRomI
                         romId: romId,
                         locationName: locationName
                     });
-                    console.log(`  Added tattle patch: unit=0x${unitId.toString(16)}, romId=0x${romId.toString(16)}`);
                 });
             } else {
                 console.warn(`No unit_id mapping for tattle location: ${locationName} (id: ${locationData.id})`);
@@ -312,14 +290,11 @@ async function patchItems(iso, romBuffer, locations, locationMap, itemCodeToRomI
         });
     });
 
-    console.log('Patches grouped by REL:', patchesByRel);
-    console.log('Tattle patches:', tattlePatches);
 
     // Apply patches to each REL file (not DOL in this loop per Rom.py)
     for (const [relName, patches] of patchesByRel) {
         if (relName === 'dol') continue; // Skip DOL, it's handled separately
 
-        console.log(`Patching ${relName} with ${patches.length} patches`);
 
         // Try both rel/ (root level) and files/rel/ directory locations
         let filePath = `rel/${relName}.rel`;
@@ -352,46 +327,37 @@ async function patchItems(iso, romBuffer, locations, locationMap, itemCodeToRomI
 
         // CRITICAL: Save the patched REL back to ISO tree
         window.addOrReplace(iso.tree, filePath, patchedData);
-        console.log(`Saved patched ${relName} back to ISO`);
     }
 
     // Apply tattle patches to DOL
     if (tattlePatches.length > 0) {
-        console.log(`Patching DOL with ${tattlePatches.length} tattle patches`);
-        console.log('Tattle patches to apply:', tattlePatches);
 
         const dolPath = 'sys/main.dol';
         const dolNode = getNodeFromTree(iso.tree.root, dolPath);
         if (dolNode) {
-            console.log('Found DOL node, src.kind:', dolNode.src.kind);
 
             // Read DOL data
             let dolData;
             if (dolNode.src.kind === 'orig') {
                 dolData = new Uint8Array(romBuffer.slice(dolNode.src.offset, dolNode.src.offset + dolNode.src.size));
-                console.log('Read DOL from original ROM, size:', dolData.length);
             } else if (dolNode.src.kind === 'mod') {
                 dolData = new Uint8Array(dolNode.src.data);
-                console.log('Read DOL from modified data, size:', dolData.length);
             } else {
                 console.warn('Unknown DOL src kind for tattles:', dolNode.src.kind);
                 dolData = null;
             }
 
             if (dolData) {
-                console.log('Applying tattle patches to DOL...');
                 // Apply tattle patches
                 const patchedDolData = applyTattlePatchesToDOL(dolData, tattlePatches);
 
                 // CRITICAL: Save the patched DOL back to ISO tree
                 window.addOrReplace(iso.tree, dolPath, patchedDolData);
-                console.log('Saved patched DOL with tattles back to ISO');
             }
         } else {
             console.warn('DOL file not found in ISO');
         }
     } else {
-        console.log('No tattle patches to apply');
     }
 }
 
@@ -408,8 +374,6 @@ async function patchDOLWithOptions(iso, romBuffer, settings) {
         return;
     }
 
-    console.log(`DOL node:`, dolNode);
-    console.log(`DOL src:`, dolNode.src);
 
     // Read DOL data - handle both original and modified files
     // IMPORTANT: Must create a COPY with .slice() so DataView offsets start at 0
@@ -431,7 +395,6 @@ async function patchDOLWithOptions(iso, romBuffer, settings) {
     // Since dolData is created from .slice(), it's a NEW buffer starting at offset 0
     const view = new DataView(dolData.buffer);
 
-    console.log(`DOL size: ${dolData.length} bytes (0x${dolData.length.toString(16)})`);
 
     // Validate we have enough space for the largest offset we'll write to
     const maxOffset = 0xEB6B6 + 2; // starting_coins offset + 2 bytes
@@ -516,11 +479,9 @@ async function patchDOLWithOptions(iso, romBuffer, settings) {
 
     // Write required_chapters array (offset 0x231, 7 bytes)
     // Use the required_chapters from seed data
-    console.log('Required chapters from seed:', seedData.required_chapters);
     if (seedData.required_chapters && Array.isArray(seedData.required_chapters)) {
         for (let i = 0; i < Math.min(seedData.required_chapters.length, 7); i++) {
             safeWrite8(0x231 + i, seedData.required_chapters[i]);
-            console.log(`Wrote required chapter ${seedData.required_chapters[i]} at offset 0x${(0x231 + i).toString(16)}`);
         }
     } else {
         console.warn('No required_chapters in seed data!');
@@ -570,7 +531,6 @@ async function patchDOLWithOptions(iso, romBuffer, settings) {
         const usBinData = new Uint8Array(await usBinResponse.arrayBuffer());
         if (0x1888 + usBinData.length <= dolData.length) {
             dolData.set(usBinData, 0x1888);
-            console.log(`Wrote US.bin (${usBinData.length} bytes) at 0x1888`);
         } else {
             console.warn(`US.bin too large: ${usBinData.length} bytes, space available: ${dolData.length - 0x1888}`);
         }
@@ -582,30 +542,17 @@ async function patchDOLWithOptions(iso, romBuffer, settings) {
     safeWrite32(0x6CE38, 0x4BF94A50, false);
 
     // DEBUG: Verify the data was written before saving
-    console.log('=== PRE-SAVE VERIFICATION ===');
-    console.log(`US.bin check at 0x1888: ${dolData[0x1888].toString(16).padStart(2, '0')} ${dolData[0x1889].toString(16).padStart(2, '0')} ${dolData[0x188A].toString(16).padStart(2, '0')} ${dolData[0x188B].toString(16).padStart(2, '0')}`);
-    console.log(`Hook check at 0x6CE38: ${view.getUint32(0x6CE38, false).toString(16).padStart(8, '0')}`);
-    console.log(`dolData is instance of Uint8Array: ${dolData instanceof Uint8Array}`);
-    console.log(`dolData.buffer is instance of ArrayBuffer: ${dolData.buffer instanceof ArrayBuffer}`);
-    console.log(`dolData.byteOffset: ${dolData.byteOffset}`);
-    console.log(`dolData.length: ${dolData.length}`);
 
     // Replace DOL in ISO
     window.addOrReplace(iso.tree, dolPath, dolData);
 
     // DEBUG: Verify the DOL node was updated
     const updatedDolNode = getNodeFromTree(iso.tree.root, dolPath);
-    console.log('=== POST-SAVE VERIFICATION ===');
-    console.log(`Updated DOL node src.kind: ${updatedDolNode.src.kind}`);
-    console.log(`Updated DOL node src.modified: ${updatedDolNode.src.modified}`);
     if (updatedDolNode.src.kind === 'mod') {
         const savedData = updatedDolNode.src.data;
-        console.log(`Saved data US.bin check at 0x1888: ${savedData[0x1888].toString(16).padStart(2, '0')} ${savedData[0x1889].toString(16).padStart(2, '0')} ${savedData[0x188A].toString(16).padStart(2, '0')} ${savedData[0x188B].toString(16).padStart(2, '0')}`);
         const savedView = new DataView(savedData.buffer);
-        console.log(`Saved data hook at 0x6CE38: ${savedView.getUint32(0x6CE38, false).toString(16).padStart(8, '0')}`);
     }
 
-    console.log('DOL patched with game options');
 }
 
 /**
@@ -629,7 +576,6 @@ async function addModFilesToISO(iso) {
             const response = await fetch(`/static/data/${relFile}`);
             const data = new Uint8Array(await response.arrayBuffer());
             window.addOrReplace(iso.tree, `mod/subrels/${relFile}`, data);
-            console.log(`Added mod file: mod/subrels/${relFile}`);
         } catch (error) {
             console.warn(`Failed to load mod file ${relFile}:`, error);
         }
@@ -640,7 +586,6 @@ async function addModFilesToISO(iso) {
         const modRelResponse = await fetch('/static/data/mod.rel');
         const modRelData = new Uint8Array(await modRelResponse.arrayBuffer());
         window.addOrReplace(iso.tree, 'mod/mod.rel', modRelData);
-        console.log('Added mod.rel at mod/mod.rel');
     } catch (error) {
         console.warn('Failed to load mod.rel:', error);
     }
@@ -650,7 +595,6 @@ async function addModFilesToISO(iso) {
         const modTxtResponse = await fetch('/static/data/mod.txt');
         const modTxtData = new Uint8Array(await modTxtResponse.arrayBuffer());
         window.addOrReplace(iso.tree, 'msg/US/mod.txt', modTxtData);
-        console.log('Added mod.txt at msg/US/mod.txt');
     } catch (error) {
         console.warn('Failed to load mod.txt:', error);
     }
@@ -658,7 +602,6 @@ async function addModFilesToISO(iso) {
     // Add desc.txt to msg/US - just 2 null terminators
     const descTxtData = new Uint8Array([0x00, 0x00]);
     window.addOrReplace(iso.tree, 'msg/US/desc.txt', descTxtData);
-    console.log('Added desc.txt at msg/US/desc.txt');
 }
 
 /**
@@ -710,7 +653,6 @@ async function patchIconFiles(iso, romBuffer) {
         window.addOrReplace(iso.tree, 'icon.tpl', new Uint8Array(patchedIconData));
         window.addOrReplace(iso.tree, 'icon.bin', new Uint8Array(patchedIconBinData));
 
-        console.log('Icon files patched successfully');
     } catch (error) {
         console.warn('Failed to patch icon files:', error);
     }
@@ -771,23 +713,17 @@ function applyTattlePatchesToDOL(dolData, tattlePatches) {
     const patchedData = new Uint8Array(dolData);
     const view = new DataView(patchedData.buffer);
 
-    console.log(`applyTattlePatchesToDOL: Processing ${tattlePatches.length} patches, DOL size: ${patchedData.length}`);
 
     // Apply each tattle patch
     tattlePatches.forEach((patch, index) => {
         // Calculate offset: 0xB00 + ((unit_id - 1) * 2)
         const offset = 0xB00 + ((patch.unitId - 1) * 2);
 
-        console.log(`Patch ${index + 1}/${tattlePatches.length}: ${patch.locationName}`);
-        console.log(`  unit_id: 0x${patch.unitId.toString(16)}, rom_id: 0x${patch.romId.toString(16)}`);
-        console.log(`  calculated offset: 0x${offset.toString(16)} (0xB00 + ((0x${patch.unitId.toString(16)} - 1) * 2))`);
 
         if (offset + 2 <= patchedData.length) {
             const oldValue = view.getUint16(offset, false);
             view.setUint16(offset, patch.romId, false); // false = big-endian, 2 bytes
             const newValue = view.getUint16(offset, false);
-            console.log(`  OLD value at 0x${offset.toString(16)}: 0x${oldValue.toString(16)}`);
-            console.log(`  NEW value at 0x${offset.toString(16)}: 0x${newValue.toString(16)}`);
         } else {
             console.warn(`  ERROR: Tattle offset 0x${offset.toString(16)} out of bounds (DOL size: ${patchedData.length})`);
         }
@@ -862,7 +798,6 @@ async function downloadPatch() {
         link.click();
         URL.revokeObjectURL(url);
 
-        console.log(`Downloaded patch file: ${link.download}`);
     } catch (error) {
         console.error('Error generating patch file:', error);
         alert('Failed to generate patch file: ' + error.message);
@@ -992,6 +927,5 @@ function handleROMSelection(event) {
         romFile = file;
         document.getElementById('selectedROMName').textContent = file.name;
         document.getElementById('patchBtn').disabled = false;
-        console.log('ROM file selected:', file.name);
     }
 }

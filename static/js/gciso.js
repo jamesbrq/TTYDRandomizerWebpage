@@ -59,7 +59,6 @@ function parseISO(isoBuf) {
 
     // Safeguard: if fstOffset/size bogus, throw
     if (!fstOffset || fstOffset + fstSize > isoBuf.byteLength) {
-        debugLog('Warning: FST offset/size appear invalid. fstOffset:', fstOffset, 'fstSize:', fstSize);
     }
 
     // Read FST buffer
@@ -268,7 +267,6 @@ function parseISO(isoBuf) {
     try {
         if (dolOffset && dolOffset + 0x100 < isoBuf.byteLength) {
             const dolView = new DataView(isoBuf, dolOffset);
-            debugLog(`DOL header at 0x${dolOffset.toString(16)}`);
 
             // Text sections (7 max)
             for (let i = 0; i < 7; i++) {
@@ -278,7 +276,6 @@ function parseISO(isoBuf) {
                 if (size && fileOff) {
                     const sectionEnd = fileOff + size;
                     dolSize = Math.max(dolSize, sectionEnd);
-                    debugLog(`DOL text section ${i}: fileOff=0x${fileOff.toString(16)}, size=0x${size.toString(16)}, end=0x${sectionEnd.toString(16)}`);
                 }
             }
 
@@ -290,25 +287,20 @@ function parseISO(isoBuf) {
                 if (size && fileOff) {
                     const sectionEnd = fileOff + size;
                     dolSize = Math.max(dolSize, sectionEnd);
-                    debugLog(`DOL data section ${i}: fileOff=0x${fileOff.toString(16)}, size=0x${size.toString(16)}, end=0x${sectionEnd.toString(16)}`);
                 }
             }
 
             // If we still don't have a size, use a reasonable default
             if (dolSize === 0) {
                 dolSize = 0x400000; // 4MB default
-                debugLog(`DOL size calculation failed, using default size: 0x${dolSize.toString(16)}`);
             } else {
-                debugLog(`Calculated DOL size: 0x${dolSize.toString(16)} (${dolSize} bytes)`);
             }
         } else {
             // Invalid DOL offset, use default
             dolSize = 0x400000; // 4MB default
-            debugLog(`Invalid DOL offset 0x${dolOffset.toString(16)}, using default size: 0x${dolSize.toString(16)}`);
         }
     } catch (e) {
         dolSize = 0x400000; // 4MB default
-        debugLog(`DOL size calculation error: ${e.message}, using default size: 0x${dolSize.toString(16)}`);
     }
 
     addSystemFile("sys/main.dol", dolOffset, dolSize);
@@ -432,7 +424,6 @@ function buildFST_fromTree(treeRoot) {
 
             for (const child of kids) {
                 if (child.src?.system || child.system) {
-                    debugLog(`Excluding system node from FST: ${child.name} (src.system=${child.src?.system}, node.system=${child.system})`);
                     continue; // system files and directories are not part of FST
                 }
 
@@ -585,14 +576,12 @@ function verifyOffsets_preserve(outBuf, treeRoot, originalBuf) {
         throw new Error(`DOL relocated: original 0x${origDolOffset.toString(16)} new 0x${newDolOffset.toString(16)} — relocation disallowed.`);
     }
 
-    debugLog('verifyOffsets_preserve: OK — no overlaps, header pointers unchanged.');
 }
 
 // ------------------ rebuildISO ------------------
 // preserve originals, append new files
 function rebuildISO(isoBuf, treeRoot, opts = {}) {
     const alignment = opts.alignment || 2048; // file alignment
-    debugLog('rebuildISO: start (preserve original offsets, append new files)');
 
     // Calculate actual data size by finding the highest used offset in the FST
     const tempView = new DataView(isoBuf);
@@ -653,7 +642,6 @@ function rebuildISO(isoBuf, treeRoot, opts = {}) {
     // Round up to next 32KB boundary for safety
     const actualSize = Math.min(isoBuf.byteLength, ((maxDataEnd + 0x7FFF) & ~0x7FFF));
     
-    debugLog(`rebuildISO: found data end at ${maxDataEnd}, copying ${actualSize} bytes instead of full ${isoBuf.byteLength} bytes`);
     
     // mutable copy of only the needed portion
     let out = new Uint8Array(isoBuf.slice(0, actualSize));
@@ -708,15 +696,10 @@ function rebuildISO(isoBuf, treeRoot, opts = {}) {
         node.offset = origOff;
         node.size = data.length;
 
-        debugLog(`Wrote sys ${name} @0x${origOff.toString(16)} size ${data.length}`);
 
         // DEBUG: Verify written data for main.dol
         if (name === 'main.dol' && node.src.kind === 'mod') {
-            debugLog(`DEBUG: main.dol US.bin at 0x1888: ${data[0x1888].toString(16)} ${data[0x1889].toString(16)} ${data[0x188A].toString(16)} ${data[0x188B].toString(16)}`);
             const testView = new DataView(data.buffer, data.byteOffset, data.byteLength);
-            debugLog(`DEBUG: main.dol hook at 0x6CE38: ${testView.getUint32(0x6CE38, false).toString(16)}`);
-            debugLog(`DEBUG: Written to output at offset 0x${origOff.toString(16)}, checking output buffer...`);
-            debugLog(`DEBUG: Output buffer US.bin at 0x${(origOff + 0x1888).toString(16)}: ${out[origOff + 0x1888].toString(16)} ${out[origOff + 0x1889].toString(16)} ${out[origOff + 0x188A].toString(16)} ${out[origOff + 0x188B].toString(16)}`);
         }
     }
 
@@ -849,7 +832,6 @@ function rebuildISO(isoBuf, treeRoot, opts = {}) {
     const finalSize = alignUp(Math.max(maxEnd, out.length), 0x8000);
     ensureSize(finalSize);
 
-    debugLog('rebuildISO: done finalSize', finalSize);
     return out.slice(0, finalSize).buffer;
 }
 

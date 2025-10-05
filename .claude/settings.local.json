@@ -14,7 +14,13 @@
       "Bash(timeout 30 python:*)",
       "Bash(for file in index.html gettingStarted.html generate.html archipelago.html patch.html result.html)",
       "Bash(do sed -i 's|<a href=\"\"{{ url_for(''''archipelago'''') }}\"\" class=\"\"pages-link\"\">Archipelago</a>|<a href=\"\"{{ url_for(''''archipelago'''') }}\"\" class=\"\"pages-link\"\">Archipelago</a>\\n        <a href=\"\"{{ url_for(''''about'''') }}\"\" class=\"\"pages-link\"\">About</a>|' \"$file\")",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(cat:*)",
+      "Bash(git checkout:*)",
+      "Bash(for file in templates/archipelago.html templates/generate.html templates/gettingStarted.html templates/index.html templates/patch.html templates/result.html)",
+      "Bash(do sed -i 's/Created by the TTYD Randomizer Community/Created by jamesbrq/g' \"$file\")",
+      "Bash(for:*)",
+      "Bash(do)"
     ],
     "deny": [],
     "ask": []
