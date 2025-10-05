@@ -46,6 +46,10 @@ def archipelago():
 def patch():
     return render_template('patch.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/result')
 @app.route('/result/<seed_id>')
 def result(seed_id=None):

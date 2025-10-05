@@ -1,10 +1,11 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TTYD Randomizer</title>
-    <meta name="description" content="A randomizer for the game TTYD, enhancing replayability with randomized items, enemies, and more.">
-    <meta name="keywords" content="TTYD, randomizer, game, mod, Mario, Paper Mario, Thousand-Year Door, randomization">
+    <title>TTYD Randomizer - About</title>
+    <meta name="description" content="About the TTYD Randomizer project, credits, and contributors">
+    <meta name="keywords" content="TTYD, randomizer, about, credits, Paper Mario, Thousand-Year Door">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
@@ -22,50 +23,93 @@
         <a href="{{ url_for('about') }}" class="pages-link">About</a>
     </div>
 </div>
+
 <div class="info-parent">
     <div class="info-panel">
-        <h1 class="large-header">~ Requirements ~</h1>
-        <h1 class="basic-header">- A US copy of Paper Mario: The Thousand-Year Door for the Gamecube (ISO or GCM format)</h1>
-        <h1 class="basic-header">- A way to play the patched ROM (Dolphin emulator or modded Gamecube/Wii)</h1>
-
-        <h1 class="large-header">~ Step 1: Configure Your Settings ~</h1>
+        <h1 class="large-header">~ About TTYD Randomizer ~</h1>
         <h1 class="basic-header">
-            Visit the Seed Generator page to customize your randomizer experience.
-            You can adjust logic settings, world options, starting stats, and quality of life features.
-            Hover over the question mark (?) icons to learn what each setting does.
+            The Paper Mario: The Thousand-Year Door Randomizer is a community-driven project that brings new life to this beloved GameCube classic.
+            By randomizing item locations, the randomizer creates unique playthroughs where every seed presents new challenges and surprises.
         </h1>
         <h1 class="basic-header">
-            <strong>Quick Start:</strong> Use one of the built-in presets (Default Settings, Beginner Mode, Expert Shuffle, or Race Settings)
-            to get started quickly. You can also save your own custom presets for future use.
+            This web-based generator allows you to create randomized seeds directly in your browser, with full customization options
+            and the ability to patch your ROM without uploading it anywhere - everything happens locally on your device.
         </h1>
 
-        <h1 class="large-header">~ Step 2: Generate Your Seed ~</h1>
+        <h1 class="large-header">~ Project Credits ~</h1>
         <h1 class="basic-header">
-            Click the "Generate Seed" button to create your randomized seed.
-            The generator will calculate item placements based on your settings and ensure the seed is completable.
-            This process typically takes a few seconds.
+            <strong>Lead Developer:</strong> jamesbrq
+        </h1>
+        <h1 class="basic-header">
+            <strong>Contributors:</strong> The TTYD Randomizer Community
+        </h1>
+        <h1 class="basic-header">
+            <strong>Special Thanks:</strong> All community members who have tested, provided feedback, and supported the project
         </h1>
 
-        <h1 class="large-header">~ Step 3: Patch Your ROM ~</h1>
+        <h1 class="large-header">~ Technology ~</h1>
         <h1 class="basic-header">
-            After generation, you'll be taken to the result page.
-            Click "Select ROM File" and choose your TTYD ISO.
-            Then click "Patch ROM" to apply the randomization to your game.
-            The patching happens entirely in your browser - your ROM never leaves your computer.
+            <strong>Web Generator:</strong> Built with Flask, JavaScript, and client-side ROM patching
+        </h1>
+        <h1 class="basic-header">
+            <strong>Core Randomizer:</strong> Based on the Archipelago TTYD implementation
+        </h1>
+        <h1 class="basic-header">
+            <strong>ROM Patching:</strong> Uses in-browser ISO parsing and IPS patching - your ROM never leaves your computer
         </h1>
 
-        <h1 class="large-header">~ Step 4: Download and Play ~</h1>
+        <h1 class="large-header">~ Version Information ~</h1>
         <h1 class="basic-header">
-            Once patching is complete, download your randomized ISO.
-            You can also download a spoiler log that shows all item locations if you get stuck.
-            Load the patched ISO in Dolphin or transfer it to your modded console and start playing!
+            <strong>Current Version:</strong> 0.6.0
+        </h1>
+        <h1 class="basic-header">
+            <strong>Last Updated:</strong> October 2025
+        </h1>
+        <h1 class="basic-header">
+            <strong>Supported ROM:</strong> Paper Mario: The Thousand-Year Door (US, GameCube)
         </h1>
 
-        <h1 class="large-header">~ Sharing Seeds ~</h1>
+        <h1 class="large-header">~ Features ~</h1>
         <h1 class="basic-header">
-            Each generated seed has a unique share URL that you can copy and send to friends.
-            Anyone with the link can view the seed details and patch their own ROM with the same randomization.
-            Shared seeds are stored for 60 days.
+            - Comprehensive item randomization with logic-based progression
+        </h1>
+        <h1 class="basic-header">
+            - Multiple randomization modes: Standard, Piecesanity, Shopsanity, Tattlesanity
+        </h1>
+        <h1 class="basic-header">
+            - Customizable starting stats and quality of life options
+        </h1>
+        <h1 class="basic-header">
+            - In-browser ROM patching with no server uploads
+        </h1>
+        <h1 class="basic-header">
+            - Shareable seed URLs for racing and co-op
+        </h1>
+        <h1 class="basic-header">
+            - Full Archipelago multiworld support
+        </h1>
+
+        <h1 class="large-header">~ Support & Community ~</h1>
+        <div class="info-link-group">
+            <div class="info-link-container">
+                <a href="https://discord.gg/Ug6nMjmR6F" class="info-link" target="_blank">Join our Discord</a>
+            </div>
+            <div class="info-link-container">
+                <a href="https://github.com/jamesbrq/ArchipelagoTTYD" class="info-link" target="_blank">GitHub Repository</a>
+            </div>
+            <div class="info-link-container">
+                <a href="https://github.com/jamesbrq/ArchipelagoTTYD/issues" class="info-link" target="_blank">Report an Issue</a>
+            </div>
+        </div>
+
+        <h1 class="large-header">~ License & Legal ~</h1>
+        <h1 class="basic-header">
+            This randomizer is a fan-made modification and is not affiliated with Nintendo or Intelligent Systems.
+            Paper Mario: The Thousand-Year Door is a trademark of Nintendo.
+        </h1>
+        <h1 class="basic-header">
+            The randomizer requires a legally obtained copy of the original game to function.
+            We do not condone or support piracy in any form.
         </h1>
 
         <div class="generate-link-group">
@@ -74,17 +118,7 @@
             </div>
             <h1 class="generator-version">Randomizer v0.6.0</h1>
         </div>
-
-        <h1 class="large-header">~ Additional Resources ~</h1>
-        <div class="info-link-group">
-            <div class="info-link-container">
-                <a href="{{ url_for('archipelago') }}" class="info-link">Archipelago</a>
-            </div>
-            <div class="info-link-container">
-                <a href="https://github.com/ZobeePlays/TTYD-Randomizer-AP-Tracker" class="info-link" target="_blank">Poptracker Pack</a>
-        </div>
     </div>
-</div>
 </div>
 </div>
 

@@ -11,7 +11,10 @@
       "Bash(start test-accessibility.html)",
       "Bash(powershell:*)",
       "Bash(npm install:*)",
-      "Bash(timeout 30 python:*)"
+      "Bash(timeout 30 python:*)",
+      "Bash(for file in index.html gettingStarted.html generate.html archipelago.html patch.html result.html)",
+      "Bash(do sed -i 's|<a href=\"\"{{ url_for(''''archipelago'''') }}\"\" class=\"\"pages-link\"\">Archipelago</a>|<a href=\"\"{{ url_for(''''archipelago'''') }}\"\" class=\"\"pages-link\"\">Archipelago</a>\\n        <a href=\"\"{{ url_for(''''about'''') }}\"\" class=\"\"pages-link\"\">About</a>|' \"$file\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []
