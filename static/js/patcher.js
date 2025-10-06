@@ -452,8 +452,10 @@ async function patchDOLWithOptions(iso, romBuffer, settings) {
     safeWrite8(0x220, palaceStars);
 
     // Write starting_partner (offset 0x221) - convert string to number
-    const partnerMap = {'goombella': 1, 'koops': 2, 'bobbery': 3, 'yoshi': 4, 'flurrie': 5, 'vivian': 6, 'ms_mowz': 7, 'random': 0};
-    const startingPartner = partnerMap[gameSettings.starting_partner] || 1;
+    // Use resolved partner from seedData if available (handles random partner resolution)
+    const partnerMap = {'goombella': 1, 'koops': 2, 'bobbery': 3, 'yoshi': 4, 'flurrie': 5, 'vivian': 6, 'ms_mowz': 7, 'random_partner': 0};
+    const partnerValue = seedData.starting_partner || gameSettings.starting_partner || 'goombella';
+    const startingPartner = partnerMap[partnerValue] !== undefined ? partnerMap[partnerValue] : 1;
     safeWrite8(0x221, startingPartner);
 
     // Write yoshi_color (offset 0x222) - convert string to number

@@ -59,7 +59,7 @@ const THEMES = {
             .preset-button, .info-link { background: linear-gradient(135deg, #8B5A9F 0%, #6B4C7A 100%) !important; border: 2px solid #D97FB8 !important; color: #FFF !important; }
             .page-wrapper { background-color: rgba(107, 76, 122, 0.15) !important; }
             .footer { background: linear-gradient(180deg, rgba(107, 76, 122, 0.9) 0%, rgba(139, 90, 159, 0.95) 100%) !important; border-top: 2px solid #D97FB8 !important; }
-            .footer-link { color: #E8D5F0 !important; border: 2px solid #8B5A9F !important; }
+            .footer-link { background-color: #8B5A9F !important; color: #E8D5F0 !important; border: 2px solid #D97FB8 !important; }
             .settings-string-input, .dropdown-select, .number-input, .text-input, .preset-dropdown { background-color: rgba(26, 15, 31, 0.8) !important; border: 2px solid #8B5A9F !important; color: #E8D5F0 !important; }
             .panel-tab { background-color: rgba(107, 76, 122, 0.6) !important; border: 2px solid #8B5A9F !important; color: #E8D5F0 !important; }
             .panel-tab.active { background-color: #8B5A9F !important; border-color: #F0A8D8 !important; color: #FFF !important; }
@@ -101,6 +101,25 @@ const THEMES = {
             .settings-string-input, .dropdown-select, .number-input, .text-input, .preset-dropdown { background-color: #FFFAF0 !important; border: 2px solid #FF4500 !important; color: #2C1810 !important; }
             .panel-tab { background-color: rgba(255, 200, 100, 0.7) !important; border: 2px solid #FF4500 !important; color: #2C1810 !important; }
             .panel-tab.active { background-color: #FF4500 !important; border-color: #FFD700 !important; color: #FFF !important; }
+        `
+    },
+    doopliss: {
+        name: 'Doopliss',
+        character: 'Doopliss',
+        description: 'Darker white with blue accents',
+        criticalCSS: `
+            html, body { background: linear-gradient(135deg, #D0D0D0 0%, #E8E8E8 50%, #C0C0C0 100%) !important; margin: 0; padding: 0; }
+            .header { background: linear-gradient(180deg, #5C7CBA 0%, #4A6FA5 50%, #3A5A8A 100%) !important; border-bottom: 3px solid #3A5A8A !important; box-shadow: 0 2px 8px rgba(92, 124, 186, 0.3) !important; }
+            .pages-link { background: linear-gradient(135deg, #D0D0D0 0%, #C0C0C0 100%) !important; border: 2px solid #A8A8A8 !important; color: #2C2C2C !important; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important; }
+            .info-panel, .generate-panel { background-color: #FFFFFF !important; border: 3px solid #5C7CBA !important; }
+            .preset-section { background-color: #E8E8E8 !important; border: 2px solid #C0C0C0 !important; }
+            .preset-button, .info-link { background: linear-gradient(135deg, #5C7CBA 0%, #4A6FA5 100%) !important; border: 2px solid #3A5A8A !important; color: #FFF !important; }
+            .page-wrapper { background-color: transparent !important; }
+            .footer { background: linear-gradient(180deg, rgba(92, 124, 186, 0.95) 0%, rgba(74, 111, 165, 0.98) 100%) !important; border-top: 2px solid #3A5A8A !important; }
+            .footer-link { background-color: #D0D0D0 !important; color: #2C2C2C !important; border: 2px solid #A8A8A8 !important; }
+            .settings-string-input, .dropdown-select, .number-input, .text-input, .preset-dropdown { background-color: #F8F8F8 !important; border: 2px solid #C0C0C0 !important; color: #2C2C2C !important; }
+            .panel-tab { background-color: rgba(208, 208, 208, 0.8) !important; border: 2px solid #A8A8A8 !important; color: #2C2C2C !important; }
+            .panel-tab.active { background-color: #5C7CBA !important; border-color: #3A5A8A !important; color: #FFF !important; }
         `
     }
 };

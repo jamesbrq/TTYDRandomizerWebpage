@@ -707,11 +707,16 @@ if __name__ == '__main__':
         ttyd_world = multiworld.worlds[1]
         locations_dict = locations_to_dict(multiworld.get_locations(1))
 
-        # Include seed and required_chapters in the output
+        # Get the resolved starting partner (after random resolution)
+        starting_partner_option = ttyd_world.options.starting_partner
+        starting_partner_name = starting_partner_option.current_key
+
+        # Include seed, required_chapters, and resolved starting_partner in the output
         output_data = {
             'locations': locations_dict,
             'seed': seed,
-            'required_chapters': getattr(ttyd_world, 'required_chapters', [])
+            'required_chapters': getattr(ttyd_world, 'required_chapters', []),
+            'starting_partner': starting_partner_name
         }
         print(json.dumps(output_data))
 

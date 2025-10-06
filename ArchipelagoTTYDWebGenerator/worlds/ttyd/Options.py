@@ -60,7 +60,7 @@ class TattleSanityOption(Toggle):
     display_name = "Tattlesanity"
 
 
-class Piecesanity(DefaultOnToggle):
+class Piecesanity(Choice):
     """
     Determines if Star Piece locations will be randomized.
     vanilla: Star Piece locations will remain in their original locations.

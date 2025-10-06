@@ -200,6 +200,7 @@ def save_seed_data(seed_id, output_data, settings):
         'seed': output_data.get('seed'),
         'locations': output_data.get('locations', {}),
         'required_chapters': output_data.get('required_chapters', []),
+        'starting_partner': output_data.get('starting_partner'),
         'settings': settings,
         'timestamp': output_data.get('timestamp') or int(time.time() * 1000)
     }

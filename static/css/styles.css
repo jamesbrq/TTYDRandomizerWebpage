@@ -391,12 +391,10 @@ body {
     font-size: clamp(12px, 2.5vw, 18px);
     color: #191919;
     user-select: none;
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    gap: clamp(4px, 0.6vw, 6px);
-    white-space: nowrap;
-    flex-shrink: 0;
+    display: inline;
+    flex-shrink: 1;
+    max-width: 70%;
+    line-height: 1.4;
 }
 
 .toggle-switch {
@@ -418,11 +416,13 @@ body {
 
 .toggle-slider {
     position: absolute;
-    top: 1px;
-    left: 1px;
-    width: clamp(23px, 3.8vw, 28px);
-    height: clamp(23px, 3.8vw, 28px);
+    top: 50%;
+    left: 2px;
+    transform: translateY(-50%);
+    width: clamp(19px, 3.2vw, 24px);
+    height: clamp(19px, 3.2vw, 24px);
     background-color: #ffffff;
+    border: 2px solid #999999;
     border-radius: 50%;
     transition: transform 0.3s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -438,7 +438,8 @@ body {
 }
 
 .toggle-switch.active .toggle-slider {
-    transform: translateX(clamp(25px, 4vw, 30px));
+    transform: translateY(-50%) translateX(clamp(25px, 4vw, 30px));
+    border-color: #ffffff;
 }
 
 .number-container {
@@ -884,6 +885,8 @@ body {
     position: relative;
     user-select: none;
     flex-shrink: 0;
+    margin-left: clamp(4px, 0.6vw, 6px);
+    vertical-align: middle;
 }
 
 .help-icon:hover {

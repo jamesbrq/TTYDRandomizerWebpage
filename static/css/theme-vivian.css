@@ -191,8 +191,9 @@ body[data-theme="vivian"] .footer {
 }
 
 body[data-theme="vivian"] .footer-link {
+    background-color: #8B5A9F;
     color: #E8D5F0;
-    border: 2px solid #8B5A9F;
+    border: 2px solid #D97FB8;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
