@@ -248,3 +248,22 @@ body[data-theme="doopliss"] a {
 body[data-theme="doopliss"] a:hover {
     color: #4A6FA5;
 }
+
+/* Toggle Switch */
+body[data-theme="doopliss"] .toggle-switch {
+    background-color: #C0C0C0;
+    border: 2px solid #A8A8A8;
+}
+
+body[data-theme="doopliss"] .toggle-switch:hover {
+    background-color: #B0B0B0;
+}
+
+body[data-theme="doopliss"] .toggle-switch.active {
+    background-color: #5C7CBA;
+    border-color: #4A6FA5;
+}
+
+body[data-theme="doopliss"] .toggle-switch.active:hover {
+    background-color: #4A6FA5;
+}

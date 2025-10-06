@@ -120,6 +120,8 @@ const THEMES = {
             .settings-string-input, .dropdown-select, .number-input, .text-input, .preset-dropdown { background-color: #F8F8F8 !important; border: 2px solid #C0C0C0 !important; color: #2C2C2C !important; }
             .panel-tab { background-color: rgba(208, 208, 208, 0.8) !important; border: 2px solid #A8A8A8 !important; color: #2C2C2C !important; }
             .panel-tab.active { background-color: #5C7CBA !important; border-color: #3A5A8A !important; color: #FFF !important; }
+            .toggle-switch { background-color: #C0C0C0 !important; border: 2px solid #A8A8A8 !important; }
+            .toggle-switch.active { background-color: #5C7CBA !important; border-color: #4A6FA5 !important; }
         `
     }
 };

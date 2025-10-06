@@ -5,6 +5,13 @@
     <title>TTYD Randomizer</title>
     <meta name="description" content="A randomizer for the game TTYD, enhancing replayability with randomized items, enemies, and more.">
     <meta name="keywords" content="TTYD, randomizer, game, mod, Mario, Paper Mario, Thousand-Year Door, randomization">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='android-chrome-192x192.png') }}">
     <script src="{{ url_for('static', filename='js/theme-switcher.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-vivian.css') }}">
@@ -67,6 +74,15 @@
                     <button class="preset-button" onclick="importFromField()">Import</button>
                 </div>
             </div>
+
+            <div class="settings-string-section">
+                <label class="settings-string-label">Export Settings as YAML</label>
+                <div class="settings-string-controls">
+                    <input type="text" class="settings-string-input" id="playerNameInput" placeholder="Player Name" maxlength="16">
+                    <button class="preset-button" onclick="exportYAMLFile()">Export YAML File</button>
+                </div>
+                <p class="helper-text">Download current settings as a .yaml file compatible with Archipelago.</p>
+            </div>
         </div>
 
         <div class="panel-tabs">
@@ -119,6 +135,13 @@
                             <option value="0" selected>Full</option>
                             <option value="1">Minimal</option>
                         </select>
+                    </div>
+
+                    <div class="toggle-container">
+                        <span class="toggle-label">Death Link<span class="help-icon" data-tooltip="When you die, everyone dies. Meant for Archipelago multiworld only. Has no effect in single-player mode.">?</span></span>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
                     </div>
 
                     <div class="toggle-container">
@@ -389,6 +412,97 @@
     }
 
     /**
+     * Export current settings as YAML file
+     */
+    function exportYAMLFile() {
+        try {
+            // Collect current settings from UI
+            const settings = collectSettingsFromUI();
+            
+            // Get player name from input field
+            const playerNameInput = document.getElementById('playerNameInput');
+            const playerName = playerNameInput ? playerNameInput.value.trim() : '';
+            
+            // Update settings with player name if provided
+            if (playerName) {
+                settings.name = playerName;
+            }
+            
+            // Convert settings to YAML format
+            const yamlContent = convertToYAML(settings);
+            
+            // Create and download the file
+            const blob = new Blob([yamlContent], { type: 'text/yaml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            // Create download link
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            const fileName = playerName ? `${playerName}-ttyd-settings.yaml` : `ttyd-randomizer-settings-${Date.now()}.yaml`;
+            downloadLink.download = fileName;
+            
+            // Trigger download
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            
+            // Clean up
+            URL.revokeObjectURL(url);
+            
+            console.log('YAML settings exported successfully');
+        } catch (error) {
+            console.error('Error exporting YAML:', error);
+            showModal('Export Error', `Failed to export YAML file: ${error.message}`);
+        }
+    }
+
+    /**
+     * Convert settings object to YAML format
+     * This creates a basic YAML structure that matches the expected format for the generator
+     */
+    function convertToYAML(settings) {
+        const lines = [];
+        
+        // Add header comment
+        lines.push('# TTYD Randomizer Settings');
+        lines.push('# Generated from TTYD Randomizer Web Interface');
+        lines.push(`# Created: ${new Date().toISOString()}`);
+        lines.push('');
+        
+        // Add top-level settings
+        lines.push(`name: "${settings.name}"`);
+        lines.push(`description: "${settings.description}"`);
+        lines.push(`game: "${settings.game}"`);
+        lines.push('');
+        
+        // Add game-specific settings
+        const gameKey = settings.game;
+        const gameSettings = settings[gameKey];
+        
+        lines.push(`"${gameKey}":`);
+        
+        // Sort settings alphabetically for consistent output
+        const sortedKeys = Object.keys(gameSettings).sort();
+        
+        for (const key of sortedKeys) {
+            const value = gameSettings[key];
+            
+            if (typeof value === 'string') {
+                lines.push(`  ${key}: "${value}"`);
+            } else if (typeof value === 'boolean') {
+                lines.push(`  ${key}: ${value}`);
+            } else if (typeof value === 'number') {
+                lines.push(`  ${key}: ${value}`);
+            } else {
+                // For any other type, stringify it
+                lines.push(`  ${key}: ${JSON.stringify(value)}`);
+            }
+        }
+        
+        return lines.join('\n');
+    }
+
+    /**
      * Main generation function called by the Generate button
      * Collects settings from UI and sends to Flask backend
      */
@@ -479,6 +593,7 @@
             'Pit Items': 'pit_items',
             'Progression Balancing': 'progression_balancing',
             'Accessibility': 'accessibility',
+            'Death Link': 'death_link',
             'Tattlesanity': 'tattlesanity',
             'Piecesanity': 'piecesanity',
             'Shopsanity': 'shopsanity',
@@ -960,6 +1075,7 @@
             'pit_items': 'Pit Items',
             'progression_balancing': 'Progression Balancing',
             'accessibility': 'Accessibility',
+            'death_link': 'Death Link',
             'tattlesanity': 'Tattlesanity',
             'piecesanity': 'Piecesanity',
             'shopsanity': 'Shopsanity',
