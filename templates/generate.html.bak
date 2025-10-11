@@ -7,11 +7,11 @@
     <meta name="keywords" content="TTYD, randomizer, game, mod, Mario, Paper Mario, Thousand-Year Door, randomization">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/favicon-16x16.png') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='images/android-chrome-192x192.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='android-chrome-192x192.png') }}">
     <script src="{{ url_for('static', filename='js/theme-switcher.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-vivian.css') }}">
@@ -57,10 +57,10 @@
             <div class="preset-controls">
                 <select class="preset-dropdown" onchange="loadPreset()">
                     <option value="">Select a preset to load...</option>
-                    <option data-settings="eyJuYW1lIjoiUGxheWVyMSIsImRlc2NyaXB0aW9uIjoiVFRZRCBSYW5kb21pemVyIFdlYiBDb25maWd1cmF0aW9uIiwiZ2FtZSI6IlBhcGVyIE1hcmlvOiBUaGUgVGhvdXNhbmQtWWVhciBEb29yIiwiUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IiOnsiZGVhdGhfbGluayI6ZmFsc2UsInRhdHRsZXNhbml0eSI6ZmFsc2UsInNob3BzYW5pdHkiOnRydWUsInNoaW5lc2FuaXR5Ijp0cnVlLCJzdGFyX3NodWZmbGUiOmZhbHNlLCJsaW1pdF9jaGFwdGVyX2xvZ2ljIjpmYWxzZSwibGltaXRfY2hhcHRlcl9laWdodCI6ZmFsc2UsInBhbGFjZV9za2lwIjpmYWxzZSwiY3V0c2NlbmVfc2tpcCI6ZmFsc2UsImRpc2FibGVfaW50ZXJtaXNzaW9ucyI6ZmFsc2UsIm9wZW5fd2VzdHNpZGUiOmZhbHNlLCJmYXN0X3RyYXZlbCI6ZmFsc2UsInN1Y2NlZWRfY29uZGl0aW9ucyI6ZmFsc2UsInBlcm1hbmVudF9wZWVrYWJvbyI6ZmFsc2UsImZ1bGxfcnVuX2JhciI6ZmFsc2UsImZpcnN0X2F0dGFjayI6ZmFsc2UsImdvYWwiOiJzaGFkb3dfcXVlZW4iLCJwaXRfaXRlbXMiOiJmaWxsZXIiLCJhY2Nlc3NpYmlsaXR5IjoiZnVsbCIsInBpZWNlc2FuaXR5Ijoibm9ucGFuZWxfb25seSIsInN0YXJ0aW5nX3BhcnRuZXIiOiJyYW5kb20iLCJtdXNpY19zZXR0aW5ncyI6Im5vcm1hbCIsImJsb2NrX3Zpc2liaWxpdHkiOiJhbGxfdmlzaWJsZSIsInlvc2hpX2NvbG9yIjoiZ3JlZW4iLCJ5b3NoaV9uYW1lIjoiWW9zaGkiLCJnb2FsX3N0YXJzIjo3LCJwYWxhY2Vfc3RhcnMiOjcsInN0YXJ0aW5nX2hwIjoxMCwic3RhcnRpbmdfZnAiOjUsInN0YXJ0aW5nX2JwIjozLCJzdGFydGluZ19jb2lucyI6MTAwLCJzdGFydGluZ19sZXZlbCI6MSwiZXhwZXJpZW5jZV9tdWx0aXBsaWVyIjoxLCJwcm9ncmVzc2lvbl9iYWxhbmNpbmciOjUwfX0=">Default Settings</option>
-                    <option data-settings="eyJuYW1lIjoiUGxheWVyMSIsImRlc2NyaXB0aW9uIjoiVFRZRCBSYW5kb21pemVyIFdlYiBDb25maWd1cmF0aW9uIiwiZ2FtZSI6IlBhcGVyIE1hcmlvOiBUaGUgVGhvdXNhbmQtWWVhciBEb29yIiwiUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IiOnsiZGVhdGhfbGluayI6ZmFsc2UsInRhdHRsZXNhbml0eSI6ZmFsc2UsInNob3BzYW5pdHkiOnRydWUsInNoaW5lc2FuaXR5Ijp0cnVlLCJzdGFyX3NodWZmbGUiOmZhbHNlLCJsaW1pdF9jaGFwdGVyX2xvZ2ljIjp0cnVlLCJsaW1pdF9jaGFwdGVyX2VpZ2h0Ijp0cnVlLCJwYWxhY2Vfc2tpcCI6ZmFsc2UsImN1dHNjZW5lX3NraXAiOmZhbHNlLCJkaXNhYmxlX2ludGVybWlzc2lvbnMiOmZhbHNlLCJvcGVuX3dlc3RzaWRlIjp0cnVlLCJmYXN0X3RyYXZlbCI6ZmFsc2UsInN1Y2NlZWRfY29uZGl0aW9ucyI6ZmFsc2UsInBlcm1hbmVudF9wZWVrYWJvbyI6dHJ1ZSwiZnVsbF9ydW5fYmFyIjpmYWxzZSwiZmlyc3RfYXR0YWNrIjp0cnVlLCJnb2FsIjoiY3J5c3RhbF9zdGFycyIsInBpdF9pdGVtcyI6InZhbmlsbGEiLCJhY2Nlc3NpYmlsaXR5IjoiZnVsbCIsInBpZWNlc2FuaXR5IjoidmFuaWxsYSIsInN0YXJ0aW5nX3BhcnRuZXIiOiJnb29tYmVsbGEiLCJtdXNpY19zZXR0aW5ncyI6Im5vcm1hbCIsImJsb2NrX3Zpc2liaWxpdHkiOiJhbGxfdmlzaWJsZSIsInlvc2hpX2NvbG9yIjoiZ3JlZW4iLCJ5b3NoaV9uYW1lIjoiWW9zaGkiLCJnb2FsX3N0YXJzIjozLCJwYWxhY2Vfc3RhcnMiOjMsInN0YXJ0aW5nX2hwIjoyMCwic3RhcnRpbmdfZnAiOjEwLCJzdGFydGluZ19icCI6OSwic3RhcnRpbmdfY29pbnMiOjIwMCwic3RhcnRpbmdfbGV2ZWwiOjEsImV4cGVyaWVuY2VfbXVsdGlwbGllciI6MiwicHJvZ3Jlc3Npb25fYmFsYW5jaW5nIjo1MH19">Beginner Mode</option>
-                    <option data-settings="eyJuYW1lIjoiUGxheWVyMSIsImRlc2NyaXB0aW9uIjoiVFRZRCBSYW5kb21pemVyIFdlYiBDb25maWd1cmF0aW9uIiwiZ2FtZSI6IlBhcGVyIE1hcmlvOiBUaGUgVGhvdXNhbmQtWWVhciBEb29yIiwiUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IiOnsiZGVhdGhfbGluayI6ZmFsc2UsInRhdHRsZXNhbml0eSI6dHJ1ZSwic2hvcHNhbml0eSI6dHJ1ZSwic2hpbmVzYW5pdHkiOnRydWUsInN0YXJfc2h1ZmZsZSI6ZmFsc2UsImxpbWl0X2NoYXB0ZXJfbG9naWMiOmZhbHNlLCJsaW1pdF9jaGFwdGVyX2VpZ2h0IjpmYWxzZSwicGFsYWNlX3NraXAiOnRydWUsImN1dHNjZW5lX3NraXAiOnRydWUsImRpc2FibGVfaW50ZXJtaXNzaW9ucyI6dHJ1ZSwib3Blbl93ZXN0c2lkZSI6ZmFsc2UsImZhc3RfdHJhdmVsIjp0cnVlLCJzdWNjZWVkX2NvbmRpdGlvbnMiOnRydWUsInBlcm1hbmVudF9wZWVrYWJvbyI6dHJ1ZSwiZnVsbF9ydW5fYmFyIjp0cnVlLCJmaXJzdF9hdHRhY2siOmZhbHNlLCJnb2FsIjoic2hhZG93X3F1ZWVuIiwicGl0X2l0ZW1zIjoiYWxsIiwiYWNjZXNzaWJpbGl0eSI6ImZ1bGwiLCJwaWVjZXNhbml0eSI6ImFsbCIsInN0YXJ0aW5nX3BhcnRuZXIiOiJyYW5kb20iLCJtdXNpY19zZXR0aW5ncyI6Im5vcm1hbCIsImJsb2NrX3Zpc2liaWxpdHkiOiJub3JtYWwiLCJ5b3NoaV9jb2xvciI6ImdyZWVuIiwieW9zaGlfbmFtZSI6Illvc2hpIiwiZ29hbF9zdGFycyI6NywicGFsYWNlX3N0YXJzIjowLCJzdGFydGluZ19ocCI6MTAsInN0YXJ0aW5nX2ZwIjo1LCJzdGFydGluZ19icCI6Mywic3RhcnRpbmdfY29pbnMiOjEwMCwic3RhcnRpbmdfbGV2ZWwiOjEsImV4cGVyaWVuY2VfbXVsdGlwbGllciI6MSwicHJvZ3Jlc3Npb25fYmFsYW5jaW5nIjo1MH19">Expert Shuffle</option>
-                    <option data-settings="eyJuYW1lIjoiUGxheWVyMSIsImRlc2NyaXB0aW9uIjoiVFRZRCBSYW5kb21pemVyIFdlYiBDb25maWd1cmF0aW9uIiwiZ2FtZSI6IlBhcGVyIE1hcmlvOiBUaGUgVGhvdXNhbmQtWWVhciBEb29yIiwiUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IiOnsiZGVhdGhfbGluayI6ZmFsc2UsInRhdHRsZXNhbml0eSI6ZmFsc2UsInNob3BzYW5pdHkiOnRydWUsInNoaW5lc2FuaXR5Ijp0cnVlLCJzdGFyX3NodWZmbGUiOmZhbHNlLCJsaW1pdF9jaGFwdGVyX2xvZ2ljIjpmYWxzZSwibGltaXRfY2hhcHRlcl9laWdodCI6ZmFsc2UsInBhbGFjZV9za2lwIjp0cnVlLCJjdXRzY2VuZV9za2lwIjp0cnVlLCJkaXNhYmxlX2ludGVybWlzc2lvbnMiOnRydWUsIm9wZW5fd2VzdHNpZGUiOmZhbHNlLCJmYXN0X3RyYXZlbCI6dHJ1ZSwic3VjY2VlZF9jb25kaXRpb25zIjp0cnVlLCJwZXJtYW5lbnRfcGVla2Fib28iOnRydWUsImZ1bGxfcnVuX2JhciI6dHJ1ZSwiZmlyc3RfYXR0YWNrIjpmYWxzZSwiZ29hbCI6InNoYWRvd19xdWVlbiIsInBpdF9pdGVtcyI6ImZpbGxlciIsImFjY2Vzc2liaWxpdHkiOiJmdWxsIiwicGllY2VzYW5pdHkiOiJhbGwiLCJzdGFydGluZ19wYXJ0bmVyIjoiZ29vbWJlbGxhIiwibXVzaWNfc2V0dGluZ3MiOiJub3JtYWwiLCJibG9ja192aXNpYmlsaXR5Ijoibm9ybWFsIiwieW9zaGlfY29sb3IiOiJncmVlbiIsInlvc2hpX25hbWUiOiJZb3NoaSIsImdvYWxfc3RhcnMiOjcsInBhbGFjZV9zdGFycyI6NCwic3RhcnRpbmdfaHAiOjEwLCJzdGFydGluZ19mcCI6MTAsInN0YXJ0aW5nX2JwIjozLCJzdGFydGluZ19jb2lucyI6MjAwLCJzdGFydGluZ19sZXZlbCI6MSwiZXhwZXJpZW5jZV9tdWx0aXBsaWVyIjoxLCJwcm9ncmVzc2lvbl9iYWxhbmNpbmciOjUwfX0=">Race Settings</option>
+                    <option data-settings="eyJuYW1lIjoiUGxheWVye251bWJlcn0iLCJkZXNjcmlwdGlvbiI6IkRlZmF1bHQgUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IgVGVtcGxhdGUiLCJnYW1lIjoiUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IiLCJQYXBlciBNYXJpbzogVGhlIFRob3VzYW5kLVllYXIgRG9vciI6eyJwcm9ncmVzc2lvbl9iYWxhbmNpbmciOjUwLCJhY2Nlc3NpYmlsaXR5IjoiZnVsbCIsImRlYXRoX2xpbmsiOmZhbHNlLCJnb2FsIjoic2hhZG93X3F1ZWVuIiwiZ29hbF9zdGFycyI6NywicGFsYWNlX3N0YXJzIjo3LCJ0YXR0bGVzYW5pdHkiOmZhbHNlLCJwaWVjZXNhbml0eSI6Im5vbnBhbmVsX29ubHkiLCJzaG9wc2FuaXR5Ijp0cnVlLCJwaXRfaXRlbXMiOiJmaWxsZXIiLCJsaW1pdF9jaGFwdGVyX2xvZ2ljIjpmYWxzZSwibGltaXRfY2hhcHRlcl9laWdodCI6ZmFsc2UsInBhbGFjZV9za2lwIjpmYWxzZSwiY3V0c2NlbmVfc2tpcCI6ZmFsc2UsImRpc2FibGVfaW50ZXJtaXNzaW9ucyI6ZmFsc2UsImZhc3RfdHJhdmVsIjpmYWxzZSwic3VjY2VlZF9jb25kaXRpb25zIjpmYWxzZSwib3Blbl93ZXN0c2lkZSI6ZmFsc2UsInBlcm1hbmVudF9wZWVrYWJvbyI6ZmFsc2UsImZ1bGxfcnVuX2JhciI6ZmFsc2UsImZpcnN0X2F0dGFjayI6ZmFsc2UsIm11c2ljX3NldHRpbmdzIjoibm9ybWFsIiwiYmxvY2tfdmlzaWJpbGl0eSI6ImFsbF92aXNpYmxlIiwiZXhwZXJpZW5jZV9tdWx0aXBsaWVyIjoxLCJzdGFydGluZ19ocCI6MTAsInN0YXJ0aW5nX2ZwIjo1LCJzdGFydGluZ19icCI6Mywic3RhcnRpbmdfY29pbnMiOjEwMCwic3RhcnRpbmdfbGV2ZWwiOjEsInN0YXJ0aW5nX3BhcnRuZXIiOiJyYW5kb21fcGFydG5lciIsInlvc2hpX2NvbG9yIjoiZ3JlZW4iLCJ5b3NoaV9uYW1lIjoiWW9zaGkifX0=">Default Settings</option>
+                    <option data-settings="eyJuYW1lIjoiUGxheWVye251bWJlcn0iLCJkZXNjcmlwdGlvbiI6IkRlZmF1bHQgUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IgVGVtcGxhdGUiLCJnYW1lIjoiUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IiLCJQYXBlciBNYXJpbzogVGhlIFRob3VzYW5kLVllYXIgRG9vciI6eyJwcm9ncmVzc2lvbl9iYWxhbmNpbmciOjUwLCJhY2Nlc3NpYmlsaXR5IjoiZnVsbCIsImRlYXRoX2xpbmsiOmZhbHNlLCJnb2FsIjoiY3J5c3RhbF9zdGFycyIsImdvYWxfc3RhcnMiOjMsInBhbGFjZV9zdGFycyI6MywidGF0dGxlc2FuaXR5IjpmYWxzZSwicGllY2VzYW5pdHkiOiJ2YW5pbGxhIiwic2hvcHNhbml0eSI6dHJ1ZSwicGl0X2l0ZW1zIjoidmFuaWxsYSIsImxpbWl0X2NoYXB0ZXJfbG9naWMiOmZhbHNlLCJsaW1pdF9jaGFwdGVyX2VpZ2h0Ijp0cnVlLCJwYWxhY2Vfc2tpcCI6ZmFsc2UsImN1dHNjZW5lX3NraXAiOmZhbHNlLCJkaXNhYmxlX2ludGVybWlzc2lvbnMiOmZhbHNlLCJmYXN0X3RyYXZlbCI6ZmFsc2UsInN1Y2NlZWRfY29uZGl0aW9ucyI6ZmFsc2UsIm9wZW5fd2VzdHNpZGUiOnRydWUsInBlcm1hbmVudF9wZWVrYWJvbyI6dHJ1ZSwiZnVsbF9ydW5fYmFyIjpmYWxzZSwiZmlyc3RfYXR0YWNrIjp0cnVlLCJtdXNpY19zZXR0aW5ncyI6Im5vcm1hbCIsImJsb2NrX3Zpc2liaWxpdHkiOiJhbGxfdmlzaWJsZSIsImV4cGVyaWVuY2VfbXVsdGlwbGllciI6Miwic3RhcnRpbmdfaHAiOjIwLCJzdGFydGluZ19mcCI6MTAsInN0YXJ0aW5nX2JwIjo5LCJzdGFydGluZ19jb2lucyI6MjAwLCJzdGFydGluZ19sZXZlbCI6MSwic3RhcnRpbmdfcGFydG5lciI6Imdvb21iZWxsYSIsInlvc2hpX2NvbG9yIjoiZ3JlZW4iLCJ5b3NoaV9uYW1lIjoiWW9zaGkifX0=">Beginner Mode</option>
+                    <option data-settings="eyJuYW1lIjoiUGxheWVye251bWJlcn0iLCJkZXNjcmlwdGlvbiI6IkRlZmF1bHQgUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IgVGVtcGxhdGUiLCJnYW1lIjoiUGFwZXIgTWFyaW86IFRoZSBUaG91c2FuZC1ZZWFyIERvb3IiLCJQYXBlciBNYXJpbzogVGhlIFRob3VzYW5kLVllYXIgRG9vciI6eyJwcm9ncmVzc2lvbl9iYWxhbmNpbmciOjI1LCJhY2Nlc3NpYmlsaXR5IjoibWluaW1hbCIsImRlYXRoX2xpbmsiOmZhbHNlLCJnb2FsIjoiY3J5c3RhbF9zdGFycyIsImdvYWxfc3RhcnMiOjcsInBhbGFjZV9zdGFycyI6MCwidGF0dGxlc2FuaXR5Ijp0cnVlLCJwaWVjZXNhbml0eSI6ImFsbCIsInNob3BzYW5pdHkiOnRydWUsInBpdF9pdGVtcyI6ImFsbCIsImxpbWl0X2NoYXB0ZXJfbG9naWMiOmZhbHNlLCJsaW1pdF9jaGFwdGVyX2VpZ2h0IjpmYWxzZSwicGFsYWNlX3NraXAiOmZhbHNlLCJjdXRzY2VuZV9za2lwIjpmYWxzZSwiZGlzYWJsZV9pbnRlcm1pc3Npb25zIjpmYWxzZSwiZmFzdF90cmF2ZWwiOmZhbHNlLCJzdWNjZWVkX2NvbmRpdGlvbnMiOmZhbHNlLCJvcGVuX3dlc3RzaWRlIjpmYWxzZSwicGVybWFuZW50X3BlZWthYm9vIjpmYWxzZSwiZnVsbF9ydW5fYmFyIjpmYWxzZSwiZmlyc3RfYXR0YWNrIjpmYWxzZSwibXVzaWNfc2V0dGluZ3MiOiJub3JtYWwiLCJibG9ja192aXNpYmlsaXR5Ijoibm9ybWFsIiwiZXhwZXJpZW5jZV9tdWx0aXBsaWVyIjoxLCJzdGFydGluZ19ocCI6MTAsInN0YXJ0aW5nX2ZwIjo1LCJzdGFydGluZ19icCI6Mywic3RhcnRpbmdfY29pbnMiOjEwMCwic3RhcnRpbmdfbGV2ZWwiOjEsInN0YXJ0aW5nX3BhcnRuZXIiOiJyYW5kb21fcGFydG5lciIsInlvc2hpX2NvbG9yIjoiZ3JlZW4iLCJ5b3NoaV9uYW1lIjoiWW9zaGkifX0=">Expert Shuffle</option>
+                    <option data-settings="eyJuYW1lIjoiUGxheWVye251bWJlcn0iLCJkZXNjcmlwdGlvbiI6IkRlZmF1bHQgUGFwZXIgTWFyaW8gVGhlIFRob3VzYW5kIFllYXIgRG9vciBUZW1wbGF0ZSIsImdhbWUiOiJQYXBlciBNYXJpbzogVGhlIFRob3VzYW5kLVllYXIgRG9vciIsIlBhcGVyIE1hcmlvOiBUaGUgVGhvdXNhbmQtWWVhciBEb29yIjp7InByb2dyZXNzaW9uX2JhbGFuY2luZyI6NTAsImFjY2Vzc2liaWxpdHkiOiJmdWxsIiwiZGVhdGhfbGluayI6ZmFsc2UsImdvYWwiOiJzaGFkb3dfcXVlZW4iLCJnb2FsX3N0YXJzIjo3LCJwYWxhY2Vfc3RhcnMiOjQsInRhdHRsZXNhbml0eSI6ZmFsc2UsInBpdF9pdGVtcyI6ImZpbGxlciIsImxpbWl0X2NoYXB0ZXJfbG9naWMiOnRydWUsImxpbWl0X2NoYXB0ZXJfZWlnaHQiOmZhbHNlLCJwYWxhY2Vfc2tpcCI6dHJ1ZSwiY3V0c2NlbmVfc2tpcCI6dHJ1ZSwiZGlzYWJsZV9pbnRlcm1pc3Npb25zIjp0cnVlLCJmYXN0X3RyYXZlbCI6dHJ1ZSwic3VjY2VlZF9jb25kaXRpb25zIjp0cnVlLCJvcGVuX3dlc3RzaWRlIjpmYWxzZSwicGVybWFuZW50X3BlZWthYm9vIjp0cnVlLCJmdWxsX3J1bl9iYXIiOnRydWUsImV4cGVyaWVuY2VfbXVsdGlwbGllciI6MSwic3RhcnRpbmdfaHAiOjEwLCJzdGFydGluZ19mcCI6MTAsInN0YXJ0aW5nX2JwIjozLCJzdGFydGluZ19jb2lucyI6MjAwLCJzdGFydGluZ19sZXZlbCI6MSwic3RhcnRpbmdfcGFydG5lciI6InJhbmRvbV9wYXJ0bmVyIiwieW9zaGlfY29sb3IiOiJncmVlbiIsInlvc2hpX25hbWUiOiJZb3NoaSJ9fQ==">Race Settings</option>
                 </select>
                 <button class="preset-button" onclick="savePreset()">Save as New Preset</button>
                 <button class="delete-preset-button" id="deletePresetBtn" onclick="deleteCurrentPreset()" style="display: none;">Delete Preset</button>
@@ -90,7 +90,6 @@
             <button class="panel-tab" onclick="switchTab(this, 'world')">World & Gameplay</button>
             <button class="panel-tab" onclick="switchTab(this, 'stats')">Starting Stats</button>
             <button class="panel-tab" onclick="switchTab(this, 'qol')">Quality of Life</button>
-            <button class="panel-tab" onclick="switchTab(this, 'archipelago')">Archipelago Settings</button>
         </div>
 
         <div class="generate-content">
@@ -124,6 +123,12 @@
                             <option value="2">All</option>
                         </select>
                     </div>
+
+                    <div class="number-container">
+                        <span class="number-label">Progression Balancing<span class="help-icon" data-tooltip="A system that can move progression earlier, to try and prevent the player from getting stuck and bored early. A lower setting means more getting stuck. A higher setting means less getting stuck.">?</span></span>
+                        <input type="number" class="number-input" min="0" max="99" value="50">
+                    </div>
+
                     <div class="dropdown-container">
                         <span class="dropdown-label">Accessibility<span class="help-icon" data-tooltip="Set rules for reachability of your items/locations. Full: ensure everything can be reached and acquired. Minimal: ensure what is needed to reach your goal can be acquired.">?</span></span>
                         <select class="dropdown-select">
@@ -132,6 +137,12 @@
                         </select>
                     </div>
 
+                    <div class="toggle-container">
+                        <span class="toggle-label">Death Link<span class="help-icon" data-tooltip="When you die, everyone dies. Meant for Archipelago multiworld only. Has no effect in single-player mode.">?</span></span>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
 
                     <div class="toggle-container">
                         <span class="toggle-label">Tattlesanity<span class="help-icon" data-tooltip="Creates a location for every enemy being tattled. All key items can possibly be placed in these locations.">?</span></span>
@@ -152,20 +163,6 @@
                     <div class="toggle-container">
                         <span class="toggle-label">Shopsanity<span class="help-icon" data-tooltip="When enabled, shop purchases become location checks that can contain any item.">?</span></span>
                         <div class="toggle-switch active" onclick="toggleSwitch(this)">
-                            <div class="toggle-slider"></div>
-                        </div>
-                    </div>
-
-                    <div class="toggle-container">
-                        <span class="toggle-label">Shinesanity<span class="help-icon" data-tooltip="Shine Sprites will be randomized.">?</span></span>
-                        <div class="toggle-switch active" onclick="toggleSwitch(this)">
-                            <div class="toggle-slider"></div>
-                        </div>
-                    </div>
-
-                    <div class="toggle-container">
-                        <span class="toggle-label">Star Shuffle<span class="help-icon" data-tooltip="Crystal Stars will be added as items to the item pool. Completing a chapter will reward you with a random item.">?</span></span>
-                        <div class="toggle-switch" onclick="toggleSwitch(this)">
                             <div class="toggle-slider"></div>
                         </div>
                     </div>
@@ -340,23 +337,6 @@
                     <div class="text-container">
                         <span class="text-label">Yoshi Name<span class="help-icon" data-tooltip="Set the name of your Yoshi partner. This has a maximum length of 8 characters.">?</span></span>
                         <input type="text" class="text-input" maxlength="8" value="Yoshi">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Archipelago Settings Tab -->
-            <div id="archipelago" class="panel-content">
-                <div class="settings-grid">
-                    <div class="number-container">
-                        <span class="number-label">Progression Balancing<span class="help-icon" data-tooltip="A system that can move progression earlier, to try and prevent the player from getting stuck and bored early. A lower setting means more getting stuck. A higher setting means less getting stuck. Meant for Archipelago multiworld only. Has no effect in single-player mode.">?</span></span>
-                        <input type="number" class="number-input" min="0" max="99" value="50">
-                    </div>
-
-                    <div class="toggle-container">
-                        <span class="toggle-label">Death Link<span class="help-icon" data-tooltip="When you die, everyone dies. Meant for Archipelago multiworld only. Has no effect in single-player mode.">?</span></span>
-                        <div class="toggle-switch" onclick="toggleSwitch(this)">
-                            <div class="toggle-slider"></div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -617,8 +597,6 @@
             'Tattlesanity': 'tattlesanity',
             'Piecesanity': 'piecesanity',
             'Shopsanity': 'shopsanity',
-            'Shinesanity': 'shinesanity',
-            'Star Shuffle': 'star_shuffle',
             'Limit Chapter Logic': 'limit_chapter_logic',
             'Limit Chapter 8': 'limit_chapter_eight',
 
@@ -1101,8 +1079,6 @@
             'tattlesanity': 'Tattlesanity',
             'piecesanity': 'Piecesanity',
             'shopsanity': 'Shopsanity',
-            'shinesanity': 'Shinesanity',
-            'star_shuffle': 'Star Shuffle',
             'limit_chapter_logic': 'Limit Chapter Logic',
             'limit_chapter_eight': 'Limit Chapter 8',
 
@@ -1347,8 +1323,7 @@
         <p class="footer-text">
             Paper Mario: The Thousand-Year Door Randomizer<br>
             Created by jamesbrq<br>
-            <span id="seedStats" style="font-size: 0.9em; opacity: 0.8;">Loading stats...</span><br>
-                <span style="font-size: 0.85em; opacity: 0.7;">Last Updated: October 11, 2025</span>
+            <span id="seedStats" style="font-size: 0.9em; opacity: 0.8;">Loading stats...</span>
         </p>
     </div>
 </footer>
