@@ -1,3 +1,4 @@
+from worlds.ttyd import all_locations
 from worlds.ttyd.Data import star_locations
 
 
