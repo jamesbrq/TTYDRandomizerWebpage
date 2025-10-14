@@ -291,5 +291,15 @@ def get_base_classification(classification: ItemClassification = ItemClassificat
 
 
 def locations_to_dict(locations: Iterable[Location]) -> Dict[str, Tuple]:
-    return {location.name: (location.item.code, location.item.player) if location.item is not None else (0, 0)
-                    for location in locations}
+    result = {}
+    for location in locations:
+        if location.item is not None:
+            item_code = location.item.code
+            item_player = location.item.player
+            # Add shop price if this location is a shop item
+            is_shop = locationName_to_data[location.name].id in shop_items
+            shop_price = item_prices.get(item_code, 10) if is_shop else 0
+            result[location.name] = (item_code, item_player, shop_price)
+        else:
+            result[location.name] = (0, 0, 0)
+    return result
