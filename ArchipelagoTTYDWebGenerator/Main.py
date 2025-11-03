@@ -27,15 +27,15 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
     if not baked_server_options:
         baked_server_options = get_settings().server_options.as_dict()
     assert isinstance(baked_server_options, dict)
+    logger = logging.getLogger()
     if args.outputpath:
         os.makedirs(args.outputpath, exist_ok=True)
         output_path.cached_path = args.outputpath
+        logger.info(f"Output path set to: {args.outputpath}")
 
     start = time.perf_counter()
     # initialize the multiworld
     multiworld = MultiWorld(args.multi)
-
-    logger = logging.getLogger()
     multiworld.set_seed(seed, args.race, str(args.outputname) if args.outputname else None)
     multiworld.plando_options = args.plando_options
     multiworld.game = args.game.copy()
@@ -373,10 +373,13 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
 
         zipfilename = output_path(f"AP_{multiworld.seed_name}.zip")
         logger.info(f"Creating final archive at {zipfilename}")
+        logger.info(f"Temp directory contents: {[f.name for f in os.scandir(temp_dir)]}")
         with zipfile.ZipFile(zipfilename, mode="w", compression=zipfile.ZIP_DEFLATED,
                              compresslevel=9) as zf:
             for file in os.scandir(temp_dir):
                 zf.write(file.path, arcname=file.name)
+        logger.info(f"Zip file created successfully at: {zipfilename}")
+        logger.info(f"Zip file exists: {os.path.exists(zipfilename)}, size: {os.path.getsize(zipfilename) if os.path.exists(zipfilename) else 0} bytes")
 
     logger.info('Done. Enjoy. Total Time: %s', time.perf_counter() - start)
     return multiworld

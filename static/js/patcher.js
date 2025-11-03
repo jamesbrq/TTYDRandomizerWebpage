@@ -676,7 +676,8 @@ function deobfuscatePatchData(data) {
     return deobfuscateData(data);
 }
 
-async function downloadSpoiler() {
+// Renamed to patcherDownloadSpoiler to allow override in result.html
+window.patcherDownloadSpoiler = async function() {
     if (!seedData) {
         showModal('Error', 'No seed data available.');
         return;
@@ -748,6 +749,15 @@ async function downloadSpoiler() {
     } catch (error) {
         console.error('Error generating spoiler:', error);
         showModal('Error', 'Failed to generate spoiler log: ' + error.message);
+    }
+};
+
+// Default downloadSpoiler that can be overridden by result.html
+function downloadSpoiler() {
+    // This will be overridden in result.html to use server-side spoiler
+    // For patch.html, just call the patcher version directly
+    if (window.patcherDownloadSpoiler) {
+        window.patcherDownloadSpoiler();
     }
 }
 

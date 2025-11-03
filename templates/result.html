@@ -94,8 +94,11 @@
             <button class="preset-button" onclick="downloadPatch()" style="margin-right: 10px;">
                 Download Seed Patch (.ttydp)
             </button>
-            <button class="preset-button" onclick="downloadSpoiler()">
+            <button class="preset-button" onclick="downloadSpoiler()" style="margin-right: 10px;">
                 Download Spoiler Log
+            </button>
+            <button class="preset-button" onclick="downloadArchipelagoZip()" id="downloadApZipBtn" style="display: none;">
+                Download Archipelago Zip
             </button>
             <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
                 The seed patch file (.ttydp) can be shared with others to apply the same randomization to their ROM.
@@ -192,8 +195,79 @@ function displaySeedInfo() {
     if (seedData.seed_id) {
         const shareUrl = `${window.location.origin}/result/${seedData.seed_id}`;
         document.getElementById('shareUrl').textContent = shareUrl;
+
+        // Check if Archipelago zip exists and show button
+        checkArchipelagoZip(seedData.seed_id);
     } else {
         document.getElementById('shareUrl').textContent = 'Not available (legacy seed)';
+    }
+}
+
+async function checkArchipelagoZip(seedId) {
+    try {
+        // Check if zip file exists by attempting a HEAD request
+        const response = await fetch(`/api/seed/${seedId}/download`, { method: 'HEAD' });
+        if (response.ok) {
+            // Zip exists, show the download button
+            document.getElementById('downloadApZipBtn').style.display = 'inline-block';
+        }
+    } catch (error) {
+        console.log('Archipelago zip not available for this seed');
+    }
+}
+
+function downloadArchipelagoZip() {
+    if (!seedData.seed_id) {
+        showModal('Error', 'Archipelago zip download is only available for seeds generated on this server.');
+        return;
+    }
+
+    // Create download link and trigger download
+    const downloadUrl = `/api/seed/${seedData.seed_id}/download`;
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = `AP_${seedData.seed_id}.zip`;
+    link.click();
+}
+
+async function downloadSpoiler() {
+    // Override the patcher.js function to use server-side spoiler from Archipelago zip
+    if (seedData.seed_id) {
+        // Try to download spoiler from Archipelago zip first
+        try {
+            const spoilerUrl = `/api/seed/${seedData.seed_id}/spoiler`;
+            const response = await fetch(spoilerUrl);
+
+            if (response.ok) {
+                // Get the filename from Content-Disposition header or use default
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'spoiler.txt';
+                if (contentDisposition) {
+                    const match = contentDisposition.match(/filename="(.+)"/);
+                    if (match) filename = match[1];
+                }
+
+                // Download the spoiler log
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                link.click();
+                URL.revokeObjectURL(url);
+                return;
+            }
+        } catch (error) {
+            console.warn('Failed to download spoiler from server, falling back to client-side generation:', error);
+        }
+    }
+
+    // Fallback to client-side spoiler generation for legacy seeds
+    // Call the original function from patcher.js
+    if (window.patcherDownloadSpoiler) {
+        window.patcherDownloadSpoiler();
+    } else {
+        showModal('Error', 'Spoiler log not available for this seed.');
     }
 }
 

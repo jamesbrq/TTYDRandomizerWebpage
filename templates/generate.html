@@ -374,6 +374,21 @@
         </div>
 
         <!-- Generation Section -->
+        <!-- Plando Items Section -->
+        <div class="preset-section" style="margin-top: 20px;">
+            <h3 class="preset-header">Plando Items (Optional)</h3>
+            <p style="padding: 10px; font-size: 0.9em;">
+                Force specific items to spawn at specific locations. Select an item for any location, or leave as "No Plando" to randomize normally.
+            </p>
+            <div style="padding: 15px;">
+                <div style="margin-bottom: 10px;">
+                    <input type="text" id="plandoSearchBox" placeholder="Search locations..."
+                           class="settings-string-input" style="width: 100%; margin-bottom: 10px;">
+                </div>
+                <div id="plandoContainer" style="max-height: 400px; overflow-y: auto; border: 1px solid; border-radius: 5px; padding: 10px;"></div>
+            </div>
+        </div>
+
         <div class="iso-generation-section">
             <h3>Generate Seed</h3>
             <div class="seed-input-section" style="margin-top: 10px;">
@@ -551,15 +566,39 @@
             // Collect settings from UI
             const settings = collectSettingsFromUI();
 
+            // Get player name from input field
+            const playerNameInput = document.getElementById('playerNameInput');
+            const playerName = playerNameInput ? playerNameInput.value.trim() : '';
+
+            // Add player name to settings if provided
+            if (playerName) {
+                settings.name = playerName;
+            }
+
+            // Collect plando items
+            const plandoItems = collectPlandoItems();
+            if (plandoItems) {
+                // Add plando_items to the game settings
+                if (!settings['Paper Mario: The Thousand-Year Door']) {
+                    settings['Paper Mario: The Thousand-Year Door'] = {};
+                }
+                settings['Paper Mario: The Thousand-Year Door'].plando_items = plandoItems;
+                console.log('Plando items:', plandoItems);
+            }
+
             // Handle seed conversion - only add seed if user provided one
             const seedInput = document.getElementById('seedInput').value;
             const convertedSeed = convertSeedToInt(seedInput);
+
             if (convertedSeed !== null) {
                 // Add seed at top level for Flask to pass to --seed flag
                 settings.seed = convertedSeed;
                 console.log(`Seed input: "${seedInput}" -> ${convertedSeed}`);
             } else {
-                console.log('No seed provided, using random seed');
+                // Generate a random 64-bit integer as fallback seed
+                const randomSeed = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+                settings.seed = randomSeed;
+                console.log(`No seed provided, using random seed: ${randomSeed}`);
             }
 
             console.log('Collected settings:', settings);
@@ -1203,13 +1242,13 @@
                 } else if (optionName === 'starting_partner') {
                     const partnerMap = {
                         'goombella': 1, 'koops': 2, 'bobbery': 3, 'yoshi': 4,
-                        'flurrie': 5, 'vivian': 6, 'ms_mowz': 7, 'random_partner': 8
+                        'flurrie': 5, 'vivian': 6, 'ms_mowz': 7, 'random': 8, 'random_partner': 8
                     };
                     dropdownValue = partnerMap[value] !== undefined ? partnerMap[value] : 1;
                 } else if (optionName === 'yoshi_color') {
                     const colorMap = {
                         'green': 0, 'red': 1, 'blue': 2, 'orange': 3,
-                        'pink': 4, 'black': 5, 'white': 6, 'random_color': 7
+                        'pink': 4, 'black': 5, 'white': 6, 'random': 7, 'random_color': 7
                     };
                     dropdownValue = colorMap[value] !== undefined ? colorMap[value] : 0;
                 }
@@ -1378,6 +1417,112 @@
     </div>
 </footer>
 <script>
+    // Plando functionality
+    let plandoCounter = 0;
+    let locationsData = [];
+    let itemsData = [];
+
+    // Load locations and items data on page load
+    async function loadPlandoData() {
+        try {
+            const [locationsResponse, itemsResponse] = await Promise.all([
+                fetch('/static/json/locations.json'),
+                fetch('/static/json/items.json')
+            ]);
+
+            locationsData = await locationsResponse.json();
+            itemsData = await itemsResponse.json();
+
+            // Sort alphabetically for easier selection
+            locationsData.sort((a, b) => a.name.localeCompare(b.name));
+            itemsData.sort((a, b) => a.item_name.localeCompare(b.item_name));
+
+            console.log('Plando data loaded:', locationsData.length, 'locations,', itemsData.length, 'items');
+        } catch (error) {
+            console.error('Failed to load plando data:', error);
+        }
+    }
+
+    function addPlandoEntry() {
+        if (locationsData.length === 0 || itemsData.length === 0) {
+            showModal('Error', 'Plando data is still loading. Please try again in a moment.');
+            return;
+        }
+
+        const container = document.getElementById('plandoContainer');
+        const entryId = plandoCounter++;
+
+        const entryDiv = document.createElement('div');
+        entryDiv.className = 'plando-entry';
+        entryDiv.id = `plando-entry-${entryId}`;
+        entryDiv.style.cssText = 'background: #f5f5f5; padding: 15px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ddd;';
+
+        entryDiv.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: start;">
+                <div>
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Location:</label>
+                    <select class="dropdown-select plando-location" style="width: 100%;">
+                        <option value="">Select Location...</option>
+                        ${locationsData.map(loc => `<option value="${loc.name}">${loc.name}</option>`).join('')}
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Item:</label>
+                    <select class="dropdown-select plando-item" style="width: 100%;">
+                        <option value="">Select Item...</option>
+                        ${itemsData.map(item => `<option value="${item.item_name}">${item.item_name}</option>`).join('')}
+                    </select>
+                </div>
+                <div style="padding-top: 25px;">
+                    <button class="preset-button" onclick="removePlandoEntry(${entryId})"
+                            style="background: #d9534f; padding: 8px 15px;">Remove</button>
+                </div>
+            </div>
+            <div style="margin-top: 10px;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" class="plando-from-pool" checked style="margin-right: 8px;">
+                    <span style="font-size: 0.9em;">Remove from item pool (uncheck to duplicate item)</span>
+                </label>
+            </div>
+        `;
+
+        container.appendChild(entryDiv);
+    }
+
+    function removePlandoEntry(entryId) {
+        const entry = document.getElementById(`plando-entry-${entryId}`);
+        if (entry) {
+            entry.remove();
+        }
+    }
+
+    function collectPlandoItems() {
+        const container = document.getElementById('plandoContainer');
+        const entries = container.querySelectorAll('.plando-entry');
+        const plandoItems = [];
+
+        entries.forEach(entry => {
+            const location = entry.querySelector('.plando-location').value;
+            const item = entry.querySelector('.plando-item').value;
+            const fromPool = entry.querySelector('.plando-from-pool').checked;
+
+            if (location && item) {
+                plandoItems.push({
+                    location: location,
+                    item: item,
+                    from_pool: fromPool
+                });
+            }
+        });
+
+        return plandoItems.length > 0 ? plandoItems : null;
+    }
+
+    // Load plando data when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        loadPlandoData();
+    });
+
     // Fetch and display seed statistics
     async function updateSeedStats() {
         try {

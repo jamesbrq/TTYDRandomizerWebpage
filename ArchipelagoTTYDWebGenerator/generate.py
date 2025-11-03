@@ -9,6 +9,7 @@ import shlex
 import string
 import sys
 import textwrap
+import time
 import urllib.parse
 import urllib.request
 from collections import Counter
@@ -212,7 +213,8 @@ def main(args=None) -> tuple[argparse.Namespace, int]:
     erargs.spoiler = args.spoiler
     erargs.race = args.race
     erargs.outputname = seed_name
-    erargs.outputpath = args.outputpath
+    # Ensure outputpath is absolute to prevent issues with working directory changes
+    erargs.outputpath = os.path.abspath(args.outputpath) if args.outputpath else None
     erargs.skip_prog_balancing = args.skip_prog_balancing
     erargs.skip_output = args.skip_output
     erargs.spoiler_only = args.spoiler_only
@@ -700,24 +702,24 @@ if __name__ == '__main__':
     from Main import main as ERmain
     multiworld = ERmain(erargs, seed)
 
-    # If --skip_output is set, output location data as JSON
-    if args.skip_output:
-        from worlds.ttyd.Rom import locations_to_dict
-        # Get TTYD world (player 1)
-        ttyd_world = multiworld.worlds[1]
-        locations_dict = locations_to_dict(multiworld.get_locations(1))
+    # Always output location data as JSON to stdout (for web generator)
+    from worlds.ttyd.Rom import locations_to_dict
+    # Get TTYD world (player 1)
+    ttyd_world = multiworld.worlds[1]
+    locations_dict = locations_to_dict(multiworld.get_locations(1))
 
-        # Get the resolved starting partner (after random resolution)
-        starting_partner_option = ttyd_world.options.starting_partner
-        starting_partner_name = starting_partner_option.current_key
+    # Get the resolved starting partner (after random resolution)
+    starting_partner_option = ttyd_world.options.starting_partner
+    starting_partner_name = starting_partner_option.current_key
 
-        # Include seed, required_chapters, and resolved starting_partner in the output
-        output_data = {
-            'locations': locations_dict,
-            'seed': seed,
-            'required_chapters': getattr(ttyd_world, 'required_chapters', []),
-            'starting_partner': starting_partner_name
-        }
-        print(json.dumps(output_data))
+    # Include seed, required_chapters, and resolved starting_partner in the output
+    output_data = {
+        'locations': locations_dict,
+        'seed': seed,
+        'required_chapters': getattr(ttyd_world, 'required_chapters', []),
+        'starting_partner': starting_partner_name,
+        'timestamp': int(time.time() * 1000)
+    }
+    print(json.dumps(output_data))
 
     atexit.unregister(confirmation)
