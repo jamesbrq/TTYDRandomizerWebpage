@@ -521,6 +521,107 @@ def get_stats():
     stats = get_seed_stats()
     return jsonify(stats)
 
+@app.route('/statistics')
+def statistics():
+    """
+    Statistics page showing setting usage percentages.
+    """
+    return render_template('statistics.html')
+
+@app.route('/api/setting-statistics', methods=['GET'])
+def get_setting_statistics():
+    """
+    API endpoint to analyze all seeds and return statistics about setting usage.
+    Returns percentage breakdown of each setting option.
+    """
+    try:
+        statistics = {}
+        total_seeds = 0
+
+        # Read all seed files
+        for seed_file in SEED_DATA_DIR.glob('*.json.gz'):
+            try:
+                with gzip.open(seed_file, 'rb') as f:
+                    json_bytes = f.read()
+                    seed_data = json.loads(json_bytes.decode('utf-8'))
+
+                total_seeds += 1
+
+                # Extract settings - they're under the 'Paper Mario: The Thousand-Year Door' key
+                settings = seed_data.get('settings', {})
+                game_settings = settings.get('Paper Mario: The Thousand-Year Door', {})
+
+                # Count each setting value
+                for setting_name, setting_value in game_settings.items():
+                    if setting_name not in statistics:
+                        statistics[setting_name] = {}
+
+                    # Convert value to string for consistent counting
+                    value_str = str(setting_value)
+
+                    if value_str not in statistics[setting_name]:
+                        statistics[setting_name][value_str] = 0
+
+                    statistics[setting_name][value_str] += 1
+
+            except Exception as e:
+                app.logger.error(f"Error reading seed file {seed_file.name}: {e}")
+                continue
+
+        # Also check legacy uncompressed files
+        for seed_file in SEED_DATA_DIR.glob('*.json'):
+            # Skip special files
+            if seed_file.name.startswith('.'):
+                continue
+
+            try:
+                with open(seed_file, 'r') as f:
+                    seed_data = json.load(f)
+
+                total_seeds += 1
+
+                settings = seed_data.get('settings', {})
+                game_settings = settings.get('Paper Mario: The Thousand-Year Door', {})
+
+                for setting_name, setting_value in game_settings.items():
+                    if setting_name not in statistics:
+                        statistics[setting_name] = {}
+
+                    value_str = str(setting_value)
+
+                    if value_str not in statistics[setting_name]:
+                        statistics[setting_name][value_str] = 0
+
+                    statistics[setting_name][value_str] += 1
+
+            except Exception as e:
+                app.logger.error(f"Error reading legacy seed file {seed_file.name}: {e}")
+                continue
+
+        # Calculate percentages
+        percentages = {}
+        for setting_name, value_counts in statistics.items():
+            percentages[setting_name] = {}
+            for value, count in value_counts.items():
+                percentage = (count / total_seeds * 100) if total_seeds > 0 else 0
+                percentages[setting_name][value] = {
+                    'count': count,
+                    'percentage': round(percentage, 2)
+                }
+
+        return jsonify({
+            'total_seeds': total_seeds,
+            'statistics': percentages
+        })
+
+    except Exception as e:
+        app.logger.error(f"Error calculating setting statistics: {e}")
+        import traceback
+        return jsonify({
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        }), 500
+
 # Standard way to run the application locally for testing
 if __name__ == '__main__':
     # Set debug=True for local development

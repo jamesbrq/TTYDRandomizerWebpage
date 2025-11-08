@@ -78,7 +78,7 @@ generator:
   race: 0
   # List of options that can be plando'd. Can be combined, for example "bosses, items"
   # Available options: bosses, items, texts, connections
-  plando_options: "bosses, connections, texts"
+  plando_options: "bosses, connections, texts, items"
   # What to do if the current item placements appear unsolvable.
   # raise -> Raise an exception and abort.
   # swap -> Attempt to fix it by swapping prior placements around. (Default)

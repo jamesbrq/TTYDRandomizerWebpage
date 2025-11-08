@@ -20,7 +20,9 @@
       "Bash(for file in templates/archipelago.html templates/generate.html templates/gettingStarted.html templates/index.html templates/patch.html templates/result.html)",
       "Bash(do sed -i 's/Created by the TTYD Randomizer Community/Created by jamesbrq/g' \"$file\")",
       "Bash(for:*)",
-      "Bash(do)"
+      "Bash(do)",
+      "Bash(gunzip:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []

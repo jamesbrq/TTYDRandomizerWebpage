@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTYD Randomizer - Statistics</title>
+    <meta name="description" content="Statistics showing setting usage percentages across all generated TTYD Randomizer seeds">
+    <meta name="keywords" content="TTYD, randomizer, statistics, settings, Paper Mario, Thousand-Year Door">
+    <script src="{{ url_for('static', filename='js/theme-switcher.js') }}"></script>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='images/android-chrome-192x192.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-vivian.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-yoshi.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-goombella.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-msmowz.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-rawkhawk.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-doopliss.css') }}">
+    <style>
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .stats-summary {
+            background: rgba(var(--ui-primary-rgb), 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .setting-category {
+            margin-bottom: 2rem;
+            background: rgba(var(--ui-primary-rgb), 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .setting-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            text-transform: capitalize;
+            border-bottom: 2px solid var(--ui-primary);
+            padding-bottom: 0.5rem;
+        }
+
+        .setting-option {
+            display: flex;
+            align-items: center;
+            margin: 0.75rem 0;
+            padding: 0.5rem;
+            background: rgba(var(--ui-primary-rgb), 0.05);
+            border-radius: 4px;
+        }
+
+        .option-label {
+            min-width: 200px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .option-bar {
+            flex-grow: 1;
+            height: 24px;
+            background: rgba(var(--ui-primary-rgb), 0.1);
+            border-radius: 4px;
+            margin: 0 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--ui-primary), var(--accent-primary));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .option-percentage {
+            min-width: 80px;
+            text-align: right;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .option-count {
+            min-width: 60px;
+            text-align: right;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid rgba(255, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 2rem;
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 400px;
+            margin: 1rem auto;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 2px solid var(--ui-primary);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            display: block;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+<div class="header">
+    <div class="header-logo">
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Home" class="logo">
+        </a>
+    </div>
+    <div class="header-pages">
+        <a href="{{ url_for('generate') }}" class="pages-link">Seed Generator</a>
+        <a href="{{ url_for('patch') }}" class="pages-link">Patch ROM</a>
+        <a href="{{ url_for('about') }}" class="pages-link">About</a>
+        <a href="{{ url_for('archipelago') }}" class="pages-link">Archipelago</a>
+    </div>
+</div>
+
+<div class="stats-container">
+    <div class="stats-header">
+        <h1 class="large-header">~ Setting Statistics ~</h1>
+        <p class="basic-header">Usage percentages for all randomizer settings</p>
+    </div>
+
+    <div id="statsContent">
+        <div class="loading">Loading statistics...</div>
+    </div>
+</div>
+</div>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="https://discord.gg/Ug6nMjmR6F" class="footer-link" target="_blank" rel="noopener noreferrer">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                </svg>
+                Discord
+            </a>
+            <a href="https://github.com/jamesbrq/ArchipelagoTTYD" class="footer-link" target="_blank" rel="noopener noreferrer">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                GitHub
+            </a>
+            <a href="https://github.com/jamesbrq/ArchipelagoTTYD/issues" class="footer-link" target="_blank" rel="noopener noreferrer">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+                Report Issue
+            </a>
+        </div>
+        <div class="footer-divider"></div>
+        <p class="footer-text">
+            Paper Mario: The Thousand-Year Door Randomizer<br>
+            Created by jamesbrq<br>
+            <span id="seedStats" style="font-size: 0.9em; opacity: 0.8;">Loading stats...</span><br>
+            <span style="font-size: 0.85em; opacity: 0.7;">Last Updated: October 11, 2025</span>
+        </p>
+    </div>
+</footer>
+
+<script>
+// Format setting names to be more readable
+function formatSettingName(name) {
+    return name
+        .replace(/_/g, ' ')
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+// Format option values to be more readable
+function formatOptionValue(value) {
+    if (value === 'true') return 'Enabled';
+    if (value === 'false') return 'Disabled';
+    return value.replace(/_/g, ' ')
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+// Load and display statistics
+async function loadStatistics() {
+    const contentDiv = document.getElementById('statsContent');
+
+    try {
+        const response = await fetch('/api/setting-statistics');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.total_seeds === 0) {
+            contentDiv.innerHTML = '<div class="no-results">No seed data available yet. Generate some seeds to see statistics!</div>';
+            return;
+        }
+
+        // Create summary section
+        let html = `
+            <div class="stats-summary">
+                <h2>Total Seeds Analyzed: ${data.total_seeds.toLocaleString()}</h2>
+            </div>
+
+            <input type="text" class="search-box" id="searchBox" placeholder="Search settings...">
+
+            <div id="settingsList">
+        `;
+
+        // Sort settings by name
+        const sortedSettings = Object.entries(data.statistics).sort((a, b) =>
+            a[0].localeCompare(b[0])
+        );
+
+        // Create a section for each setting
+        for (const [settingName, options] of sortedSettings) {
+            html += `
+                <div class="setting-category" data-setting-name="${settingName}">
+                    <div class="setting-name">${formatSettingName(settingName)}</div>
+            `;
+
+            // Sort options by percentage (descending)
+            const sortedOptions = Object.entries(options).sort((a, b) =>
+                b[1].percentage - a[1].percentage
+            );
+
+            for (const [optionValue, stats] of sortedOptions) {
+                const barWidth = stats.percentage;
+                const showPercentageInBar = barWidth > 15; // Show inside bar if wide enough
+
+                html += `
+                    <div class="setting-option">
+                        <span class="option-label">${formatOptionValue(optionValue)}</span>
+                        <div class="option-bar">
+                            <div class="option-fill" style="width: ${barWidth}%">
+                                ${showPercentageInBar ? stats.percentage + '%' : ''}
+                            </div>
+                        </div>
+                        ${!showPercentageInBar ? `<span class="option-percentage">${stats.percentage}%</span>` : '<span class="option-percentage"></span>'}
+                        <span class="option-count">(${stats.count})</span>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+        }
+
+        html += '</div>';
+
+        contentDiv.innerHTML = html;
+
+        // Add search functionality
+        const searchBox = document.getElementById('searchBox');
+        searchBox.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const settings = document.querySelectorAll('.setting-category');
+
+            settings.forEach(setting => {
+                const settingName = setting.dataset.settingName.toLowerCase();
+                if (settingName.includes(searchTerm)) {
+                    setting.style.display = 'block';
+                } else {
+                    setting.style.display = 'none';
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error('Error loading statistics:', error);
+        contentDiv.innerHTML = `
+            <div class="error">
+                <h2>Error Loading Statistics</h2>
+                <p>${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+// Fetch and display seed statistics
+async function updateSeedStats() {
+    try {
+        const response = await fetch('/api/stats');
+        const stats = await response.json();
+
+        const statsElement = document.getElementById('seedStats');
+        if (statsElement) {
+            let statsText = 'Total Seeds Generated: ' + stats.total_seeds.toLocaleString();
+
+            if (stats.last_generation) {
+                const lastGen = new Date(stats.last_generation);
+                const now = new Date();
+                const diffMs = now - lastGen;
+                const diffMins = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMs / 3600000);
+                const diffDays = Math.floor(diffMs / 86400000);
+
+                let timeAgo;
+                if (diffMins < 1) {
+                    timeAgo = 'just now';
+                } else if (diffMins < 60) {
+                    timeAgo = diffMins + ' minute' + (diffMins !== 1 ? 's' : '') + ' ago';
+                } else if (diffHours < 24) {
+                    timeAgo = diffHours + ' hour' + (diffHours !== 1 ? 's' : '') + ' ago';
+                } else {
+                    timeAgo = diffDays + ' day' + (diffDays !== 1 ? 's' : '') + ' ago';
+                }
+
+                statsText += ' | Last seed: ' + timeAgo;
+            }
+
+            statsElement.textContent = statsText;
+        }
+    } catch (error) {
+        console.error('Error fetching seed stats:', error);
+        const statsElement = document.getElementById('seedStats');
+        if (statsElement) {
+            statsElement.textContent = 'Stats unavailable';
+        }
+    }
+}
+
+// Load statistics on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadStatistics();
+    updateSeedStats();
+});
+</script>
+
+</body>
+</html>

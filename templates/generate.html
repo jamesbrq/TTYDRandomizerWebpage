@@ -376,16 +376,22 @@
         <!-- Generation Section -->
         <!-- Plando Items Section -->
         <div class="preset-section" style="margin-top: 20px;">
-            <h3 class="preset-header">Plando Items (Optional)</h3>
-            <p style="padding: 10px; font-size: 0.9em;">
-                Force specific items to spawn at specific locations. Select an item for any location, or leave as "No Plando" to randomize normally.
-            </p>
-            <div style="padding: 15px;">
-                <div style="margin-bottom: 10px;">
-                    <input type="text" id="plandoSearchBox" placeholder="Search locations..."
-                           class="settings-string-input" style="width: 100%; margin-bottom: 10px;">
+            <h3 class="preset-header" style="cursor: pointer; user-select: none;" onclick="togglePlandoSection()">
+                <span id="plandoToggleIcon">▶</span> Plando Items (Optional) - Click to Expand
+            </h3>
+            <div id="plandoSectionContent" style="display: none;">
+                <p style="padding: 10px; font-size: 0.9em;">
+                    Force specific items to spawn at specific locations. Select an item for any location to plando it. Locations with "No Plando" selected will be randomized normally.
+                </p>
+                <div style="padding: 15px;">
+                    <div style="margin-bottom: 10px;">
+                        <input type="text" id="plandoSearchBox" placeholder="Search locations..."
+                               class="settings-string-input" style="width: 100%;" onkeyup="filterPlandoLocations()">
+                    </div>
+                    <div id="plandoContainer" style="max-height: 400px; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 5px; padding: 10px; background-color: rgba(255, 255, 255, 0.1);">
+                        <p style="text-align: center; color: rgba(25, 25, 25, 0.6); padding: 20px;">Click to expand and load locations...</p>
+                    </div>
                 </div>
-                <div id="plandoContainer" style="max-height: 400px; overflow-y: auto; border: 1px solid; border-radius: 5px; padding: 10px;"></div>
             </div>
         </div>
 
@@ -828,6 +834,14 @@
             }
         });
 
+        // Collect plando items
+        const plandoItems = collectPlandoItems();
+        if (plandoItems) {
+            gameSettings.plando_items = plandoItems;
+            console.log('Plando items added to settings:', gameSettings.plando_items);
+        }
+
+        console.log('Final settings:', JSON.stringify(settings, null, 2));
         return settings;
     }
 
@@ -1418,12 +1432,44 @@
 </footer>
 <script>
     // Plando functionality
-    let plandoCounter = 0;
     let locationsData = [];
     let itemsData = [];
+    let filteredLocationsData = [];
+    let plandoDataLoaded = false;
+    let plandoSectionExpanded = false;
+    let plandoSelections = {}; // Store user selections: {locationName: itemName}
 
-    // Load locations and items data on page load
+    // Virtual scrolling constants
+    const ROW_HEIGHT = 68; // Approximate height of each row in pixels
+    const BUFFER_SIZE = 20; // Extra items to render above/below viewport
+    let itemOptionsHTML = ''; // Cache item options HTML
+
+    // Toggle plando section visibility
+    function togglePlandoSection() {
+        const content = document.getElementById('plandoSectionContent');
+        const icon = document.getElementById('plandoToggleIcon');
+
+        plandoSectionExpanded = !plandoSectionExpanded;
+
+        if (plandoSectionExpanded) {
+            content.style.display = 'block';
+            icon.textContent = '▼';
+
+            // Load data only once when first expanded
+            if (!plandoDataLoaded) {
+                loadPlandoData();
+            }
+        } else {
+            content.style.display = 'none';
+            icon.textContent = '▶';
+        }
+    }
+
+    // Load locations and items data when section is expanded
     async function loadPlandoData() {
+        const container = document.getElementById('plandoContainer');
+        container.innerHTML = '<p style="text-align: center; color: rgba(25, 25, 25, 0.6); padding: 20px;">Loading locations...</p>';
+
         try {
             const [locationsResponse, itemsResponse] = await Promise.all([
                 fetch('/static/json/locations.json'),
@@ -1438,90 +1484,175 @@
             itemsData.sort((a, b) => a.item_name.localeCompare(b.item_name));
 
             console.log('Plando data loaded:', locationsData.length, 'locations,', itemsData.length, 'items');
+
+            plandoDataLoaded = true;
+
+            // Render all locations
+            renderPlandoLocations();
         } catch (error) {
             console.error('Failed to load plando data:', error);
+            container.innerHTML = '<p style="text-align: center; color: rgba(217, 83, 79, 0.9); padding: 20px;">Failed to load plando data.</p>';
         }
     }
 
-    function addPlandoEntry() {
+    function renderPlandoLocations() {
+        const container = document.getElementById('plandoContainer');
+
         if (locationsData.length === 0 || itemsData.length === 0) {
-            showModal('Error', 'Plando data is still loading. Please try again in a moment.');
+            container.innerHTML = '<p style="text-align: center; color: rgba(25, 25, 25, 0.6); padding: 20px;">No locations available.</p>';
             return;
         }
 
-        const container = document.getElementById('plandoContainer');
-        const entryId = plandoCounter++;
+        filteredLocationsData = [...locationsData];
 
-        const entryDiv = document.createElement('div');
-        entryDiv.className = 'plando-entry';
-        entryDiv.id = `plando-entry-${entryId}`;
-        entryDiv.style.cssText = 'background: #f5f5f5; padding: 15px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ddd;';
+        // Build item options HTML once and cache it
+        itemOptionsHTML = '<option value="">No Plando</option>' +
+            itemsData.map(item => `<option value="${item.item_name}">${item.item_name}</option>`).join('');
 
-        entryDiv.innerHTML = `
-            <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: start;">
-                <div>
-                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Location:</label>
-                    <select class="dropdown-select plando-location" style="width: 100%;">
-                        <option value="">Select Location...</option>
-                        ${locationsData.map(loc => `<option value="${loc.name}">${loc.name}</option>`).join('')}
-                    </select>
-                </div>
-                <div>
-                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Item:</label>
-                    <select class="dropdown-select plando-item" style="width: 100%;">
-                        <option value="">Select Item...</option>
-                        ${itemsData.map(item => `<option value="${item.item_name}">${item.item_name}</option>`).join('')}
-                    </select>
-                </div>
-                <div style="padding-top: 25px;">
-                    <button class="preset-button" onclick="removePlandoEntry(${entryId})"
-                            style="background: #d9534f; padding: 8px 15px;">Remove</button>
-                </div>
-            </div>
-            <div style="margin-top: 10px;">
-                <label style="display: flex; align-items: center; cursor: pointer;">
-                    <input type="checkbox" class="plando-from-pool" checked style="margin-right: 8px;">
-                    <span style="font-size: 0.9em;">Remove from item pool (uncheck to duplicate item)</span>
-                </label>
+        // Setup virtual scroll container
+        const totalHeight = filteredLocationsData.length * ROW_HEIGHT;
+        container.innerHTML = `
+            <div style="position: relative; height: ${totalHeight}px;">
+                <div id="plandoViewport" style="position: absolute; top: 0; left: 0; right: 0;"></div>
             </div>
         `;
 
-        container.appendChild(entryDiv);
-    }
+        // Render initial visible items
+        updateVisibleItems();
 
-    function removePlandoEntry(entryId) {
-        const entry = document.getElementById(`plando-entry-${entryId}`);
-        if (entry) {
-            entry.remove();
+        // Add scroll event listener (only once)
+        if (!container.hasAttribute('data-scroll-listener')) {
+            container.addEventListener('scroll', handlePlandoScroll);
+            container.setAttribute('data-scroll-listener', 'true');
         }
     }
 
-    function collectPlandoItems() {
+    function updateVisibleItems() {
         const container = document.getElementById('plandoContainer');
-        const entries = container.querySelectorAll('.plando-entry');
+        const viewport = document.getElementById('plandoViewport');
+        if (!container || !viewport) return;
+
+        const scrollTop = container.scrollTop;
+        const containerHeight = container.clientHeight;
+
+        // Calculate which items should be visible
+        const startIndex = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - BUFFER_SIZE);
+        const endIndex = Math.min(
+            filteredLocationsData.length,
+            Math.ceil((scrollTop + containerHeight) / ROW_HEIGHT) + BUFFER_SIZE
+        );
+
+        // Build HTML for visible items
+        let html = '';
+        for (let i = startIndex; i < endIndex; i++) {
+            const location = filteredLocationsData[i];
+            const selectedItem = plandoSelections[location.name] || '';
+            const escapedName = location.name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            const topPosition = i * ROW_HEIGHT;
+
+            html += `
+                <div class="plando-location-row" data-location-name="${escapedName}" data-index="${i}" style="position: absolute; top: ${topPosition}px; left: 0; right: 0; display: flex; align-items: center; gap: 10px; padding: 12px 8px; background-color: rgba(255, 255, 255, 0.8); border-radius: 4px; border: 1px solid rgba(198, 147, 33, 0.5); height: ${ROW_HEIGHT - 8}px; box-sizing: border-box; margin-bottom: 8px;">
+                    <div style="flex: 1; display: flex; align-items: center; overflow: hidden;">
+                        <span style="font-size: 0.9em; color: #191919; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${location.name}</span>
+                    </div>
+                    <div style="flex: 1; display: flex; align-items: center;">
+                        <select class="dropdown-select plando-item-select" data-location="${escapedName}" style="width: 100%; margin: 4px 0;">
+                            ${selectedItem ? itemOptionsHTML.replace(`value="${selectedItem}"`, `value="${selectedItem}" selected`) : itemOptionsHTML}
+                        </select>
+                    </div>
+                </div>
+            `;
+        }
+
+        viewport.innerHTML = html;
+
+        // Attach event listeners to all selects
+        const selects = viewport.querySelectorAll('.plando-item-select');
+        selects.forEach(select => {
+            select.addEventListener('change', function() {
+                const locationName = this.dataset.location.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+                savePlandoSelection(locationName, this.value);
+            });
+        });
+    }
+
+    function handlePlandoScroll() {
+        // Use requestAnimationFrame to throttle scroll updates
+        if (!handlePlandoScroll.ticking) {
+            window.requestAnimationFrame(() => {
+                updateVisibleItems();
+                handlePlandoScroll.ticking = false;
+            });
+            handlePlandoScroll.ticking = true;
+        }
+    }
+
+    function savePlandoSelection(locationName, itemName) {
+        if (itemName) {
+            plandoSelections[locationName] = itemName;
+        } else {
+            delete plandoSelections[locationName];
+        }
+    }
+
+    function filterPlandoLocations() {
+        const searchBox = document.getElementById('plandoSearchBox');
+        const searchTerm = searchBox.value.toLowerCase();
+
+        if (searchTerm === '') {
+            // Reset to all locations
+            filteredLocationsData = [...locationsData];
+        } else {
+            // Filter locations by search term
+            filteredLocationsData = locationsData.filter(loc =>
+                loc.name.toLowerCase().includes(searchTerm)
+            );
+        }
+
+        // Update virtual scroll with new filtered data
+        const container = document.getElementById('plandoContainer');
+        const totalHeight = filteredLocationsData.length * ROW_HEIGHT;
+        container.innerHTML = `
+            <div style="position: relative; height: ${totalHeight}px;">
+                <div id="plandoViewport" style="position: absolute; top: 0; left: 0; right: 0;"></div>
+            </div>
+        `;
+
+        // Scroll to top and render
+        container.scrollTop = 0;
+        updateVisibleItems();
+    }
+
+    function collectPlandoItems() {
+        // If plando section was never expanded, return null (no plando)
+        if (!plandoDataLoaded) {
+            return null;
+        }
+
         const plandoItems = [];
 
-        entries.forEach(entry => {
-            const location = entry.querySelector('.plando-location').value;
-            const item = entry.querySelector('.plando-item').value;
-            const fromPool = entry.querySelector('.plando-from-pool').checked;
-
-            if (location && item) {
+        // Use stored selections instead of querying DOM
+        for (const [location, item] of Object.entries(plandoSelections)) {
+            if (item) {
                 plandoItems.push({
-                    location: location,
-                    item: item,
-                    from_pool: fromPool
+                    items: {
+                        [item]: 1
+                    },
+                    locations: [location],
+                    from_pool: true,
+                    force: 'silent'
                 });
             }
-        });
+        }
+
+        if (plandoItems.length > 0) {
+            console.log('Plando items collected:', plandoItems);
+        }
 
         return plandoItems.length > 0 ? plandoItems : null;
     }
 
-    // Load plando data when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        loadPlandoData();
-    });
+    // Note: Plando data is loaded on-demand when section is expanded (not on page load)
 
     // Fetch and display seed statistics
     async function updateSeedStats() {
