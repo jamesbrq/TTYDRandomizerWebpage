@@ -101,6 +101,10 @@ def api_generate():
         if settings.get('seed'):
             cmd.extend(['--seed', str(settings['seed'])])
 
+        # Disable spoiler if league mode is active
+        if settings.get('isLeagueMode'):
+            cmd.extend(['--spoiler', '0'])
+
         # Debug: Log the command being executed
         app.logger.info(f"Executing command: {' '.join(cmd)}")
         app.logger.info(f"Python executable: {python_exec}")

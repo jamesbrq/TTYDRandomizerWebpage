@@ -354,7 +354,9 @@ async function patchDOLWithOptions(iso, romBuffer, settings) {
     const palaceStars = gameSettings.palace_stars !== undefined ? gameSettings.palace_stars : 7;
     safeWrite8(0x220, palaceStars);
     const partnerMap = {'goombella': 1, 'koops': 2, 'bobbery': 3, 'yoshi': 4, 'flurrie': 5, 'vivian': 6, 'ms_mowz': 7, 'random_partner': 0};
-    const partnerValue = seedData.starting_partner || gameSettings.starting_partner || 'goombella';
+    const itemCodeToPartner = {77772078: 'goombella', 77772104: 'koops', 77772016: 'bobbery', 77772213: 'yoshi', 77772064: 'flurrie', 77772208: 'vivian', 77772222: 'ms_mowz'};
+    const goombellaLocation = seedData.locations?.['Rogueport Center: Goombella'];
+    const partnerValue = goombellaLocation ? itemCodeToPartner[goombellaLocation[0]] || 'goombella' : 'goombella';
     const startingPartner = partnerMap[partnerValue] !== undefined ? partnerMap[partnerValue] : 1;
     safeWrite8(0x221, startingPartner);
 

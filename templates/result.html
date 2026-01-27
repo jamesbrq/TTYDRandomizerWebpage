@@ -94,7 +94,7 @@
             <button class="preset-button" onclick="downloadPatch()" style="margin-right: 10px;">
                 Download Seed Patch (.ttydp)
             </button>
-            <button class="preset-button" onclick="downloadSpoiler()" style="margin-right: 10px;">
+            <button class="preset-button" id="downloadSpoilerBtn" onclick="downloadSpoiler()" style="margin-right: 10px;">
                 Download Spoiler Log
             </button>
             <button class="preset-button" onclick="downloadArchipelagoZip()" id="downloadApZipBtn" style="display: none;">
@@ -190,6 +190,16 @@ function displaySeedInfo() {
     document.getElementById('seedNumber').textContent = seedNumber;
     document.getElementById('totalLocations').textContent = locationCount;
     document.getElementById('timestamp').textContent = date.toLocaleString();
+
+    // Hide spoiler button if league mode is active
+    // Check both seedData.isLeagueMode and seedData.settings.isLeagueMode
+    const isLeagueMode = seedData.isLeagueMode || (seedData.settings && seedData.settings.isLeagueMode);
+    if (isLeagueMode) {
+        const spoilerBtn = document.getElementById('downloadSpoilerBtn');
+        if (spoilerBtn) {
+            spoilerBtn.style.display = 'none';
+        }
+    }
 
     // Display share URL if seed_id exists
     if (seedData.seed_id) {
@@ -312,7 +322,7 @@ function copyShareUrl() {
             Paper Mario: The Thousand-Year Door Randomizer<br>
             Created by jamesbrq<br>
                 <span id="seedStats" style="font-size: 0.9em; opacity: 0.8;">Loading stats...</span><br>
-                <span style="font-size: 0.85em; opacity: 0.7;">Last Updated: October 11, 2025</span>
+                <span style="font-size: 0.85em; opacity: 0.7;">Last Updated: November 19, 2025</span>
         </p>
     </div>
 </footer>
